@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DICT JOB PORTAL</title>
+    <title>Sign Up - Job Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- XSS Protection Meta Tags -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-src https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;">
@@ -71,7 +71,7 @@
             <div class="flex justify-center mb-4 md:hidden">
                 <img src="{{ asset('assets/images/image.png') }}" alt="Logo" class="h-20 w-auto" style="max-width: 120px;">
             </div>
-            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">Registration Form</h2>
+            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">SIGN UP</h2>
             <div class="space-y-7">
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">

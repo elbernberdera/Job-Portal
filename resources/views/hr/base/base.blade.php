@@ -6,27 +6,23 @@
   
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('assets/static/fontawesome-free/css/all.min.css') }}">
+  
   <title>DICT JOB PORTAL</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/static/images/image1.png') }}">
   
-  <!-- Tempusdominus Bbootstrap 4 -->
-  <link rel="stylesheet" href="{{ asset('assets/static/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{ asset('assets/static/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{{ asset('assets/static/jqvmap/jqvmap.min.css') }}">
-  <!-- Theme style -->
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ asset('assets/static/fontawesome-free/css/all.min.css') }}">
+  
+  <!-- AdminLTE CSS -->
   <link rel="stylesheet" href="{{ asset('assets/static/dist/css/adminlte.min.css') }}">
+  
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ asset('assets/static/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
- 
-  <!-- summernote -->
-  <link rel="stylesheet" href="{{ asset('assets/static/summernote/summernote-bs4.css') }}">
   
-  <!-- CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
   
@@ -41,35 +37,34 @@
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          
-        </li>
-        <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
       </ul>
 
       <ul class="navbar-nav ml-auto">
-      
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false" style="margin-right: 20px;">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
           <i class="fas fa-user"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 60px; ">
-          
-          <div class="dropdown-divider"></div>
-          <a href="{{ route('update_profile_hr') }}" class="dropdown-item">
-            <i class="fas fa-user-edit mr-2"></i> Update Profile
-          </a>
-          <div class="dropdown-divider"></div>
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-          </form>
-          <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fas fa-power-off mr-2"></i> Logout
-          </a>
-          <div class="dropdown-divider"></div>
-        </div>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="right: 60px;">
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a href="{{ route('update_profile_hr') }}" class="dropdown-item">
+              <i class="fas fa-user-edit mr-2"></i> Update Profile
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+            </form>
+            <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              <i class="fas fa-power-off mr-2"></i> Logout
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+        </ul>
       </li>
     </ul>
 
@@ -112,43 +107,15 @@
   </div>
   <!-- ./wrapper -->
 
-
 <!-- jQuery -->
 <script src="{{ asset('assets/static/jquery/jquery.min.js') }}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{ asset('assets/static/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('assets/static/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- ChartJS -->
-<script src="{{ asset('assets/static/chart.js/Chart.min.js') }}"></script>
-<!-- Sparkline -->
-@yield('extra_scripts')
-<script src="{{ asset('assets/static/sparklines/sparkline.js') }}"></script>
-<!-- JQVMap -->
-<script src="{{ asset('assets/static/jqvmap/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('assets/static/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('assets/static/jquery-knob/jquery.knob.min.js') }}"></script>
-<!-- daterangepicker -->
-<script src="{{ asset('assets/static/moment/moment.min.js') }}"></script>
-<script src="{{ asset('assets/static/daterangepicker/daterangepicker.js') }}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ asset('assets/static/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<!-- Summernote -->
-<script src="{{ asset('assets/static/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ asset('assets/static/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('assets/static/dist/js/adminlte.js') }}"></script>
 
-<!-- Scripts - Order is important! -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- AdminLTE App -->
+<script src="{{ asset('assets/static/dist/js/adminlte.js') }}"></script>
 
 <!-- DataTables -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>

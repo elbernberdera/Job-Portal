@@ -29,6 +29,8 @@ class JobVacancy extends Model
         'benefits' => 'array',
         'training' => 'array',
         'experience' => 'array',
+        'monthly_salary' => 'decimal:2',
+        'date_posted' => 'date',
     ];
 
     public function jobApplications()

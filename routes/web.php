@@ -13,9 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LogController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
 
 Route::get('/dashboard-test', function () {
     $openJobs = \App\Models\JobVacancy::where('status', 'open')->count();

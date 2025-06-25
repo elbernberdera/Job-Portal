@@ -47,10 +47,7 @@ class RegisteredUserController extends Controller
             'zipcode' => ['required', 'string', 'max:20'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'g-recaptcha-response' => ['required', 'captcha'],
-        ], [
-            'g-recaptcha-response.required' => 'Please complete the reCAPTCHA.',
-            'g-recaptcha-response.captcha' => 'reCAPTCHA verification failed. Please try again.',
+            // 'g-recaptcha-response' => ['required', 'captcha'], // captcha temporarily disabled
         ]);
 
         $user = User::create([

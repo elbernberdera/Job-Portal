@@ -16,43 +16,74 @@ class JobVacancyController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'job_title' => 'required|string',
-            'position_code' => 'required|string|unique:job_vacancies,position_code',
-            'division' => 'required|string',
-            'region' => 'required|string',
-            'monthly_salary' => 'nullable|numeric',
-            'education' => 'nullable|string',
-            'training' => 'nullable|array',
-            'training.*' => 'nullable|string',
-            'experience' => 'nullable|array',
-            'experience.*' => 'nullable|string',
-            'eligibility' => 'nullable|string',
-            'benefits' => 'nullable|array',
-            'benefits.*.amount' => 'nullable|numeric',
-            'benefits.*.description' => 'nullable|string',
-            'status' => 'required|in:open,closed',
-            'date_posted' => 'nullable|date',
-        ]);
+        // Debug the incoming request
+        $requestData = $request->all();
+        \Log::info('Incoming request data:', $requestData);
 
         try {
-            JobVacancy::create([
-                'job_title' => $validated['job_title'],
-                'position_code' => $validated['position_code'],
-                'division' => $validated['division'],
-                'region' => $validated['region'],
-                'monthly_salary' => $validated['monthly_salary'] ?? null,
-                'education' => $validated['education'] ?? null,
-                'training' => $validated['training'] ?? [],
-                'experience' => $validated['experience'] ?? [],
-                'eligibility' => $validated['eligibility'] ?? null,
-                'benefits' => $validated['benefits'] ?? [],
-                'status' => $validated['status'],
-                'date_posted' => $validated['date_posted'] ?? null,
+            $validated = $request->validate([
+                'job_title' => 'required|string',
+                'position_code' => 'required|string|unique:job_vacancies,position_code',
+                'division' => 'required|string',
+                'region' => 'required|string',
+                'monthly_salary' => 'nullable|numeric',
+                'education' => 'nullable|string',
+                'training' => 'nullable|array',
+                'training.*' => 'nullable|string',
+                'experience' => 'nullable|array',
+                'experience.*' => 'nullable|string',
+                'eligibility' => 'nullable|string',
+                'benefits' => 'nullable|array',
+                'benefits.*.amount' => 'nullable|numeric',
+                'benefits.*.description' => 'nullable|string',
+                'status' => 'required|in:open,closed',
+                'date_posted' => 'nullable|date',
             ]);
+
+            // Set default values for arrays if they're not present
+            $validated['training'] = [];
+            $validated['experience'] = [];
+            $validated['benefits'] = [];
+            
+            // Set default status if not provided
+            if (!isset($validated['status'])) {
+                $validated['status'] = 'open';
+            }
+
+            // Set default date_posted if not provided
+            if (!isset($validated['date_posted'])) {
+                $validated['date_posted'] = now();
+            }
+
+            \Log::info('Attempting to create job vacancy with data:', $validated);
+
+            $job = JobVacancy::create($validated);
+
+            if (!$job) {
+                \Log::error('Failed to create job vacancy - returned false');
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['error' => 'Failed to create job vacancy: Database error']);
+            }
+
+            \Log::info('Job vacancy created successfully:', ['job_id' => $job->id]);
             return redirect()->route('job_vacancies')->with('success', 'Job vacancy created successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::warning('Validation failed:', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            throw $e;
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create job vacancy: ' . $e->getMessage()]);
+            \Log::error('Job vacancy creation failed:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to create job vacancy: ' . $e->getMessage()]);
         }
     }
 

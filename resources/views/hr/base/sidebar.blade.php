@@ -1,5 +1,3 @@
-
-
 <style>
 .sidebar-gradient-bg {
     background: linear-gradient(135deg,rgb(11, 13, 134), #2d5193), url("{{ asset('assets/static/image/image2.png') }}");
@@ -11,11 +9,11 @@
 
 <aside class="main-sidebar sidebar-dark-success elevation-4 sidebar-gradient-bg">
       <!-- Brand Logo -->
-      <!-- <a href="{{ route('admin.dashboard') }}" class="brand-link" style="display: flex; justify-content: center; align-items: center;">
+      <a href="{{ route('admin.dashboard') }}" class="brand-link" style="display: flex; justify-content: center; align-items: center;">
         <img src="{{ asset('assets/static/image/image3.png') }}"
              alt="Logo"
              style="width: 110px; height: 80px; " />
-      </a> -->
+      </a>
 
        <!-- Sidebar -->
     <div class="sidebar" style="color: #000!important;">
