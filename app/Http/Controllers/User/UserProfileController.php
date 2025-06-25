@@ -15,6 +15,27 @@ class UserProfileController extends Controller
         return view('user.user_profile', compact('user'));
     }
 
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_initial' => 'nullable|string|max:1',
+            'suffix' => 'nullable|string|max:10',
+        ]);
+
+        $user->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'middle_initial' => $request->middle_initial,
+            'suffix' => $request->suffix,
+        ]);
+
+        return redirect()->route('user.profile')->with('success', 'Profile updated successfully!');
+    }
+
     public function uploadProfileImage(Request $request)
     {
         $request->validate([

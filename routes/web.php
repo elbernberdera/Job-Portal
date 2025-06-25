@@ -81,6 +81,7 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     //creat here the route for user profile
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
+    Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
 });
 

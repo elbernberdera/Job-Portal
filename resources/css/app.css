@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom chevron for select fields - modern, rounded, blue border */
+select.custom-chevron {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center/1.5em;
+  padding-right: 2.5em;
+  background-color: #f9fafb;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  color: #222;
+  font-size: 1.1em;
+  height: 48px;
+  transition: border-color 0.2s;
+}
+select.custom-chevron:focus {
+  border-color: #0056b3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,123,255,.15);
+}
