@@ -21,8 +21,8 @@
         <div class="user-panel mt-4 pb-4 mb-4 d-flex flex-column align-items-center">
             <div class="position-relative" style="width: 120px; height: 120px;">
                 <img
-                    src="{{ Auth::user()->profile_image ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/images/default-avatar.png') }}"
-                    alt="Profile Image"
+                    src="{{ Auth::user()->profile_image ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/images/image7.png') }}"
+                    alt=""
                     class="rounded-circle"
                     style="width: 100%; height: 100%; object-fit: cover; border: 4px solid #fff;"
                 >
@@ -37,7 +37,7 @@
                 </form>
             </div>
             <div class="info mt-2">
-                <a href="" class="d-block" style="color: #fbf8f8!important; font-weight: 30px; text-decoration: none;">
+                <a href="" class="d-block" style="color: #fbf8f8!important; font-weight: bold; text-decoration: none; text-transform: capitalize;">
                     {{ Auth::user()->first_name ?? '' }} {{ Auth::user()->last_name ?? '' }}
                 </a>
             </div>

@@ -199,8 +199,22 @@
                         <h3 class="text-xl font-bold mb-4">JobPortal</h3>
                         <p class="text-gray-400">Find your dream job with us. We connect talented professionals with amazing companies.</p>
                     </div>
-
-
+                    <div>
+                        <h4 class="font-semibold mb-4">For Job Seekers</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Browse Jobs</a></li>
+                            <li><a href="#" class="hover:text-white">Career Advice</a></li>
+                            <li><a href="#" class="hover:text-white">Resume Tips</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-4">For Employers</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Post a Job</a></li>
+                            <li><a href="#" class="hover:text-white">Browse Candidates</a></li>
+                            <li><a href="#" class="hover:text-white">Pricing</a></li>
+                        </ul>
+                    </div>
                     <div>
                         <h4 class="font-semibold mb-4">Contact</h4>
                         <ul class="space-y-2 text-gray-400">
