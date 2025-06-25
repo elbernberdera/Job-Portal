@@ -1,12 +1,24 @@
 @extends('user.base.base')
 
+<script>
+function showSection(sectionId) {
+    // Hide all sections
+    var sections = document.querySelectorAll('.content');
+    sections.forEach(function(section) {
+        section.style.display = 'none';
+    });
+    // Show the requested section
+    document.getElementById(sectionId).style.display = 'block';
+}
+</script>
+
 @section('main_content')
 
 @push('styles')
 <link href="{{ asset('assets/static/select2/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 
-<div class="content">
+<div class="content" id="section1">
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
@@ -232,7 +244,7 @@
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="col-md-4" id="dualCountryDropdown" style="display:none;">
+                        <div class="col-md-4" id="dualcitizinshipDropdown" >
                             <label for="dual_country_dropdown" class="form-label">Select Country:</label>
                             <select name="dual_country_dropdown" id="dual_country_dropdown" class="form-select">
                                 <option value="">-- Select Country --</option>
@@ -282,11 +294,106 @@
                             <label for="dual_country" class="form-label">Other Country:</label>
                             <input type="text" name="dual_country" id="dual_country" class="form-control" placeholder="e.g., USA, Japan" value="{{ old('dual_country', $user->dual_country ?? '') }}">
                         </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <h5>Permanent Address</h5>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_house_unit_no" class="form-label">House/Unit No.</label>
+                                <input type="text" class="form-control @error('perm_house_unit_no') is-invalid @enderror" id="perm_house_unit_no" name="perm_house_unit_no" value="{{ old('perm_house_unit_no', $user->perm_house_unit_no ?? '') }}">
+                                @error('perm_house_unit_no')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_street" class="form-label">Street</label>
+                                <input type="text" class="form-control @error('perm_street') is-invalid @enderror" id="perm_street" name="perm_street" value="{{ old('perm_street', $user->perm_street ?? '') }}">
+                                @error('perm_street')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_barangay" class="form-label">Barangay</label>
+                                <input type="text" class="form-control @error('perm_barangay') is-invalid @enderror" id="perm_barangay" name="perm_barangay" value="{{ old('perm_barangay', $user->perm_barangay ?? '') }}">
+                                @error('perm_barangay')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_city_municipality" class="form-label">City/Municipality</label>
+                                <input type="text" class="form-control @error('perm_city_municipality') is-invalid @enderror" id="perm_city_municipality" name="perm_city_municipality" value="{{ old('perm_city_municipality', $user->perm_city_municipality ?? '') }}">
+                                @error('perm_city_municipality')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_province" class="form-label">Province</label>
+                                <input type="text" class="form-control @error('perm_province') is-invalid @enderror" id="perm_province" name="perm_province" value="{{ old('perm_province', $user->perm_province ?? '') }}">
+                                @error('perm_province')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="perm_zipcode" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control @error('perm_zipcode') is-invalid @enderror" id="perm_zipcode" name="perm_zipcode" value="{{ old('perm_zipcode', $user->perm_zipcode ?? '') }}">
+                                @error('perm_zipcode')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <h5>Resident Address </h5>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_house_unit_no" class="form-label">House/Unit No.</label>
+                                <input type="text" class="form-control @error('res_house_unit_no') is-invalid @enderror" id="res_house_unit_no" name="res_house_unit_no" value="{{ old('res_house_unit_no', $user->res_house_unit_no ?? '') }}">
+                                @error('res_house_unit_no')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_street" class="form-label">Street</label>
+                                <input type="text" class="form-control @error('res_street') is-invalid @enderror" id="res_street" name="res_street" value="{{ old('res_street', $user->res_street ?? '') }}">
+                                @error('res_street')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_barangay" class="form-label">Barangay</label>
+                                <input type="text" class="form-control @error('res_barangay') is-invalid @enderror" id="res_barangay" name="res_barangay" value="{{ old('res_barangay', $user->res_barangay ?? '') }}">
+                                @error('res_barangay')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_city_municipality" class="form-label">City/Municipality</label>
+                                <input type="text" class="form-control @error('res_city_municipality') is-invalid @enderror" id="res_city_municipality" name="res_city_municipality" value="{{ old('res_city_municipality', $user->res_city_municipality ?? '') }}">
+                                @error('res_city_municipality')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_province" class="form-label">Province</label>
+                                <input type="text" class="form-control @error('res_province') is-invalid @enderror" id="res_province" name="res_province" value="{{ old('res_province', $user->res_province ?? '') }}">
+                                @error('res_province')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label for="res_zipcode" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control @error('res_zipcode') is-invalid @enderror" id="res_zipcode" name="res_zipcode" value="{{ old('res_zipcode', $user->res_zipcode ?? '') }}">
+                                @error('res_zipcode')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Next Page
+                            <button type="button" class="btn btn-primary" onclick="showSection('section2')">
+                                <i class="fas fa-arrow-right"></i> Next Page
                             </button>
                             <!-- <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Dashboard
@@ -300,7 +407,7 @@
 </div>
 
 <!-- section II -->
-<div class="content">
+<div class="content" id="section2" style="display:none;">
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
@@ -308,12 +415,595 @@
             </div>
             <div class="card-body">
                 <form action="" method="POST">
-                  
+                  <!-- Section II fields go here -->
+                  <div class="row">
+                      <div class="col-12">
+                          <h5>Spouse's Information</h5>
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_surname" class="form-label">Spouse's Surname</label>
+                          <input type="text" class="form-control @error('spouse_surname') is-invalid @enderror" id="spouse_surname" name="spouse_surname" value="{{ old('spouse_surname', $user->spouse_surname ?? '') }}">
+                          @error('spouse_surname')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_first_name" class="form-label">First Name</label>
+                          <input type="text" class="form-control @error('spouse_first_name') is-invalid @enderror" id="spouse_first_name" name="spouse_first_name" value="{{ old('spouse_first_name', $user->spouse_first_name ?? '') }}">
+                          @error('spouse_first_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_middle_name" class="form-label">Middle Name</label>
+                          <input type="text" class="form-control @error('spouse_middle_name') is-invalid @enderror" id="spouse_middle_name" name="spouse_middle_name" value="{{ old('spouse_middle_name', $user->spouse_middle_name ?? '') }}">
+                          @error('spouse_middle_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_name_extension" class="form-label">Name Extension (Jr., Sr.)</label>
+                          <input type="text" class="form-control @error('spouse_name_extension') is-invalid @enderror" id="spouse_name_extension" name="spouse_name_extension" value="{{ old('spouse_name_extension', $user->spouse_name_extension ?? '') }}">
+                          @error('spouse_name_extension')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_occupation" class="form-label">Occupation</label>
+                          <input type="text" class="form-control @error('spouse_occupation') is-invalid @enderror" id="spouse_occupation" name="spouse_occupation" value="{{ old('spouse_occupation', $user->spouse_occupation ?? '') }}">
+                          @error('spouse_occupation')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_employer" class="form-label">Employer/Business Name</label>
+                          <input type="text" class="form-control @error('spouse_employer') is-invalid @enderror" id="spouse_employer" name="spouse_employer" value="{{ old('spouse_employer', $user->spouse_employer ?? '') }}">
+                          @error('spouse_employer')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_business_address" class="form-label">Business Address</label>
+                          <input type="text" class="form-control @error('spouse_business_address') is-invalid @enderror" id="spouse_business_address" name="spouse_business_address" value="{{ old('spouse_business_address', $user->spouse_business_address ?? '') }}">
+                          @error('spouse_business_address')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="spouse_telephone_no" class="form-label">Telephone No.</label>
+                          <input type="text" class="form-control @error('spouse_telephone_no') is-invalid @enderror" id="spouse_telephone_no" name="spouse_telephone_no" value="{{ old('spouse_telephone_no', $user->spouse_telephone_no ?? '') }}">
+                          @error('spouse_telephone_no')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col-12">
+                          <h5>Father's Information</h5>
+                      </div>
+                      <div class="col-md-3">
+                          <label for="father_surname" class="form-label">Father's Surname</label>
+                          <input type="text" class="form-control @error('father_surname') is-invalid @enderror" id="father_surname" name="father_surname" value="{{ old('father_surname', $user->father_surname ?? '') }}">
+                          @error('father_surname')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="father_first_name" class="form-label">First Name</label>
+                          <input type="text" class="form-control @error('father_first_name') is-invalid @enderror" id="father_first_name" name="father_first_name" value="{{ old('father_first_name', $user->father_first_name ?? '') }}">
+                          @error('father_first_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="father_middle_name" class="form-label">Middle Name</label>
+                          <input type="text" class="form-control @error('father_middle_name') is-invalid @enderror" id="father_middle_name" name="father_middle_name" value="{{ old('father_middle_name', $user->father_middle_name ?? '') }}">
+                          @error('father_middle_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-3">
+                          <label for="father_name_extension" class="form-label">Name Extension (Jr., Sr.)</label>
+                          <input type="text" class="form-control @error('father_name_extension') is-invalid @enderror" id="father_name_extension" name="father_name_extension" value="{{ old('father_name_extension', $user->father_name_extension ?? '') }}">
+                          @error('father_name_extension')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col-12">
+                          <h5>Mother's Maiden Name</h5>
+                      </div>
+                      <div class="col-md-4">
+                          <label for="mother_surname" class="form-label">Surname</label>
+                          <input type="text" class="form-control @error('mother_surname') is-invalid @enderror" id="mother_surname" name="mother_surname" value="{{ old('mother_surname', $user->mother_surname ?? '') }}">
+                          @error('mother_surname')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-4">
+                          <label for="mother_first_name" class="form-label">First Name</label>
+                          <input type="text" class="form-control @error('mother_first_name') is-invalid @enderror" id="mother_first_name" name="mother_first_name" value="{{ old('mother_first_name', $user->mother_first_name ?? '') }}">
+                          @error('mother_first_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                      <div class="col-md-4">
+                          <label for="mother_middle_name" class="form-label">Middle Name</label>
+                          <input type="text" class="form-control @error('mother_middle_name') is-invalid @enderror" id="mother_middle_name" name="mother_middle_name" value="{{ old('mother_middle_name', $user->mother_middle_name ?? '') }}">
+                          @error('mother_middle_name')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col-12">
+                          <h5>Children</h5>
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Name of Children (Full Name)</th>
+                                      <th>Date of Birth (mm/dd/yyyy)</th>
+                                  </tr>
+                              </thead>
+                              <tbody id="childrenTableBody">
+                                  <tr>
+                                      <td><input type="text" name="children_names[]" class="form-control"></td>
+                                      <td><input type="date" name="children_birthdates[]" class="form-control"></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          <button type="button" class="btn btn-sm btn-success" onclick="addChildRow()">Add Child</button>
+                      </div>
+                  </div>
+                  <div class="row mt-3">
+                      <div class="col-12 d-flex justify-content-end">
+                          <button type="button" class="btn btn-secondary me-2" onclick="showSection('section1')">
+                              <i class="fas fa-arrow-left"></i> Back
+                          </button>
+                          <button type="button" class="btn btn-primary" onclick="showSection('section3')">
+                              Next Page <i class="fas fa-arrow-right"></i>
+                          </button>
+                      </div>
+                  </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<!-- section III -->
+<div class="content" id="section3" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">III. Educational Background</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Name of School<br><small>(Write in full)</small></th>
+                                <th>Basic Education/Degree/Course<br><small>(Write in full)</small></th>
+                                <th colspan="2">Period of Attendance</th>
+                                <th>Highest Level/Units Earned<br><small>(if not graduated)</small></th>
+                                <th>Year Graduated</th>
+                                <th>Scholarship/Academic Honors Received</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $levels = [
+                                    'Elementary',
+                                    'Secondary',
+                                    'Vocational/Trade Course',
+                                    'College',
+                                    'Graduate Studies'
+                                ];
+                            @endphp
+                            @foreach($levels as $level)
+                            <tr>
+                                <td>{{ $level }}</td>
+                                <td><input type="text" name="school_name[{{ $level }}]" class="form-control"></td>
+                                <td><input type="text" name="degree_course[{{ $level }}]" class="form-control"></td>
+                                <td><input type="text" name="attendance_from[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
+                                <td><input type="text" name="attendance_to[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
+                                <td><input type="text" name="highest_level[{{ $level }}]" class="form-control"></td>
+                                <td><input type="text" name="year_graduated[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
+                                <td><input type="text" name="honors[{{ $level }}]" class="form-control"></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section2')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section4')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section IV -->
+<div class="content" id="section4" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">IV. Civil Service Eligibility</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Career Service/RA 1080 (Board/Bar) Under Special Laws/CES/CSEE Barangay Eligibility/Driver's License</th>
+                                <th>Rating<br><small>(If Applicable)</small></th>
+                                <th>Date of Examination/Conferment</th>
+                                <th>Place of Examination/Conferment</th>
+                                <th colspan="2">License (if applicable)</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Number</th>
+                                <th>Date of Validity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eligibilityTableBody">
+                            @for($i = 0; $i < 4; $i++)
+                            <tr>
+                                <td><input type="text" name="eligibility[{{$i}}][type]" class="form-control"></td>
+                                <td><input type="text" name="eligibility[{{$i}}][rating]" class="form-control"></td>
+                                <td><input type="date" name="eligibility[{{$i}}][exam_date]" class="form-control"></td>
+                                <td><input type="text" name="eligibility[{{$i}}][exam_place]" class="form-control"></td>
+                                <td><input type="text" name="eligibility[{{$i}}][license_number]" class="form-control"></td>
+                                <td><input type="date" name="eligibility[{{$i}}][license_validity]" class="form-control"></td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addEligibilityRow()">Add Row</button>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section3')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section5')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- section V -->
+<div class="content" id="section5" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">V. Work Experience</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Inclusive Dates<br><small>(mm/dd/yyyy)</small></th>
+                                <th>Position Title<br><small>(Write in full/Do not abbreviate)</small></th>
+                                <th>Department/Agency/Office/Company<br><small>(Write in full/Do not abbreviate)</small></th>
+                                <th>Monthly Salary</th>
+                                <th>Salary/Job/Pay Grade & Step (if applicable) & Step Increment</th>
+                                <th>Status of Appointment</th>
+                                <th>Govt Service (Y/N)</th>
+                            </tr>
+                            <tr>
+                                <th>From</th>
+                                <th>To</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="workTableBody">
+                            @for($i = 0; $i < 4; $i++)
+                            <tr>
+                                <td><input type="date" name="work[{{$i}}][from]" class="form-control"></td>
+                                <td><input type="date" name="work[{{$i}}][to]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][position]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][department]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][salary]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][pay_grade]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][appointment_status]" class="form-control"></td>
+                                <td><input type="text" name="work[{{$i}}][govt_service]" class="form-control"></td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addWorkRow()">Add Row</button>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section4')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section6')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- section VI -->
+<div class="content" id="section6" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">VI. Voluntary Work or Involvement in Civic / Non-Government / People / Voluntary Organizations</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name & Address of Organization<br><small>(Write in full)</small></th>
+                                <th colspan="2">Inclusive Dates<br><small>(mm/dd/yyyy)</small></th>
+                                <th>Number of Hours</th>
+                                <th>Position / Nature of Work</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="voluntaryTableBody">
+                            @for($i = 0; $i < 4; $i++)
+                            <tr>
+                                <td><input type="text" name="voluntary[{{$i}}][organization]" class="form-control"></td>
+                                <td><input type="date" name="voluntary[{{$i}}][from]" class="form-control"></td>
+                                <td><input type="date" name="voluntary[{{$i}}][to]" class="form-control"></td>
+                                <td><input type="text" name="voluntary[{{$i}}][hours]" class="form-control"></td>
+                                <td><input type="text" name="voluntary[{{$i}}][position]" class="form-control"></td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addVoluntaryRow()">Add Row</button>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section5')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section7')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- section VII -->
+<div class="content" id="section7" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">VII. Learning and Development (L&D) Interventions/Training Programs Attended</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Title of Learning and Development Interventions/Training Programs<br><small>(Write in full)</small></th>
+                                <th colspan="2">Inclusive Dates of Attendance<br><small>(mm/dd/yyyy)</small></th>
+                                <th>Number of Hours</th>
+                                <th>Type of LD<br><small>(Managerial/Supervisory/Technical/etc)</small></th>
+                                <th>Conducted/Sponsored By<br><small>(Write in full)</small></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ldTableBody">
+                            @for($i = 0; $i < 4; $i++)
+                            <tr>
+                                <td><input type="text" name="ld[{{$i}}][title]" class="form-control"></td>
+                                <td><input type="date" name="ld[{{$i}}][from]" class="form-control"></td>
+                                <td><input type="date" name="ld[{{$i}}][to]" class="form-control"></td>
+                                <td><input type="text" name="ld[{{$i}}][hours]" class="form-control"></td>
+                                <td><input type="text" name="ld[{{$i}}][type]" class="form-control"></td>
+                                <td><input type="text" name="ld[{{$i}}][sponsor]" class="form-control"></td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addLDRow()">Add Row</button>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section6')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section8')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- section VIII -->
+<div class="content" id="section8" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">VIII. Additional Information</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <!-- Question 34a -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                34a. Are you related by consanguinity or affinity to the appointing or recommending authority, or to chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed, within the third degree?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q34a" id="q34a_yes" value="yes">
+                                <label class="form-check-label" for="q34a_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q34a" id="q34a_no" value="no">
+                                <label class="form-check-label" for="q34a_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q34a_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 34b -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                34b. ...within the fourth degree (for Local Government Unit - Career Employees)?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q34b" id="q34b_yes" value="yes">
+                                <label class="form-check-label" for="q34b_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q34b" id="q34b_no" value="no">
+                                <label class="form-check-label" for="q34b_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q34b_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 35a -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                35a. Have you ever been found guilty of any administrative offense?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q35a" id="q35a_yes" value="yes">
+                                <label class="form-check-label" for="q35a_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q35a" id="q35a_no" value="no">
+                                <label class="form-check-label" for="q35a_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q35a_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 35b -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                35b. Have you been criminally charged before any court?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q35b" id="q35b_yes" value="yes">
+                                <label class="form-check-label" for="q35b_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q35b" id="q35b_no" value="no">
+                                <label class="form-check-label" for="q35b_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q35b_details" placeholder="If YES, give details">
+                            <input type="text" class="form-control mt-2" name="q35b_date_filed" placeholder="Date Filed">
+                            <input type="text" class="form-control mt-2" name="q35b_status" placeholder="Status of Case/s">
+                        </div>
+                    </div>
+                    <!-- Question 36 -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                36. Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q36" id="q36_yes" value="yes">
+                                <label class="form-check-label" for="q36_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q36" id="q36_no" value="no">
+                                <label class="form-check-label" for="q36_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q36_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 37 -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                37. Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q37" id="q37_yes" value="yes">
+                                <label class="form-check-label" for="q37_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q37" id="q37_no" value="no">
+                                <label class="form-check-label" for="q37_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q37_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section7')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addWorkRow() {
+    var tableBody = document.getElementById('workTableBody');
+    var row = document.createElement('tr');
+    row.innerHTML = '<td><input type="date" name="work[][from]" class="form-control"></td>' +
+                    '<td><input type="date" name="work[][to]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][position]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][department]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][salary]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][pay_grade]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][appointment_status]" class="form-control"></td>' +
+                    '<td><input type="text" name="work[][govt_service]" class="form-control"></td>';
+    tableBody.appendChild(row);
+}
+</script>
+
 @endsection
 
 <!-- Select2 CSS -->
@@ -345,7 +1035,7 @@
 <script>
 function toggleDualDetails() {
     var citizenship = document.getElementById('citizenship').value;
-    var dualCountryDropdown = document.getElementById('dualCountryDropdown');
+    var dualCountryDropdown = document.getElementById('dualcitizinshipDropdown');
     var dualCountryText = document.getElementById('dualCountryText');
 
     if (citizenship === 'Dual Citizenship by Birth' || citizenship === 'Dual Citizenship by Naturalization') {
@@ -363,4 +1053,54 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleDualDetails();
 });
 </script>
-@endpush
+
+<script>
+function addChildRow() {
+    var tableBody = document.getElementById('childrenTableBody');
+    var row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text" name="children_names[]" class="form-control"></td>' +
+                    '<td><input type="date" name="children_birthdates[]" class="form-control"></td>';
+    tableBody.appendChild(row);
+}
+</script>
+
+<script>
+function addEligibilityRow() {
+    var tableBody = document.getElementById('eligibilityTableBody');
+    var row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text" name="eligibility[][type]" class="form-control"></td>' +
+                    '<td><input type="text" name="eligibility[][rating]" class="form-control"></td>' +
+                    '<td><input type="date" name="eligibility[][exam_date]" class="form-control"></td>' +
+                    '<td><input type="text" name="eligibility[][exam_place]" class="form-control"></td>' +
+                    '<td><input type="text" name="eligibility[][license_number]" class="form-control"></td>' +
+                    '<td><input type="date" name="eligibility[][license_validity]" class="form-control"></td>';
+    tableBody.appendChild(row);
+}
+</script>
+
+<script>
+function addVoluntaryRow() {
+    var tableBody = document.getElementById('voluntaryTableBody');
+    var row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text" name="voluntary[][organization]" class="form-control"></td>' +
+                    '<td><input type="date" name="voluntary[][from]" class="form-control"></td>' +
+                    '<td><input type="date" name="voluntary[][to]" class="form-control"></td>' +
+                    '<td><input type="text" name="voluntary[][hours]" class="form-control"></td>' +
+                    '<td><input type="text" name="voluntary[][position]" class="form-control"></td>';
+    tableBody.appendChild(row);
+}
+</script>
+
+<script>
+function addLDRow() {
+    var tableBody = document.getElementById('ldTableBody');
+    var row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text" name="ld[][title]" class="form-control"></td>' +
+                    '<td><input type="date" name="ld[][from]" class="form-control"></td>' +
+                    '<td><input type="date" name="ld[][to]" class="form-control"></td>' +
+                    '<td><input type="text" name="ld[][hours]" class="form-control"></td>' +
+                    '<td><input type="text" name="ld[][type]" class="form-control"></td>' +
+                    '<td><input type="text" name="ld[][sponsor]" class="form-control"></td>';
+    tableBody.appendChild(row);
+}
+</script>
