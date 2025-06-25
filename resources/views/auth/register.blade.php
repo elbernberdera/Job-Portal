@@ -71,7 +71,7 @@
             <div class="flex justify-center mb-4 md:hidden">
                 <img src="{{ asset('assets/images/image.png') }}" alt="Logo" class="h-20 w-auto" style="max-width: 120px;">
             </div>
-            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">SIGN UP</h2>
+            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">Registration Form</h2>
             <div class="space-y-7">
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -83,8 +83,8 @@
 
                 <!-- sa midlle initial pag want center and place holder "text-center" -->
                     <div>
-                        <x-input-label for="middle_initial" :value="__('Middle Initial')" class="font-semibold text-gray-800" />
-                        <x-text-input id="middle_initial" class="block mt-1 w-full  bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="middle_initial" :value="htmlspecialchars(old('middle_initial'), ENT_QUOTES, 'UTF-8')" maxlength="1" placeholder="M" pattern="[A-Za-z]" oninput="sanitizeInput(this)" />
+                        <x-input-label for="middle_name" :value="__('Middle Name')" class="font-semibold text-gray-800" />
+                        <x-text-input id="middle_name" class="block mt-1 w-full  bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="middle_name" :value="htmlspecialchars(old('middle_name'), ENT_QUOTES, 'UTF-8')" maxlength="50" placeholder="Middle Name" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
                     </div>
                     <div>
                         <x-input-label for="last_name"  class="font-semibold text-gray-800">{{ __('Last Name') }} <span class="text-red-600">*</span></x-input-label>
@@ -101,11 +101,6 @@
                             <option value="III" {{ old('suffix') == 'III' ? 'selected' : '' }}>III</option>
                             <option value="IV" {{ old('suffix') == 'IV' ? 'selected' : '' }}>IV</option>
                             <option value="V" {{ old('suffix') == 'V' ? 'selected' : '' }}>V</option>
-                            <option value="VI" {{ old('suffix') == 'VI' ? 'selected' : '' }}>VI</option>
-                            <option value="VII" {{ old('suffix') == 'VII' ? 'selected' : '' }}>VII</option>
-                            <option value="VIII" {{ old('suffix') == 'VIII' ? 'selected' : '' }}>VIII</option>
-                            <option value="IX" {{ old('suffix') == 'IX' ? 'selected' : '' }}>IX</option>
-                            <option value="X" {{ old('suffix') == 'X' ? 'selected' : '' }}>X</option>
                         </select>
                     </div>
                     
@@ -144,7 +139,7 @@
                 </div>
                 <!-- Address Label -->
                 <div>
-                    <x-input-label :value="__('Address')" class="font-semibold text-gray-800" />
+                    <x-input-label :value="__('Address')" class="font-bold text-xl text-gray-800" />
                 </div>
                 <!-- Address Row 1 (Region, Province, City) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -189,9 +184,13 @@
                         </div>
                         <div id="password-strength" class="text-xs mt-1 font-medium"></div>
                     </div>
-                    <div>
+                    <div class="relative">
                         <x-input-label for="password_confirmation"  class="font-semibold text-gray-800">{{ __('Confirm Password') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="password_confirmation" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password" minlength="8" maxlength="255" oninput="validateConfirmPassword(this)" onfocus="showPasswordMatch()" onblur="hidePasswordMatch()" />
+                        <x-text-input id="password_confirmation" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3 pr-10" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password" minlength="8" maxlength="255" oninput="validateConfirmPassword(this)" onfocus="showPasswordMatch()" onblur="hidePasswordMatch()" />
+                        <button type="button" id="toggle-confirm-password" class="absolute top-8 right-3 text-gray-500 focus:outline-none" tabindex="-1" onclick="toggleConfirmPasswordVisibility()">
+                            <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.671-2.634A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.306M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" /></svg>
+                        </button>
                         <div id="confirm-password-match" class="text-xs mt-1 font-medium hidden"></div>
                     </div>
                 </div>
@@ -243,7 +242,7 @@
                     <!-- Login Link -->
                     <div class="text-center mt-6">
                         <span>Already have an account?</span>
-                        <a href="{{ route('login') }}" class="text-indigo-700 font-semibold hover:underline ml-1">Log In Here</a>
+                        <a href="{{ route('login') }}" class="text-indigo-700 font-semibold hover:underline ml-1">Login Here</a>
                     </div>
                 </div>
             </div>
@@ -661,6 +660,8 @@
   // Close modal on clicking the close button
   closeModal.addEventListener('click', () => {
     termsModal.classList.add('hidden');
+    termsCheckbox.checked = true;
+    termsCheckbox.dispatchEvent(new Event('change'));
   });
 
   // Optional: close modal when clicking outside modal content
@@ -677,9 +678,24 @@
   function hidePasswordMatch() {
     document.getElementById('confirm-password-match').classList.add('hidden');
   }
+
+  function toggleConfirmPasswordVisibility() {
+    const passwordInput = document.getElementById('password_confirmation');
+    const eyeOpen = document.getElementById('eye-open');
+    const eyeClosed = document.getElementById('eye-closed');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeOpen.classList.add('hidden');
+      eyeClosed.classList.remove('hidden');
+    } else {
+      passwordInput.type = 'password';
+      eyeOpen.classList.remove('hidden');
+      eyeClosed.classList.add('hidden');
+    }
+  }
 </script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{!! NoCaptcha::renderJs() !!}
+<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{!! NoCaptcha::renderJs() !!} -->
 </body>
 </html>
 
