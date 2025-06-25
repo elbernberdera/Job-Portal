@@ -8,7 +8,7 @@
     <!-- XSS Protection Meta Tags -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-src https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;">
     <style>
-    .custom-bg-logo::before {
+    /* .custom-bg-logo::before {
         content: "";
         position: absolute;
         top: 35%;
@@ -25,7 +25,7 @@
     .custom-bg-logo > * {
         position: relative;
         z-index: 1;
-    }
+    } */
     </style>
 </head>
 <body class="bg-gray-100">
@@ -38,7 +38,7 @@
         <img src="{{ asset('assets/images/image3.png') }}" alt="" class="w-90 h-90 object-contain mb-1" />
     </div>
     <!-- Right Side (Form) -->
-    <div class="w-full md:w-2/3 flex flex-col justify-center p-4 md:p-12 bg-white relative custom-bg-logo">
+    <div class="w-full md:w-2/3 flex flex-col justify-center p-4 md:p-12 bg-white relative">
         <form method="POST" action="{{ route('register') }}" class="w-full max-w-4xl mx-auto bg-white bg-opacity-90 rounded-2xl shadow-2xl p-8 md:p-12" id="registerForm">
             @csrf
 
@@ -74,7 +74,7 @@
             <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">Registration Form</h2>
             <div class="space-y-7">
                 <!-- Name Row -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                 <div>
                     <x-input-label for="first_name" class="font-semibold text-gray-800">{{ __('First Name') }} <span class="text-red-600">*</span></x-input-label>
                     <x-text-input id="first_name" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="first_name" :value="htmlspecialchars(old('first_name'), ENT_QUOTES, 'UTF-8')" required autofocus placeholder="First Name" maxlength="50" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
@@ -89,6 +89,24 @@
                     <div>
                         <x-input-label for="last_name"  class="font-semibold text-gray-800">{{ __('Last Name') }} <span class="text-red-600">*</span></x-input-label>
                         <x-text-input id="last_name" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="last_name" :value="htmlspecialchars(old('last_name'), ENT_QUOTES, 'UTF-8')" required placeholder="Last Name" maxlength="50" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
+                    </div>
+                    <div>
+                        <x-input-label for="suffix" :value="__('Suffix')" class="font-semibold text-gray-800" />
+                        <select id="suffix" name="suffix" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3">
+                            <option value="">-- None --</option>
+                            <option value="Jr." {{ old('suffix') == 'Jr.' ? 'selected' : '' }}>Jr.</option>
+                            <option value="Sr." {{ old('suffix') == 'Sr.' ? 'selected' : '' }}>Sr.</option>
+                            <option value="I" {{ old('suffix') == 'I' ? 'selected' : '' }}>I</option>
+                            <option value="II" {{ old('suffix') == 'II' ? 'selected' : '' }}>II</option>
+                            <option value="III" {{ old('suffix') == 'III' ? 'selected' : '' }}>III</option>
+                            <option value="IV" {{ old('suffix') == 'IV' ? 'selected' : '' }}>IV</option>
+                            <option value="V" {{ old('suffix') == 'V' ? 'selected' : '' }}>V</option>
+                            <option value="VI" {{ old('suffix') == 'VI' ? 'selected' : '' }}>VI</option>
+                            <option value="VII" {{ old('suffix') == 'VII' ? 'selected' : '' }}>VII</option>
+                            <option value="VIII" {{ old('suffix') == 'VIII' ? 'selected' : '' }}>VIII</option>
+                            <option value="IX" {{ old('suffix') == 'IX' ? 'selected' : '' }}>IX</option>
+                            <option value="X" {{ old('suffix') == 'X' ? 'selected' : '' }}>X</option>
+                        </select>
                     </div>
                     
                 </div>
@@ -162,8 +180,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <x-input-label for="password"  class="font-semibold text-gray-800">{{ __('Password') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="password" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="password" name="password" required autocomplete="new-password" placeholder="Password" minlength="8" maxlength="255" oninput="validatePassword(this)" />
-                        <div id="password-requirements" class="text-xs mt-1 space-y-1">
+                        <x-text-input id="password" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="password" name="password" required autocomplete="new-password" placeholder="Password" minlength="8" maxlength="255" oninput="validatePassword(this)" onfocus="showPasswordRequirements()" onblur="hidePasswordRequirements()" />
+                        <div id="password-requirements" class="text-xs mt-1 space-y-1 hidden">
                             <div id="length-check" class="text-gray-500">• At least 8 characters</div>
                             <div id="uppercase-check" class="text-gray-500">• One uppercase letter</div>
                             <div id="number-check" class="text-gray-500">• One number</div>
@@ -173,8 +191,8 @@
                     </div>
                     <div>
                         <x-input-label for="password_confirmation"  class="font-semibold text-gray-800">{{ __('Confirm Password') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="password_confirmation" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password" minlength="8" maxlength="255" oninput="validateConfirmPassword(this)" />
-                        <div id="confirm-password-match" class="text-xs mt-1 font-medium"></div>
+                        <x-text-input id="password_confirmation" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password" minlength="8" maxlength="255" oninput="validateConfirmPassword(this)" onfocus="showPasswordMatch()" onblur="hidePasswordMatch()" />
+                        <div id="confirm-password-match" class="text-xs mt-1 font-medium hidden"></div>
                     </div>
                 </div>
                 <!-- Terms and Button -->
@@ -288,6 +306,22 @@
 </div>
 
 <script>
+  // Password Requirements Show/Hide Functions
+  function showPasswordRequirements() {
+    const requirements = document.getElementById('password-requirements');
+    requirements.classList.remove('hidden');
+  }
+
+  function hidePasswordRequirements() {
+    const requirements = document.getElementById('password-requirements');
+    const passwordInput = document.getElementById('password');
+    
+    // Only hide if password field is empty or if user clicks outside
+    if (passwordInput.value.length === 0) {
+      requirements.classList.add('hidden');
+    }
+  }
+
   // XSS Protection Functions
   function sanitizeInput(input) {
     // Remove any HTML tags and dangerous characters
@@ -635,6 +669,14 @@
       termsModal.classList.add('hidden');
     }
   });
+
+  // Show/hide confirm password match message
+  function showPasswordMatch() {
+    document.getElementById('confirm-password-match').classList.remove('hidden');
+  }
+  function hidePasswordMatch() {
+    document.getElementById('confirm-password-match').classList.add('hidden');
+  }
 </script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {!! NoCaptcha::renderJs() !!}
