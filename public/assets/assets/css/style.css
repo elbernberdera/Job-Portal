@@ -1,0 +1,157 @@
+body {
+    background-color: #cfcfcfea;
+}
+
+.fill-up-font {
+    letter-spacing: -1px;
+}
+
+.fill-up-label {
+    background-color: #969696;
+    height: 100%;
+    display: inline-block;
+}
+
+.tab-pane {
+    background-color: white;
+    padding: 25px;
+    box-sizing: border-box;
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-tabs .nav-link {
+    border: 0;
+    border-radius: 0;
+}
+
+.container {
+    max-width: 90%;
+    padding: 0px;
+}
+
+.c1-container-header, .c1-container-body,
+.c2-container-body, .c3-container-body, .c4-container-body
+{
+    padding: 30px;
+}
+
+.c1-container, .c2-container, .c3-container, .c4-container{
+    width: 100%;
+}
+
+.c1-container-header, .c2-container-header, c3-container-header, c4-container-header {
+    width: 100%;
+    position: relative;
+}
+
+.c1-container-header > p {
+    font-size: 0.65em;
+}
+
+.c1-container-body, .c2-container-body, .c3-container-body, .c4-container-body { 
+    letter-spacing: -1px;
+    font-weight: 500;
+}
+
+.holder-box-1, .holder-box-2, .holder-box-3 {
+    display: flex;
+    flex-direction: row;
+}
+
+.box-1 {
+    flex: 49%;
+    margin-right: 1%;
+    margin-top: 15px;
+}
+
+.box-2 {
+    flex: 70%;
+    margin-right: 1%;
+    margin-top: 15px;
+}
+
+.box-3 {
+    flex: 30%;
+    margin-right: 1%;
+    margin-top: 15px;
+}
+
+.box-3-picturebox {
+    width: 6.5cm;
+    height: 10cm;
+    
+    margin: auto;
+}
+
+.box-3-picturebox-solo {
+    width: 100%;
+    height: 8cm;
+    border: 2px solid black;
+    padding: 20px;
+    text-align: center;
+}
+
+.box-3-picturebox-caption {
+    padding: 10px 0px;
+    text-align: center;
+}
+
+
+.col-form-label {
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+.maximize {
+    width: 100%;
+}
+
+.inputting {
+    display: none;
+}
+
+
+@media screen and (max-width: 575px) {
+    .submit-button {
+        height: 100px;
+    }
+
+    .box-2, .box-3 {
+        flex: 100%;
+        margin-top: 15px;
+    }
+
+
+    .holder-box-1, .holder-box-2, .holder-box-3 {
+        flex-direction: column;
+    }
+
+    .tab-pane {
+        padding: 0px;
+        border: 0px;
+    }
+
+    .c1-container-header, .c2-container-header, .c3-container-header, .c4-container-header {
+        border-top: 0px;
+    }
+
+    .edu-label {
+        display: none;
+    }
+
+    .inputting {
+        display: block;
+    }
+
+    .inputting-0 {
+        display: none;
+    }
+}
