@@ -42668,7 +42668,12 @@
               "Tagbongabong",
               "Poblacion II"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "name": "Agusan del Sur",
+        "cities": [
           {
             "name": "City of Bayugan",
             "barangays": [
@@ -43054,10 +43059,6 @@
             ]
           }
         ]
-      },
-      {
-        "name": "Agusan del Sur",
-        "cities": []
       },
       {
         "name": "Surigao del Norte",
