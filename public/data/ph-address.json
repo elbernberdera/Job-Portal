@@ -1,7 +1,161 @@
 [
   {
     "name": "National Capital Region (NCR)",
-    "provinces": []
+    "provinces": [
+      {
+        "name": "Manila",
+        "cities": [
+          {
+            "name": "Manila",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Quezon City",
+        "cities": [
+          {
+            "name": "Quezon City",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Caloocan",
+        "cities": [
+          {
+            "name": "Caloocan",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Las Piñas",
+        "cities": [
+          {
+            "name": "Las Piñas",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Makati",
+        "cities": [
+          {
+            "name": "Makati",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Malabon",
+        "cities": [
+          {
+            "name": "Malabon",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Mandaluyong",
+        "cities": [
+          {
+            "name": "Mandaluyong",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Marikina",
+        "cities": [
+          {
+            "name": "Marikina",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Muntinlupa",
+        "cities": [
+          {
+            "name": "Muntinlupa",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Navotas",
+        "cities": [
+          {
+            "name": "Navotas",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Parañaque",
+        "cities": [
+          {
+            "name": "Parañaque",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Pasay",
+        "cities": [
+          {
+            "name": "Pasay",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Pasig",
+        "cities": [
+          {
+            "name": "Pasig",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Pateros",
+        "cities": [
+          {
+            "name": "Pateros",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "San Juan",
+        "cities": [
+          {
+            "name": "San Juan",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Taguig",
+        "cities": [
+          {
+            "name": "Taguig",
+            "barangays": []
+          }
+        ]
+      },
+      {
+        "name": "Valenzuela",
+        "cities": [
+          {
+            "name": "Valenzuela",
+            "barangays": []
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "Cordillera Administrative Region (CAR)",
