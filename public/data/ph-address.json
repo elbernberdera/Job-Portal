@@ -43501,7 +43501,12 @@
               "Timamana",
               "San Pablo"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "name": "Surigao del Sur",
+        "cities": [
           {
             "name": "Barobo",
             "barangays": [
@@ -43908,10 +43913,6 @@
             ]
           }
         ]
-      },
-      {
-        "name": "Surigao del Sur",
-        "cities": []
       },
       {
         "name": "Dinagat Islands",
