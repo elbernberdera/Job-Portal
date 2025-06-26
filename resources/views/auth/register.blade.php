@@ -145,22 +145,30 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                         <x-input-label for="region"  class="font-semibold text-gray-800">{{ __('Region') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="region" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="region" :value="htmlspecialchars(old('region'), ENT_QUOTES, 'UTF-8')" required placeholder="Region" maxlength="100" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
+                        <select id="region" name="region" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" required>
+                            <option value="">Select Region</option>
+                        </select>
                     </div>
                     <div>
                         <x-input-label for="province"  class="font-semibold text-gray-800">{{ __('Province') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="province" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="province" :value="htmlspecialchars(old('province'), ENT_QUOTES, 'UTF-8')" required placeholder="Province" maxlength="100" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
+                        <select id="province" name="province" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" required>
+                            <option value="">Select Province</option>
+                        </select>
                     </div>
                     <div>
-                        <x-input-label for="city"  class="font-semibold text-gray-800">{{ __('City') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="city" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="city" :value="htmlspecialchars(old('city'), ENT_QUOTES, 'UTF-8')" required placeholder="City/Municipality" maxlength="100" pattern="[A-Za-z\s]+" oninput="sanitizeInput(this)" />
+                        <x-input-label for="city"  class="font-semibold text-gray-800">{{ __('City/Municipality') }} <span class="text-red-600">*</span></x-input-label>
+                        <select id="city" name="city" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" required>
+                            <option value="">Select City/Municipality</option>
+                        </select>
                     </div>
                 </div>
                 <!-- Address Row 2 (Barangay, Street/Building/Unit, Zipcode) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                         <x-input-label for="barangay" class="font-semibold text-gray-800">{{ __('Barangay') }} <span class="text-red-600">*</span></x-input-label>
-                        <x-text-input id="barangay" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" type="text" name="barangay" :value="htmlspecialchars(old('barangay'), ENT_QUOTES, 'UTF-8')" required placeholder="Barangay" maxlength="100" pattern="[A-Za-z\s0-9.]+" oninput="sanitizeInput(this)" />
+                        <select id="barangay" name="barangay" class="block mt-1 w-full bg-gray-50 rounded-lg shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3" required>
+                            <option value="">Select Barangay</option>
+                        </select>
                     </div>
                     <div>
                         <x-input-label for="street_building_unit"  class="font-semibold text-gray-800">{{ __('Street/Building/Unit') }} <span class="text-red-600">*</span></x-input-label>
@@ -694,6 +702,72 @@
     }
   }
 </script>
+
+
+<script>
+let addressData = [];
+
+fetch('/data/ph-address.json')
+  .then(response => response.json())
+  .then(data => {
+    addressData = data;
+    populateRegions();
+  });
+
+function populateRegions() {
+  const regionSelect = document.getElementById('region');
+  regionSelect.innerHTML = '<option value="">Select Region</option>';
+  addressData.forEach(region => {
+    regionSelect.innerHTML += `<option value="${region.name}">${region.name}</option>`;
+  });
+}
+
+document.getElementById('region').addEventListener('change', function() {
+  const selectedRegion = this.value;
+  const region = addressData.find(r => r.name === selectedRegion);
+  const provinceSelect = document.getElementById('province');
+  provinceSelect.innerHTML = '<option value="">Select Province</option>';
+  document.getElementById('city').innerHTML = '<option value="">Select City/Municipality</option>';
+  document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
+  if (region && region.provinces) {
+    region.provinces.forEach(province => {
+      provinceSelect.innerHTML += `<option value="${province.name}">${province.name}</option>`;
+    });
+  }
+});
+
+document.getElementById('province').addEventListener('change', function() {
+  const selectedRegion = document.getElementById('region').value;
+  const selectedProvince = this.value;
+  const region = addressData.find(r => r.name === selectedRegion);
+  const province = region && region.provinces ? region.provinces.find(p => p.name === selectedProvince) : null;
+  const citySelect = document.getElementById('city');
+  citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
+  document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
+  if (province && province.cities) {
+    province.cities.forEach(city => {
+      citySelect.innerHTML += `<option value="${city.name}">${city.name}</option>`;
+    });
+  }
+});
+
+document.getElementById('city').addEventListener('change', function() {
+  const selectedRegion = document.getElementById('region').value;
+  const selectedProvince = document.getElementById('province').value;
+  const selectedCity = this.value;
+  const region = addressData.find(r => r.name === selectedRegion);
+  const province = region && region.provinces ? region.provinces.find(p => p.name === selectedProvince) : null;
+  const city = province && province.cities ? province.cities.find(c => c.name === selectedCity) : null;
+  const barangaySelect = document.getElementById('barangay');
+  barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+  if (city && city.barangays) {
+    city.barangays.forEach(barangay => {
+      barangaySelect.innerHTML += `<option value="${barangay}">${barangay}</option>`;
+    });
+  }
+});
+</script>
+
 <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {!! NoCaptcha::renderJs() !!} -->
 </body>
