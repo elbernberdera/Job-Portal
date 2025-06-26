@@ -83,6 +83,9 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
+
+
+    // could you add here the rout
 });
 
 Route::middleware('auth')->group(function () {
