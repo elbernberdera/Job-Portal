@@ -91,11 +91,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::get('regions', [PsgcController::class, 'getRegions']);
+Route::get('provinces', [PsgcController::class, 'getProvinces']);
+Route::get('cities', [PsgcController::class, 'getCities']);
+Route::get('barangays', [PsgcController::class, 'getBarangays']);
 
-Route::prefix('api')->group(function () {
-    Route::get('regions', [PsgcController::class, 'getRegions']);
-    Route::get('provinces', [PsgcController::class, 'getProvinces']);
-    Route::get('cities', [PsgcController::class, 'getCities']);
-    Route::get('barangays', [PsgcController::class, 'getBarangays']);
-});
+
+require __DIR__.'/auth.php';
