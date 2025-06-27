@@ -25,6 +25,7 @@ class LogSuccessfulLogin
     public function handle(Login $event): void
     {
         $user = $event->user;
+        \Log::info('LogSuccessfulLogin listener fired for user: ' . $user->email);
         $request = request();
         
         $ip = $request->ip();
@@ -38,21 +39,21 @@ class LogSuccessfulLogin
         
         Log::info("SUCCESSFUL LOGIN - User: {$user->email} - IP: {$ip} - Device: {$deviceType} - Browser: {$browser} - OS: {$os} - {$timestamp}");
         
-        // Prevent duplicate login logs for the same user and IP
-        $existingLog = ActivityLog::where('user_id', $user->id)
-            ->where('ip_address', $ip)
-            ->whereNull('logout_at')
-            ->first();
-
-        if (!$existingLog) {
-            ActivityLog::create([
+        // Always create a new log entry for login (like logout)
+        try {
+            $logEntry = ActivityLog::create([
                 'user_id'   => $user->id,
                 'user_name' => ($user->first_name ?? '') . ' ' . ($user->last_name ?? ''),
                 'email'     => $user->email,
                 'ip_address'=> $ip,
                 'device'    => $deviceType,
-                'login_at'  => now(), // Asia/Manila if config is set
+                'login_at'  => now(),
+                'role'      => $user->role,
+                'activity'  => 'logged in',
             ]);
+            \Log::info('Login log entry created successfully with ID: ' . $logEntry->id);
+        } catch (\Exception $e) {
+            \Log::error('Failed to create login log entry: ' . $e->getMessage());
         }
     }
     

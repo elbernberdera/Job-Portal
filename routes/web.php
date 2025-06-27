@@ -5,12 +5,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PsgcController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Hr\JobVacancyController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\User\JobApplicationController;
 
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
@@ -20,9 +22,14 @@ Route::get('/dashboard-test', function () {
     dd($openJobs);
 });
 
+Route::get('regions', [PsgcController::class, 'getRegions']);
+Route::get('provinces', [PsgcController::class, 'getProvinces']);
+Route::get('cities', [PsgcController::class, 'getCities']);
+Route::get('barangays', [PsgcController::class, 'getBarangays']);
+
 // Default dashboard route - redirects based on user role
 Route::get('/dashboard', function () {
-    $user = auth()->user();
+    $user = Auth::user();
     
     if ($user->role === 1) { // admin
         return redirect()->route('admin.dashboard');
@@ -52,6 +59,12 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
     // cretae here the routes of the log
     Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs');
+    Route::get('/admin/logs/ajax', [\App\Http\Controllers\Admin\LogController::class, 'ajaxLogs'])->name('admin.logs.ajax');
+    Route::get('/admin/logs/export', [LogController::class, 'export'])->name('admin.logs.export');
+    
+    // Dashboard AJAX routes
+    Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
+    Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
 
 });
 
@@ -84,8 +97,14 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
 
+<<<<<<< HEAD
     // Route to store the data in the new user_profiles table and update the users table
     Route::post('/user/profile', [App\Http\Controllers\User\UserProfileController::class, 'store'])->name('user.profile.store');
+=======
+    // Job application route
+    Route::post('/user/apply/{job}', [JobApplicationController::class, 'apply'])->name('user.apply');
+
+>>>>>>> 70a7b96e1e23ab2f90c08c7b80970223da12c498
 });
 
 Route::middleware('auth')->group(function () {
@@ -94,11 +113,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
 
-Route::prefix('api')->group(function () {
-    Route::get('regions', [PsgcController::class, 'getRegions']);
-    Route::get('provinces', [PsgcController::class, 'getProvinces']);
-    Route::get('cities', [PsgcController::class, 'getCities']);
-    Route::get('barangays', [PsgcController::class, 'getBarangays']);
-});
+require __DIR__.'/auth.php';

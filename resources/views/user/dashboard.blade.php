@@ -75,7 +75,10 @@
                                                 <p><strong>Date Posted:</strong> {{ $job->date_posted }}</p>
                                                 <div class="d-flex justify-content-end">
                                                     <a href="#" class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#viewJobModal{{ $job->id }}">View</a>
-                                                    <a href="{{ route('user.profile') }}" class="btn btn-primary mt-2 ms-2">Apply</a>
+                                                    <form method="POST" action="{{ route('user.apply', $job->id) }}" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary mt-2 ms-2">Apply</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +139,10 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <a href="{{ route('user.profile') }}" class="btn btn-primary">Apply</a>
+                                                        <form method="POST" action="{{ route('user.apply', $job->id) }}" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-primary">Apply</button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
