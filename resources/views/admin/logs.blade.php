@@ -13,11 +13,16 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">logs</h3>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Activity Logs</h3>
+                    <a href="{{ route('admin.logs.export') }}" class="btn btn-success">
+                        <i class="fas fa-download"></i> Export to Excel
+                    </a>
+                </div>
             </div>
             <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="user_Table">
+                <table class="table table-bordered table-striped" id="logs">
                     <thead>
                         <tr>
                         <th>User</th>
@@ -26,25 +31,14 @@
                     <th>Device</th>
                     <th>Login Time </th>
                     <th>Logout Time </th>
+                    <th>Role</th>
+                    <th>Activity</th>
                             
 
                         </tr>
                     </thead>
-                    <tbody>
-                    @forelse($logs as $log)
-                <tr>
-                    <td>{{ $log->user_name }}</td>
-                    <td>{{ $log->email }}</td>
-                    <td>{{ $log->ip_address }}</td>
-                    <td>{{ $log->device }}</td>
-                    <td>{{ $log->login_at ? \Carbon\Carbon::parse($log->login_at)->timezone('Asia/Manila')->format('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ $log->logout_at ? \Carbon\Carbon::parse($log->logout_at)->timezone('Asia/Manila')->format('Y-m-d H:i:s') : '' }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="text-center">No activity logs found.</td>
-                </tr>
-                @endforelse
+                    <tbody id="logs-table-body">
+                    @include('admin.partials.logs_table', ['logs' => $logs])
                     </tbody>
                 </table>
             </div>
@@ -82,6 +76,24 @@
         
     });
     
+</script>
+
+<script>
+setInterval(function() {
+    fetch("{{ route('admin.logs.ajax') }}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('logs-table-body').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error updating logs:', error);
+        });
+}, 5000); // 5 seconds
 </script>
 @endsection
 

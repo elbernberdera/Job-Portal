@@ -554,52 +554,182 @@ function showSection(sectionId) {
             </div>
             <div class="card-body">
                 <form action="" method="POST">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Level</th>
-                                <th>Name of School<br><small>(Write in full)</small></th>
-                                <th>Basic Education/Degree/Course<br><small>(Write in full)</small></th>
-                                <th colspan="2">Period of Attendance</th>
-                                <th>Highest Level/Units Earned<br><small>(if not graduated)</small></th>
-                                <th>Year Graduated</th>
-                                <th>Scholarship/Academic Honors Received</th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $levels = [
-                                    'Elementary',
-                                    'Secondary',
-                                    'Vocational/Trade Course',
-                                    'College',
-                                    'Graduate Studies'
-                                ];
-                            @endphp
-                            @foreach($levels as $level)
-                            <tr>
-                                <td>{{ $level }}</td>
-                                <td><input type="text" name="school_name[{{ $level }}]" class="form-control"></td>
-                                <td><input type="text" name="degree_course[{{ $level }}]" class="form-control"></td>
-                                <td><input type="text" name="attendance_from[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
-                                <td><input type="text" name="attendance_to[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
-                                <td><input type="text" name="highest_level[{{ $level }}]" class="form-control"></td>
-                                <td><input type="text" name="year_graduated[{{ $level }}]" class="form-control" placeholder="YYYY"></td>
-                                <td><input type="text" name="honors[{{ $level }}]" class="form-control"></td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+
+                <h6>ELEMENTARY</h6>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="elementary_school_name" class="form-label">Name of School</label>
+                        <input type="text" id="elementary_school_name" name="elementary_school_name" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="elementary_degree" class="form-label">Degree or Course</label>
+                        <input type="text" id="elementary_degree" name="elementary_degree" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="elementary_from" class="form-label">From</label>
+                        <input type="date" id="elementary_from" name="elementary_from" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="elementary_to" class="form-label">To</label>
+                        <input type="date" id="elementary_to" name="elementary_to" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="elementary_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
+                        <input type="text" id="elementary_highest_level" name="elementary_highest_level" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="elementary_year_graduated" class="form-label">Year Graduated</label>
+                        <input type="text" id="elementary_year_graduated" name="elementary_year_graduated" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="elementary_honors" class="form-label">Scholarship/Academic Honors Received</label>
+                        <input type="text" id="elementary_honors" name="elementary_honors" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <hr>
+
+                <h6>SECONDARY</h6>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="secondary_school_name" class="form-label">Name of School</label>
+                        <input type="text" id="secondary_school_name" name="secondary_school_name" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="secondary_degree" class="form-label">Degree or Course</label>
+                        <input type="text" id="secondary_degree" name="secondary_degree" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="secondary_from" class="form-label">From</label>
+                        <input type="date" id="secondary_from" name="secondary_from" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="secondary_to" class="form-label">To</label>
+                        <input type="date" id="secondary_to" name="secondary_to" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="secondary_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
+                        <input type="text" id="secondary_highest_level" name="secondary_highest_level" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="secondary_year_graduated" class="form-label">Year Graduated</label>
+                        <input type="text" id="secondary_year_graduated" name="secondary_year_graduated" class="form-control" placeholder=" ">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="secondary_honors" class="form-label">Scholarship/Academic Honors Received</label>
+                        <input type="text" id="secondary_honors" name="secondary_honors" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <hr>
+
+                <h6>VOCATIONAL / TRADE COURSE</h6>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="vocational_school_name" class="form-label">Name of School</label>
+                        <input type="text" id="vocational_school_name" name="vocational_school_name" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="vocational_degree" class="form-label">Degree or Course</label>
+                        <input type="text" id="vocational_degree" name="vocational_degree" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="vocational_from" class="form-label">From</label>
+                        <input type="date" id="vocational_from" name="vocational_from" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="vocational_to" class="form-label">To</label>
+                        <input type="date" id="vocational_to" name="vocational_to" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="vocational_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
+                        <input type="text" id="vocational_highest_level" name="vocational_highest_level" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="vocational_year_graduated" class="form-label">Year Graduated</label>
+                        <input type="text" id="vocational_year_graduated" name="vocational_year_graduated" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="vocational_honors" class="form-label">Scholarship/Academic Honors Received</label>
+                        <input type="text" id="vocational_honors" name="vocational_honors" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <hr>
+
+                <h6>COLLEGE</h6>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="college_school_name" class="form-label">Name of School</label>
+                        <input type="text" id="college_school_name" name="college_school_name" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="college_degree" class="form-label">Degree or Course</label>
+                        <input type="text" id="college_degree" name="college_degree" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="college_from" class="form-label">From</label>
+                        <input type="date" id="college_from" name="college_from" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="college_to" class="form-label">To</label>
+                        <input type="date" id="college_to" name="college_to" class="form-control" placeholder="o">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="college_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
+                        <input type="text" id="college_highest_level" name="college_highest_level" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="college_year_graduated" class="form-label">Year Graduated</label>
+                        <input type="text" id="college_year_graduated" name="college_year_graduated" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="college_honors" class="form-label">Scholarship/Academic Honors Received</label>
+                        <input type="text" id="college_honors" name="college_honors" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <hr>
+
+                <h6>GRADUATE STUDIES</h6>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="graduate_school_name" class="form-label">Name of School</label>
+                        <input type="text" id="graduate_school_name" name="graduate_school_name" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="graduate_degree" class="form-label">Degree or Course</label>
+                        <input type="text" id="graduate_degree" name="graduate_degree" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="graduate_from" class="form-label">From</label>
+                        <input type="date" id="graduate_from" name="graduate_from" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="graduate_to" class="form-label">To</label>
+                        <input type="date" id="graduate_to" name="graduate_to" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="graduate_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
+                        <input type="text" id="graduate_highest_level" name="graduate_highest_level" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="graduate_year_graduated" class="form-label">Year Graduated</label>
+                        <input type="text" id="graduate_year_graduated" name="graduate_year_graduated" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="graduate_honors" class="form-label">Scholarship/Academic Honors Received</label>
+                        <input type="text" id="graduate_honors" name="graduate_honors" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <hr>
+
                     <div class="row mt-3">
                         <div class="col-12 d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary me-2" onclick="showSection('section2')">
@@ -847,12 +977,57 @@ function showSection(sectionId) {
     </div>
 </div>
 
-<!-- section VIII -->
+<!-- Section VIII: OTHER INFORMATION -->
 <div class="content" id="section8" style="display:none;">
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">VIII. Additional Information</h3>
+                <h3 class="card-title">VIII. OTHER INFORMATION</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <h6>31. SPECIAL SKILLS and HOBBIES</h6>
+                    <div id="skillsContainer">
+                        <input type="text" name="special_skills_hobbies[]" class="form-control w-100 mb-2" placeholder="Enter your special skills and hobbies">
+                    </div>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addSkillField()">Add</button>
+                   
+                    <h6>32. NON-ACADEMIC DISTINCTIONS / RECOGNITION</h6>
+                    <p>(Write in full)</p>
+                    <div id="distinctionsContainer">
+                        <input type="text" name="non_academic_distinctions[]" class="form-control w-100 mb-2" placeholder="Enter your non-academic distinctions or recognition">
+                    </div>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addDistinctionField()">Add</button>
+
+                    <h6>33. MEMBERSHIP IN ASSOCIATION/ORGANIZATION</h6>
+                    <p>(Write in full)</p>
+                    <div id="membershipContainer">
+                        <input type="text" name="association_memberships[]" class="form-control w-100 mb-2" placeholder="Enter your membership in association/organization">
+                    </div>
+                    <button type="button" class="btn btn-sm btn-success mb-3" onclick="addMembershipField()">Add</button>
+
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section7')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="showSection('section9')">
+                                Next Page <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- section IX -->
+<div class="content" id="section9" style="display:none;">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">IX. Information </h3>
             </div>
             <div class="card-body">
                 <form action="" method="POST">
@@ -972,9 +1147,132 @@ function showSection(sectionId) {
                             <input type="text" class="form-control mt-2" name="q37_details" placeholder="If YES, give details">
                         </div>
                     </div>
+
+                    <!-- Question 38a -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                38a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q38a" id="q38a_yes" value="yes">
+                                <label class="form-check-label" for="q38a_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q38a" id="q38a_no" value="no">
+                                <label class="form-check-label" for="q38a_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q38a_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 38b -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                38b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q38b" id="q38b_yes" value="yes">
+                                <label class="form-check-label" for="q38b_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q38b" id="q38b_no" value="no">
+                                <label class="form-check-label" for="q38b_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q38b_details" placeholder="If YES, give details">
+                        </div>
+                    </div>
+                    <!-- Question 39 -->
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label>
+                                39. Have you acquired the status of an immigrant or permanent resident of another country?
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q39" id="q39_yes" value="yes">
+                                <label class="form-check-label" for="q39_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q39" id="q39_no" value="no">
+                                <label class="form-check-label" for="q39_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q39_details" placeholder="If YES, give details (country)">
+                        </div>
+                    </div>
+                    <!-- Question 40 -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label>
+                                40. Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act of 2000 (RA 8972), please answer the following:
+                            </label>
+                        </div>
+                    </div>
+                    <!-- 40a -->
+                    <div class="row mb-2">
+                        <div class="col-md-8 offset-md-1">
+                            <label>
+                                a. Are you a member of any indigenous group?
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40a" id="q40a_yes" value="yes">
+                                <label class="form-check-label" for="q40a_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40a" id="q40a_no" value="no">
+                                <label class="form-check-label" for="q40a_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q40a_details" placeholder="If YES, please specify">
+                        </div>
+                    </div>
+                    <!-- 40b -->
+                    <div class="row mb-2">
+                        <div class="col-md-8 offset-md-1">
+                            <label>
+                                b. Are you a person with disability?
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40b" id="q40b_yes" value="yes">
+                                <label class="form-check-label" for="q40b_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40b" id="q40b_no" value="no">
+                                <label class="form-check-label" for="q40b_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q40b_id" placeholder="If YES, please specify ID No.">
+                        </div>
+                    </div>
+                    <!-- 40c -->
+                    <div class="row mb-2">
+                        <div class="col-md-8 offset-md-1">
+                            <label>
+                                c. Are you a solo parent?
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40c" id="q40c_yes" value="yes">
+                                <label class="form-check-label" for="q40c_yes">YES</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="q40c" id="q40c_no" value="no">
+                                <label class="form-check-label" for="q40c_no">NO</label>
+                            </div>
+                            <input type="text" class="form-control mt-2" name="q40c_id" placeholder="If YES, please specify ID No.">
+                        </div>
+                    </div>
                     <div class="row mt-3">
                         <div class="col-12 d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section7')">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section8')">
                                 <i class="fas fa-arrow-left"></i> Back
                             </button>
                             <button type="submit" class="btn btn-primary">
@@ -1085,12 +1383,11 @@ function addVoluntaryRow() {
     row.innerHTML = '<td><input type="text" name="voluntary[][organization]" class="form-control"></td>' +
                     '<td><input type="date" name="voluntary[][from]" class="form-control"></td>' +
                     '<td><input type="date" name="voluntary[][to]" class="form-control"></td>' +
-                    '<td><input type="text" name="voluntary[][hours]" class="form-control"></td>' +
-                    '<td><input type="text" name="voluntary[][position]" class="form-control"></td>';
+                    '<td><input type="text" name="voluntary[{{$i}}][hours]" class="form-control"></td>' +
+                    '<td><input type="text" name="voluntary[{{$i}}][position]" class="form-control"></td>';
     tableBody.appendChild(row);
 }
 </script>
-
 <script>
 function addLDRow() {
     var tableBody = document.getElementById('ldTableBody');
@@ -1098,9 +1395,39 @@ function addLDRow() {
     row.innerHTML = '<td><input type="text" name="ld[][title]" class="form-control"></td>' +
                     '<td><input type="date" name="ld[][from]" class="form-control"></td>' +
                     '<td><input type="date" name="ld[][to]" class="form-control"></td>' +
-                    '<td><input type="text" name="ld[][hours]" class="form-control"></td>' +
-                    '<td><input type="text" name="ld[][type]" class="form-control"></td>' +
-                    '<td><input type="text" name="ld[][sponsor]" class="form-control"></td>';
+                    '<td><input type="text" name="ld[{{$i}}][hours]" class="form-control"></td>' +
+                    '<td><input type="text" name="ld[{{$i}}][type]" class="form-control"></td>' +
+                    '<td><input type="text" name="ld[{{$i}}][sponsor]" class="form-control"></td>';
     tableBody.appendChild(row);
 }
+
+
+function addSkillField() {
+    var container = document.getElementById('skillsContainer');
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'special_skills_hobbies[]';
+    input.className = 'form-control w-100 mb-2';
+    input.placeholder = 'Enter your special skills and hobbies';
+    container.appendChild(input);
+}
+function addDistinctionField() {
+    var container = document.getElementById('distinctionsContainer');
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'non_academic_distinctions[]';
+    input.className = 'form-control w-100 mb-2';
+    input.placeholder = 'Enter your non-academic distinctions or recognition';
+    container.appendChild(input);
+}
+function addMembershipField() {
+    var container = document.getElementById('membershipContainer');
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'association_memberships[]';
+    input.className = 'form-control w-100 mb-2';
+    input.placeholder = 'Enter your membership in association/organization';
+    container.appendChild(input);
+}
 </script>
+

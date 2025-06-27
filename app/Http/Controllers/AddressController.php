@@ -6,7 +6,7 @@ use App\Services\PSGCService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class PsgcController extends Controller
+class AddressController extends Controller
 {
     protected $psgcService;
 
@@ -16,7 +16,7 @@ class PsgcController extends Controller
     }
 
     /**
-     * Get all regions.
+     * Get all regions
      */
     public function getRegions(): JsonResponse
     {
@@ -24,7 +24,7 @@ class PsgcController extends Controller
             $regions = $this->psgcService->getRegions();
             return response()->json([
                 'success' => true,
-                'regions' => $regions
+                'data' => $regions
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -36,7 +36,7 @@ class PsgcController extends Controller
     }
 
     /**
-     * Get provinces by region.
+     * Get provinces by region
      */
     public function getProvinces(Request $request): JsonResponse
     {
@@ -48,7 +48,7 @@ class PsgcController extends Controller
             $provinces = $this->psgcService->getProvinces($request->region_code);
             return response()->json([
                 'success' => true,
-                'provinces' => $provinces
+                'data' => $provinces
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -60,7 +60,7 @@ class PsgcController extends Controller
     }
 
     /**
-     * Get cities by province.
+     * Get cities/municipalities by province
      */
     public function getCities(Request $request): JsonResponse
     {
@@ -72,7 +72,7 @@ class PsgcController extends Controller
             $cities = $this->psgcService->getCities($request->province_code);
             return response()->json([
                 'success' => true,
-                'cities' => $cities
+                'data' => $cities
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -84,7 +84,7 @@ class PsgcController extends Controller
     }
 
     /**
-     * Get barangays by city.
+     * Get barangays by city/municipality
      */
     public function getBarangays(Request $request): JsonResponse
     {
@@ -96,12 +96,32 @@ class PsgcController extends Controller
             $barangays = $this->psgcService->getBarangays($request->city_code);
             return response()->json([
                 'success' => true,
-                'barangays' => $barangays
+                'data' => $barangays
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch barangays',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get complete address data for dropdowns
+     */
+    public function getAddressData(): JsonResponse
+    {
+        try {
+            $addressData = $this->psgcService->getAddressData();
+            return response()->json([
+                'success' => true,
+                'data' => $addressData
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch address data',
                 'error' => $e->getMessage()
             ], 500);
         }

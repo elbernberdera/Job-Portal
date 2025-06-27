@@ -58,7 +58,7 @@
 
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <strong class="font-bold">oops!</strong>
+                    <strong class="font-bold">ayay ka!</strong>
                     <span class="block sm:inline">There were some problems with your input.</span>
                     <ul class="mt-3 list-disc list-inside text-sm">
                         @foreach ($errors->all() as $error)
@@ -219,7 +219,7 @@
                         <span
                           id="terms-link"
                           class="ml-2 text-blue-600 cursor-pointer underline select-none"
-                          >Read the terms & conditions</span
+                          >Read the Terms & Conditions</span
                         >
                       </div>
 
@@ -703,68 +703,61 @@
   }
 </script>
 
-
+<!-- PSGC API Integration -->
+<script src="{{ asset('js/components/AddressDropdowns.js') }}"></script>
 <script>
-let addressData = [];
-
-fetch('/data/ph-address.json')
-  .then(response => response.json())
-  .then(data => {
-    addressData = data;
-    populateRegions();
-  });
-
-function populateRegions() {
-  const regionSelect = document.getElementById('region');
-  regionSelect.innerHTML = '<option value="">Select Region</option>';
-  addressData.forEach(region => {
-    regionSelect.innerHTML += `<option value="${region.name}">${region.name}</option>`;
-  });
-}
-
-document.getElementById('region').addEventListener('change', function() {
-  const selectedRegion = this.value;
-  const region = addressData.find(r => r.name === selectedRegion);
-  const provinceSelect = document.getElementById('province');
-  provinceSelect.innerHTML = '<option value="">Select Province</option>';
-  document.getElementById('city').innerHTML = '<option value="">Select City/Municipality</option>';
-  document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
-  if (region && region.provinces) {
-    region.provinces.forEach(province => {
-      provinceSelect.innerHTML += `<option value="${province.name}">${province.name}</option>`;
+// Initialize PSGC API address dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+    const addressDropdowns = new AddressDropdowns({
+        regionSelect: '#region',
+        provinceSelect: '#province',
+        citySelect: '#city',
+        barangaySelect: '#barangay',
+        loadingText: 'Loading...',
+        placeholderText: 'Select...'
     });
-  }
+
+    // Store the instance globally for form submission
+    window.addressDropdowns = addressDropdowns;
 });
 
-document.getElementById('province').addEventListener('change', function() {
-  const selectedRegion = document.getElementById('region').value;
-  const selectedProvince = this.value;
-  const region = addressData.find(r => r.name === selectedRegion);
-  const province = region && region.provinces ? region.provinces.find(p => p.name === selectedProvince) : null;
-  const citySelect = document.getElementById('city');
-  citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-  document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
-  if (province && province.cities) {
-    province.cities.forEach(city => {
-      citySelect.innerHTML += `<option value="${city.name}">${city.name}</option>`;
-    });
-  }
-});
-
-document.getElementById('city').addEventListener('change', function() {
-  const selectedRegion = document.getElementById('region').value;
-  const selectedProvince = document.getElementById('province').value;
-  const selectedCity = this.value;
-  const region = addressData.find(r => r.name === selectedRegion);
-  const province = region && region.provinces ? region.provinces.find(p => p.name === selectedProvince) : null;
-  const city = province && province.cities ? province.cities.find(c => c.name === selectedCity) : null;
-  const barangaySelect = document.getElementById('barangay');
-  barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-  if (city && city.barangays) {
-    city.barangays.forEach(barangay => {
-      barangaySelect.innerHTML += `<option value="${barangay}">${barangay}</option>`;
-    });
-  }
+// Update form validation to use PSGC codes
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    // ... existing validation code ...
+    
+    // Validate address selections
+    const regionSelect = document.getElementById('region');
+    const provinceSelect = document.getElementById('province');
+    const citySelect = document.getElementById('city');
+    const barangaySelect = document.getElementById('barangay');
+    
+    if (!regionSelect.value) {
+        e.preventDefault();
+        alert('Please select a region.');
+        regionSelect.focus();
+        return false;
+    }
+    
+    if (!provinceSelect.value) {
+        e.preventDefault();
+        alert('Please select a province.');
+        provinceSelect.focus();
+        return false;
+    }
+    
+    if (!citySelect.value) {
+        e.preventDefault();
+        alert('Please select a city/municipality.');
+        citySelect.focus();
+        return false;
+    }
+    
+    if (!barangaySelect.value) {
+        e.preventDefault();
+        alert('Please select a barangay.');
+        barangaySelect.focus();
+        return false;
+    }
 });
 </script>
 

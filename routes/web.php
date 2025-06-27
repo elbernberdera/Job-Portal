@@ -5,12 +5,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PsgcController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Hr\JobVacancyController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\User\JobApplicationController;
 
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
@@ -22,7 +24,7 @@ Route::get('/dashboard-test', function () {
 
 // Default dashboard route - redirects based on user role
 Route::get('/dashboard', function () {
-    $user = auth()->user();
+    $user = Auth::user();
     
     if ($user->role === 1) { // admin
         return redirect()->route('admin.dashboard');
@@ -52,6 +54,12 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
     // cretae here the routes of the log
     Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs');
+    Route::get('/admin/logs/ajax', [\App\Http\Controllers\Admin\LogController::class, 'ajaxLogs'])->name('admin.logs.ajax');
+    Route::get('/admin/logs/export', [LogController::class, 'export'])->name('admin.logs.export');
+    
+    // Dashboard AJAX routes
+    Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
+    Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
 
 });
 
@@ -83,6 +91,10 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
+
+    // Job application route
+    Route::post('/user/apply/{job}', [JobApplicationController::class, 'apply'])->name('user.apply');
+
 });
 
 Route::middleware('auth')->group(function () {
