@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             // Personal info (not in users table)
-            $table->string('suffix')->nullable();
+            // $table->string('suffix')->nullable(); // Removed, now only in users table
+            $table->string('civil_status')->nullable();
             $table->string('height')->nullable();
             $table->string('weight')->nullable();
             $table->string('blood_type')->nullable();

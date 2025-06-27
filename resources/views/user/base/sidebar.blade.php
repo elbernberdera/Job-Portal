@@ -37,7 +37,7 @@
                 </form>
             </div>
             <div class="info mt-2">
-                <a href="" class="d-block" style="color: #fbf8f8!important; font-weight: bold; text-decoration: none; text-transform: capitalize;">
+                <a href="{{ route('user.profile') }}" class="d-block" style="color: #fbf8f8!important; font-weight: bold; text-decoration: none; text-transform: capitalize;">
                     {{ Auth::user()->first_name ?? '' }} {{ Auth::user()->last_name ?? '' }}
                 </a>
             </div>

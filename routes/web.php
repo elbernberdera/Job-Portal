@@ -84,8 +84,8 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
 
-
-    // could you add here the rout
+    // Route to store the data in the new user_profiles table and update the users table
+    Route::post('/user/profile', [App\Http\Controllers\User\UserProfileController::class, 'store'])->name('user.profile.store');
 });
 
 Route::middleware('auth')->group(function () {
