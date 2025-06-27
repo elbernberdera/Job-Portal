@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Models\JobVacancy;
+use App\Models\JobApplication;
+use App\Models\ActivityLog;
 
 class AdminController extends Controller
 {
@@ -14,7 +17,67 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $userCount = User::count();
+        $jobCount = JobVacancy::count();
+        $applicationCount = JobApplication::count();
+        $logCount = ActivityLog::count();
+
+        // Recent activity (last 5 actions: login or logout)
+        $recentActivities = ActivityLog::orderByDesc('login_at')
+            ->orderByDesc('logout_at')
+            ->limit(10)
+            ->get()
+            ->flatMap(function($log) {
+                $actions = collect();
+                if ($log->login_at) {
+                    $actions->push([
+                        'user' => $log->user_name,
+                        'action' => 'logged in',
+                        'time' => $log->login_at,
+                    ]);
+                }
+                if ($log->logout_at) {
+                    $actions->push([
+                        'user' => $log->user_name,
+                        'action' => 'logged out',
+                        'time' => $log->logout_at,
+                    ]);
+                }
+                return $actions;
+            })
+            ->sortByDesc('time')
+            ->take(5)
+            ->map(function($item) {
+                return $item['user'] . ' ' . $item['action'] . ' at ' . $item['time'];
+            });
+
+        // Chart data: Applications per month (last 6 months)
+        $chartLabels = [];
+        $chartData = [];
+        $usersChartData = [];
+        $months = collect(range(0, 5))->map(function($i) {
+            return now()->subMonths($i)->format('Y-m');
+        })->reverse();
+        foreach ($months as $month) {
+            $chartLabels[] = date('M Y', strtotime($month.'-01'));
+            $chartData[] = JobApplication::whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+            $usersChartData[] = User::whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+        }
+
+        return view('admin.dashboard', compact(
+            'userCount',
+            'jobCount',
+            'applicationCount',
+            'logCount',
+            'recentActivities',
+            'chartLabels',
+            'chartData',
+            'usersChartData'
+        ));
     }
 
     /**
@@ -138,13 +201,70 @@ class AdminController extends Controller
         }
         $user->save();
 
+        // Log activity
+        \App\Models\ActivityLog::create([
+            'user_id' => $user->id,
+            'user_name' => $user->first_name . ' ' . $user->last_name,
+            'email' => $user->email,
+            'ip_address' => $request->ip(),
+            'device' => $request->header('User-Agent'),
+            'activity' => 'Updated Profile',
+            'role' => $user->role,
+        ]);
+
         return redirect()->route('update.profile')->with('success', 'Profile updated successfully!');
     }
 
+    /**
+     * Get chart data for AJAX requests
+     */
+    public function getChartData()
+    {
+        $chartLabels = [];
+        $applicationsData = [];
+        $usersData = [];
+        $months = collect(range(0, 5))->map(function($i) {
+            return now()->subMonths($i)->format('Y-m');
+        })->reverse();
+        
+        foreach ($months as $month) {
+            $chartLabels[] = date('M Y', strtotime($month.'-01'));
+            
+            // Applications data
+            $applicationsData[] = JobApplication::whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+            
+            // Users data
+            $usersData[] = User::whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+        }
 
+        return response()->json([
+            'labels' => $chartLabels,
+            'applications' => $applicationsData,
+            'users' => $usersData
+        ]);
+    }
 
+    /**
+     * Get dashboard statistics for AJAX requests
+     */
+    public function getStats()
+    {
+        $userCount = User::count();
+        $jobCount = JobVacancy::count();
+        $applicationCount = JobApplication::count();
+        $logCount = ActivityLog::count();
 
-
+        return response()->json([
+            'userCount' => $userCount,
+            'jobCount' => $jobCount,
+            'applicationCount' => $applicationCount,
+            'logCount' => $logCount
+        ]);
+    }
 
     // create here for the for the logs that display the times stamp what time they login and logout  
 } 

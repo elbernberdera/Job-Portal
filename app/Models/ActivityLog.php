@@ -17,6 +17,8 @@ class ActivityLog extends Model
         'device',
         'login_at',
         'logout_at',
+        'activity',
+        'role',
     ];
 
     protected $dates = [
