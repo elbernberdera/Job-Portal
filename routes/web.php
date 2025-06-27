@@ -22,6 +22,11 @@ Route::get('/dashboard-test', function () {
     dd($openJobs);
 });
 
+Route::get('regions', [PsgcController::class, 'getRegions']);
+Route::get('provinces', [PsgcController::class, 'getProvinces']);
+Route::get('cities', [PsgcController::class, 'getCities']);
+Route::get('barangays', [PsgcController::class, 'getBarangays']);
+
 // Default dashboard route - redirects based on user role
 Route::get('/dashboard', function () {
     $user = Auth::user();
@@ -102,11 +107,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::get('regions', [PsgcController::class, 'getRegions']);
-Route::get('provinces', [PsgcController::class, 'getProvinces']);
-Route::get('cities', [PsgcController::class, 'getCities']);
-Route::get('barangays', [PsgcController::class, 'getBarangays']);
 
 
 require __DIR__.'/auth.php';

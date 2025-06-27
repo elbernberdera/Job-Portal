@@ -62,27 +62,37 @@ class PsgcController extends Controller
     /**
      * Get cities by province.
      */
-    public function getCities(Request $request): JsonResponse
-    {
-        $request->validate([
-            'province_code' => 'required|string'
-        ]);
-
-        try {
-            $cities = $this->psgcService->getCities($request->province_code);
+    public function getCities(Request $request)
+{
+    if ($request->has('region_code')) {
+        $regionCode = $request->input('region_code');
+        // Fetch cities for the region (NCR)
+        $response = \Illuminate\Support\Facades\Http::get("https://psgc.gitlab.io/api/regions/{$regionCode}/cities-municipalities/");
+        if ($response->successful()) {
+            $cities = $response->json();
             return response()->json([
                 'success' => true,
                 'cities' => $cities
             ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch cities',
-                'error' => $e->getMessage()
-            ], 500);
         }
+        return response()->json(['success' => false, 'cities' => []]);
     }
 
+    if ($request->has('province_code')) {
+        $provinceCode = $request->input('province_code');
+        $response = \Illuminate\Support\Facades\Http::get("https://psgc.gitlab.io/api/provinces/{$provinceCode}/cities-municipalities/");
+        if ($response->successful()) {
+            $cities = $response->json();
+            return response()->json([
+                'success' => true,
+                'cities' => $cities
+            ]);
+        }
+        return response()->json(['success' => false, 'cities' => []]);
+    }
+
+    return response()->json(['success' => false, 'cities' => []]);
+}
     /**
      * Get barangays by city.
      */

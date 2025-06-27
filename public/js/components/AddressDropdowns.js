@@ -78,6 +78,8 @@ class AddressDropdowns {
             this.clearSelect(this.elements.city);
             this.clearSelect(this.elements.barangay);
             this.elements.province.disabled = false;
+            this.elements.city.disabled = false;
+            this.elements.barangay.disabled = false;
             return;
         }
 
@@ -88,6 +90,8 @@ class AddressDropdowns {
             this.elements.province.disabled = true;
             this.clearSelect(this.elements.city);
             this.clearSelect(this.elements.barangay);
+            this.elements.city.disabled = false;
+            this.elements.barangay.disabled = false;
             // Fetch cities for NCR (regionCode)
             try {
                 this.setLoading(this.elements.city, true);
@@ -106,6 +110,7 @@ class AddressDropdowns {
             return;
         }
 
+        // For non-NCR regions
         try {
             this.setLoading(this.elements.province, true);
             const response = await fetch(`/provinces?region_code=${regionCode}`);
@@ -116,6 +121,8 @@ class AddressDropdowns {
                 this.clearSelect(this.elements.city);
                 this.clearSelect(this.elements.barangay);
                 this.elements.province.disabled = false;
+                this.elements.city.disabled = true;
+                this.elements.barangay.disabled = true;
             } else {
                 console.error('Failed to load provinces:', data.message);
             }
@@ -127,10 +134,16 @@ class AddressDropdowns {
     }
 
     async onProvinceChange() {
+        // Only fetch cities if province is enabled (not NCR)
+        if (this.elements.province.disabled) {
+            return;
+        }
         const provinceCode = this.elements.province.value;
         if (!provinceCode) {
             this.clearSelect(this.elements.city);
             this.clearSelect(this.elements.barangay);
+            this.elements.city.disabled = true;
+            this.elements.barangay.disabled = true;
             return;
         }
 
@@ -142,6 +155,8 @@ class AddressDropdowns {
             if (data.success && data.cities) {
                 this.populateSelect(this.elements.city, data.cities, 'name', 'code');
                 this.clearSelect(this.elements.barangay);
+                this.elements.city.disabled = false;
+                this.elements.barangay.disabled = true;
             } else {
                 console.error('Failed to load cities:', data.message);
             }
@@ -156,6 +171,7 @@ class AddressDropdowns {
         const cityCode = this.elements.city.value;
         if (!cityCode) {
             this.clearSelect(this.elements.barangay);
+            this.elements.barangay.disabled = true;
             return;
         }
 
@@ -166,6 +182,7 @@ class AddressDropdowns {
 
             if (data.success && data.barangays) {
                 this.populateSelect(this.elements.barangay, data.barangays, 'name', 'code');
+                this.elements.barangay.disabled = false;
             } else {
                 console.error('Failed to load barangays:', data.message);
             }
