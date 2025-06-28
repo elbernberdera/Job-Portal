@@ -1,5 +1,21 @@
 @extends('user.base.base')
 
+<style>
+.custom-hover-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, transform 0.2s;
+    background-color: #fff;
+}
+.custom-hover-card:hover {
+    border-color: #007bff;
+    background-color: #e6f0ff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.10);
+    transform: scale(1.03);
+    z-index: 2;
+}
+</style>
+
 @section('main_content')
 @php
 function abbreviateJobTitle($title) {
@@ -25,10 +41,10 @@ function abbreviateJobTitle($title) {
     return strtoupper(substr($title, 0, 1));
 }
 @endphp
-<div class="container mt-4">
+<div class="container mt-4  ">
     @forelse($jobs as $job)
         <div class="card mb-3 shadow-sm" style="border-radius: 12px; border: 1px solid #d1d5db;">
-            <div class="row g-0 align-items-center">
+            <div class="row g-0 align-items-center custom-hover-card">
                 <div class="col-auto d-flex flex-column align-items-center justify-content-center" style="width: 80px;">
                     <div class="rounded bg-light text-center" style="width: 48px; height: 48px; font-size: 2rem; line-height: 48px; font-weight: bold;">
                         {{ abbreviateJobTitle($job->job_title) }}
@@ -72,8 +88,10 @@ function abbreviateJobTitle($title) {
                             <!-- Right: Badges, Salary, Apply -->
                             <div style="flex: 1; text-align: right;">
                                 <div class="mb-3">
-                                    <span class="badge bg-primary me-1">FEATURED</span>
-                                    <span class="badge bg-danger">Full Time</span>
+                                    <button type="button" class="badge bg-primary me-1 border-0" data-bs-toggle="modal" data-bs-target="#jobDetailsModal{{ $job->id }}">
+                                        View Details
+                                    </button>
+                                    <span class="badge bg-success">Full Time</span>
                                 </div>
                                 <div class="fw-bold text-primary mb-3" style="font-size: 1.1rem;">
                                     ₱{{ number_format($job->monthly_salary, 2) }} /monthly
@@ -84,6 +102,66 @@ function abbreviateJobTitle($title) {
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="jobDetailsModal{{ $job->id }}" tabindex="-1" aria-labelledby="jobDetailsModalLabel{{ $job->id }}" aria-hidden="true" data-bs-backdrop="static">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="jobDetailsModalLabel{{ $job->id }}">{{ $job->job_title }} Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>Job Title:</strong> {{ $job->job_title }}</li>
+                                        <li class="list-group-item"><strong>Position Code:</strong> {{ $job->position_code }}</li>
+                                        <li class="list-group-item"><strong>Division:</strong> {{ $job->division }}</li>
+                                        <li class="list-group-item"><strong>Region:</strong> {{ $job->region }}</li>
+                                        <li class="list-group-item"><strong>Monthly Salary:</strong> {{ $job->monthly_salary }}</li>
+                                        <li class="list-group-item"><strong>Education:</strong> {{ $job->education }}</li>
+                                        <li class="list-group-item"><strong>Training:</strong>
+                                            @if(is_array($job->training) && count($job->training))
+                                                <ul>
+                                                    @foreach($job->training as $item)
+                                                        <li>{{ $item }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </li>
+                                        <li class="list-group-item"><strong>Experience:</strong>
+                                            @if(is_array($job->experience) && count($job->experience))
+                                                <ul>
+                                                    @foreach($job->experience as $item)
+                                                        <li>{{ $item }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </li>
+                                        <li class="list-group-item"><strong>Eligibility:</strong> {{ $job->eligibility }}</li>
+                                        <li class="list-group-item"><strong>Status:</strong> {{ ucfirst($job->status) }}</li>
+                                        <li class="list-group-item"><strong>Date Posted:</strong> {{ $job->date_posted }}</li>
+                                        <li class="list-group-item"><strong>Benefits:</strong>
+                                            @if(is_array($job->benefits) && count($job->benefits))
+                                                <ul>
+                                                    @foreach($vajobcancy->benefits as $benefit)
+                                                        <li>{{ $benefit['amount'] ?? '' }} - {{ $benefit['description'] ?? '' }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+            </div>
+          </div>
         </div>
     @empty
         <div class="alert alert-info">No job vacancies available at the moment.</div>

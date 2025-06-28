@@ -28,7 +28,7 @@
             </div>
             <!-- Jobs Applied -->
             <div class="col-lg-4 col-md-6">
-                <div class="small-box bg-success">
+                <div class="small-box bg-warning">
                     <div class="inner">
                         <h3>{{ $appliedJobs ?? 0 }}</h3>
                         <p>Jobs You've Applied For</p>
