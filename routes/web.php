@@ -63,6 +63,11 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/admin/logs/ajax', [\App\Http\Controllers\Admin\LogController::class, 'ajaxLogs'])->name('admin.logs.ajax');
     Route::get('/admin/logs/export', [LogController::class, 'export'])->name('admin.logs.export');
     
+    // New routes for date filtering
+    Route::post('/admin/logs/filter-by-date', [LogController::class, 'filterByDate'])->name('admin.logs.filter-by-date');
+    Route::post('/admin/logs/ajax-by-date', [LogController::class, 'ajaxLogsByDate'])->name('admin.logs.ajax-by-date');
+    Route::post('/admin/logs/export-by-date', [LogController::class, 'exportByDate'])->name('admin.logs.export-by-date');
+    
     // Dashboard AJAX routes
     Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
     Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
@@ -83,6 +88,17 @@ Route::middleware(['auth', 'role:2'])->group(function () {
     Route::put('/hr/job-vacancies/{id}', [JobVacancyController::class, 'update'])->name('job_vacancies.update');
     Route::delete('/hr/job-vacancies/{id}', [JobVacancyController::class, 'destroy'])->name('job_vacancies.destroy');
     Route::post('/hr/job-vacancies/{id}/add-training', [JobVacancyController::class, 'addTraining'])->name('job_vacancies.add_training');
+    
+    // Archive and restore routes
+    Route::post('/hr/job-vacancies/{id}/archive', [JobVacancyController::class, 'archive'])->name('job_vacancies.archive');
+    Route::post('/hr/job-vacancies/{id}/restore', [JobVacancyController::class, 'restore'])->name('job_vacancies.restore');
+
+    // HR Application Actions
+    Route::post('/applications/{application}/shortlist', [App\Http\Controllers\Hr\JobApplicationController::class, 'shortlist'])->name('applications.shortlist');
+    Route::post('/applications/{application}/reject', [App\Http\Controllers\Hr\JobApplicationController::class, 'reject'])->name('applications.reject');
+    
+    // HR Qualified Applicants
+    Route::get('/qualified-applicants', [App\Http\Controllers\Hr\JobApplicationController::class, 'qualifiedApplicants'])->name('hr.qualified-applicants');
 
 });
 

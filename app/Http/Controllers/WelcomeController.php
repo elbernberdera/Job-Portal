@@ -10,7 +10,11 @@ class WelcomeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = JobVacancy::where('status', 'open');
+        $query = JobVacancy::where('status', 'open')
+            ->where(function($subQuery) {
+                $subQuery->whereNull('closing_date')
+                         ->orWhere('closing_date', '>=', now()->toDateString());
+            });
 
         // Search by job title
         if ($request->filled('job_title')) {

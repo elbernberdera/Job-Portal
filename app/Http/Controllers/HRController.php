@@ -12,7 +12,63 @@ class HRController extends Controller
      */
     public function dashboard()
     {
-        return view('hr.dashboard');
+        $hr = auth()->user();
+
+        // Job posts by this HR
+        $jobCount = \App\Models\JobVacancy::where('hr_id', $hr->id)->count();
+
+        // Applications for this HR's jobs
+        $jobIds = \App\Models\JobVacancy::where('hr_id', $hr->id)->pluck('id');
+        $applicationCount = \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)->count();
+        $shortlistedCount = \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)->where('status', 'shortlisted')->count();
+        $hiredCount = \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)->where('status', 'hired')->count();
+
+        // Chart data: Applications per month (last 6 months)
+        $chartLabels = [];
+        $applicationsChartData = [];
+        $months = collect(range(0, 5))->map(function($i) {
+            return now()->subMonths($i)->format('Y-m');
+        })->reverse();
+        foreach ($months as $month) {
+            $chartLabels[] = date('M Y', strtotime($month.'-01'));
+            $applicationsChartData[] = \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)
+                ->whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+        }
+
+        // Status breakdown for pie chart
+        $statusBreakdown = [
+            'Pending' => \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)->where('status', 'pending')->count(),
+            'Shortlisted' => $shortlistedCount,
+            'Hired' => $hiredCount,
+            'Rejected' => \App\Models\JobApplication::whereIn('job_vacancy_id', $jobIds)->where('status', 'rejected')->count(),
+        ];
+
+        // Latest applications
+        $latestApplications = \App\Models\JobApplication::with(['user', 'jobVacancy'])
+            ->whereIn('job_vacancy_id', $jobIds)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Recent activity (last 5 actions by this HR)
+        $recentActivity = \App\Models\ActivityLog::where('user_id', $hr->id)
+            ->orderByDesc('created_at')
+            ->take(5)
+            ->get();
+
+        return view('hr.dashboard', compact(
+            'jobCount',
+            'applicationCount',
+            'shortlistedCount',
+            'hiredCount',
+            'chartLabels',
+            'applicationsChartData',
+            'statusBreakdown',
+            'latestApplications',
+            'recentActivity'
+        ));
     }
 
     public function editProfile(Request $request)

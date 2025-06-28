@@ -60,9 +60,9 @@
             </li>
 
             <li class="nav-item">
-              <a href="" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-users" style="color: #fbf8f8!important;"></i>
-                <p>Qualified applicant</p>
+              <a href="{{ route('hr.qualified-applicants') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
+                <i class="nav-icon fas fa-user-check" style="color: #fbf8f8!important;"></i>
+                <p>Qualified Applicants</p>
               </a>
             </li>
 

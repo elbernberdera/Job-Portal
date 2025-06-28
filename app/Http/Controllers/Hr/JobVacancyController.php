@@ -10,8 +10,21 @@ class JobVacancyController extends Controller
 {
     public function index()
     {
-        $vacancies = JobVacancy::all();
-        return view('hr.job_vacancies', compact('vacancies'));
+        // Get all vacancies with counts and eager load applications and users
+        $allVacancies = \App\Models\JobVacancy::with([
+            'jobApplications.user',
+        ])->withCount([
+            'jobApplications as applications_count',
+            'jobApplications as shortlisted_count' => function ($query) {
+                $query->where('status', 'shortlisted');
+            }
+        ])->get();
+
+        // Separate active and archived vacancies
+        $activeVacancies = $allVacancies->whereNotIn('status', ['archived']);
+        $archivedVacancies = $allVacancies->where('status', 'archived');
+
+        return view('hr.job_vacancies', compact('activeVacancies', 'archivedVacancies'));
     }
 
     public function store(Request $request)
@@ -36,14 +49,15 @@ class JobVacancyController extends Controller
                 'benefits' => 'nullable|array',
                 'benefits.*.amount' => 'nullable|numeric',
                 'benefits.*.description' => 'nullable|string',
-                'status' => 'required|in:open,closed',
+                'status' => 'required|in:open,closed,archived',
                 'date_posted' => 'nullable|date',
+                'closing_date' => 'nullable|date|after_or_equal:date_posted',
             ]);
 
             // Set default values for arrays if they're not present
-            $validated['training'] = [];
-            $validated['experience'] = [];
-            $validated['benefits'] = [];
+            $validated['training'] = $validated['training'] ?? [];
+            $validated['experience'] = $validated['experience'] ?? [];
+            $validated['benefits'] = $validated['benefits'] ?? [];
             
             // Set default status if not provided
             if (!isset($validated['status'])) {
@@ -54,6 +68,9 @@ class JobVacancyController extends Controller
             if (!isset($validated['date_posted'])) {
                 $validated['date_posted'] = now();
             }
+
+            // Set hr_id to the currently logged-in HR
+            $validated['hr_id'] = auth()->id();
 
             \Log::info('Attempting to create job vacancy with data:', $validated);
 
@@ -98,7 +115,8 @@ class JobVacancyController extends Controller
             'education' => 'nullable|string',
             'eligibility' => 'nullable|string',
             'date_posted' => 'nullable|date',
-            'status' => 'required|in:open,closed',
+            'closing_date' => 'nullable|date|after_or_equal:date_posted',
+            'status' => 'required|in:open,closed,archived',
             'training' => 'nullable|array',
             'training.*' => 'nullable|string',
             'experience' => 'nullable|array',
@@ -118,6 +136,7 @@ class JobVacancyController extends Controller
             $vacancy->education = $validated['education'] ?? null;
             $vacancy->eligibility = $validated['eligibility'] ?? null;
             $vacancy->date_posted = $validated['date_posted'] ?? null;
+            $vacancy->closing_date = $validated['closing_date'] ?? null;
             $vacancy->status = $validated['status'];
             $vacancy->training = $validated['training'] ?? [];
             $vacancy->experience = $validated['experience'] ?? [];
@@ -149,5 +168,34 @@ class JobVacancyController extends Controller
         $vacancy->training = $trainings;
         $vacancy->save();
         return response()->json(['success' => true, 'trainings' => $trainings]);
+    }
+
+    /**
+     * Archive a job vacancy
+     */
+    public function archive($id)
+    {
+        try {
+            $vacancy = JobVacancy::findOrFail($id);
+            $vacancy->archive();
+            return redirect()->route('job_vacancies')->with('success', 'Job vacancy archived successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to archive job vacancy: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Restore an archived job vacancy
+     */
+    public function restore($id)
+    {
+        try {
+            $vacancy = JobVacancy::findOrFail($id);
+            $vacancy->status = 'open';
+            $vacancy->save();
+            return redirect()->route('job_vacancies')->with('success', 'Job vacancy restored successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to restore job vacancy: ' . $e->getMessage()]);
+        }
     }
 } 
