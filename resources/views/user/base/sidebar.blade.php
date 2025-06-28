@@ -54,7 +54,10 @@
             </li>
 
             <li class="nav-item">
-             
+            <a href="{{ route('user.job.vacancies') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
+                <i class="nav-icon fas fa-briefcase" style="color: #fbf8f8!important;"></i>
+                <p>Job Vacancies</p>
+              </a>
             </li>
 
 

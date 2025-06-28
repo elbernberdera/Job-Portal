@@ -13,6 +13,7 @@ use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\User\JobApplicationController;
+use App\Http\Controllers\User\UserJobVacancyController;
 
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
@@ -101,6 +102,13 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::post('/user/profile', [App\Http\Controllers\User\UserProfileController::class, 'store'])->name('user.profile.store');
     // Job application route
     Route::post('/user/apply/{job}', [JobApplicationController::class, 'apply'])->name('user.apply');
+
+    // =====================
+    // User Job Vacancies (NEW)
+    // =====================
+    Route::get('/user/job_vacancies', [\App\Http\Controllers\User\UserJobVacancyController::class, 'index'])->name('user.job.vacancies'); // List all jobs
+    Route::get('/user/job_vacancies/{id}', [\App\Http\Controllers\User\UserJobVacancyController::class, 'show'])->name('user.job.details'); // View job details
+    Route::get('/user/job_vacancies/{id}/apply', [\App\Http\Controllers\User\UserJobVacancyController::class, 'apply'])->name('user.job.apply'); // Apply to job
 });
 
 Route::middleware('auth')->group(function () {
