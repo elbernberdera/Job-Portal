@@ -1,7 +1,32 @@
 @extends('user.base.base')
 
-
 @section('main_content')
+<!-- SweetAlert2 for session success/error -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+    <script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        };
+    </script>
+@endif
+@if($errors->any())
+    <script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: '{!! implode("<br>", $errors->all()) !!}'
+            });
+        };
+    </script>
+@endif
 <div class="container-fluid px-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -10,22 +35,6 @@
                     <h2 class="mb-0">Update Profile</h2>
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
                     <form method="POST" action="{{ route('user.profile.update') }}">
                         @csrf
                         @method('PUT')

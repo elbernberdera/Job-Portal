@@ -52,7 +52,7 @@ class UserProfileController extends Controller
             'role' => $user->role,
         ]);
 
-        return redirect()->route('user.profile')->with('success', 'Profile updated successfully!');
+        return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 
     public function uploadProfileImage(Request $request)

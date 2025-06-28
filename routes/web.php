@@ -97,14 +97,10 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/user/profile/upload', [UserProfileController::class, 'uploadProfileImage'])->name('user.profile.upload');
 
-<<<<<<< HEAD
     // Route to store the data in the new user_profiles table and update the users table
     Route::post('/user/profile', [App\Http\Controllers\User\UserProfileController::class, 'store'])->name('user.profile.store');
-=======
     // Job application route
     Route::post('/user/apply/{job}', [JobApplicationController::class, 'apply'])->name('user.apply');
-
->>>>>>> 70a7b96e1e23ab2f90c08c7b80970223da12c498
 });
 
 Route::middleware('auth')->group(function () {

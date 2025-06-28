@@ -1,5 +1,32 @@
 @extends('user.base.base')
 
+<!-- SweetAlert2 for session success/error -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+    <script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        };
+    </script>
+@endif
+@if($errors->any())
+    <script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: '{!! implode("<br>", $errors->all()) !!}'
+            });
+        };
+    </script>
+@endif
+
 <script>
 function showSection(sectionId) {
     // Hide all sections and remove required from their inputs
