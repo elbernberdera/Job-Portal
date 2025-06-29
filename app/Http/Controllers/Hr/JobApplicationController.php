@@ -35,7 +35,9 @@ class JobApplicationController extends Controller
         foreach ($jobVacancies as $job) {
             foreach ($job->jobApplications as $application) {
                 $result = $job->checkQualification($application->user);
-                if ($result['qualified']) {
+                
+                // Check if result is an array and user is qualified
+                if (is_array($result) && isset($result['qualified']) && $result['qualified']) {
                     $qualifiedApplicants->push([
                         'job' => $job,
                         'application' => $application,
@@ -47,7 +49,7 @@ class JobApplicationController extends Controller
         
         // Sort by qualification score (highest first)
         $qualifiedApplicants = $qualifiedApplicants->sortByDesc(function ($item) {
-            return $item['result']['percentage'];
+            return $item['result']['percentage'] ?? 0;
         });
         
         return view('hr.qualified_applicants', compact('qualifiedApplicants'));

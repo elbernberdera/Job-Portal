@@ -36,7 +36,7 @@
                         <p>Applications Received</p>
                     </div>
                     <div class="icon"><i class="fas fa-file-alt"></i></div>
-                    <a href="#" class="small-box-footer">View Applications <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('hr.qualified-applicants') }}" class="small-box-footer">View Applications <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-3">

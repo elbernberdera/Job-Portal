@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     $qualifiedApplicants = collect();
                                     foreach($vacancy->jobApplications as $application) {
                                         $result = $vacancy->checkQualification($application->user);
-                                        if ($result['qualified']) {
+                                        if (is_array($result) && isset($result['qualified']) && $result['qualified']) {
                                             $qualifiedApplicants->push([
                                                 'application' => $application,
                                                 'result' => $result
@@ -994,7 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     $qualifiedApplicants = collect();
                                     foreach($vacancy->jobApplications as $application) {
                                         $result = $vacancy->checkQualification($application->user);
-                                        if ($result['qualified']) {
+                                        if (is_array($result) && isset($result['qualified']) && $result['qualified']) {
                                             $qualifiedApplicants->push([
                                                 'application' => $application,
                                                 'result' => $result

@@ -30,8 +30,7 @@ class JobApplicationController extends Controller
             $application = JobApplication::create([
                 'user_id' => $user->id,
                 'job_vacancy_id' => $jobId,
-                'status' => 'pending',
-                'applied_at' => now(),
+                'status' => 'applied',
             ]);
 
             // Log the activity
@@ -41,7 +40,7 @@ class JobApplicationController extends Controller
                 'email' => $user->email,
                 'ip_address' => $request->ip(),
                 'device' => $request->header('User-Agent'),
-                'activity' => 'Applied for job: ' . $job->position_title,
+                'activity' => 'Applied for job: ' . $job->job_title,
                 'role' => $user->role,
             ]);
 
