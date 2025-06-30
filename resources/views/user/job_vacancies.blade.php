@@ -96,7 +96,11 @@ function abbreviateJobTitle($title) {
                                 <div class="fw-bold text-primary mb-3" style="font-size: 1.1rem;">
                                     ₱{{ number_format($job->monthly_salary, 2) }} /monthly
                                 </div>
-                                <a href="{{ route('user.job.apply', $job->id) }}" class="btn btn-link p-0">Apply Now &raquo;</a>
+                                <button type="button"
+                                        class="btn btn-link p-0"
+                                        onclick="showApplyModal({{ $job->id }})">
+                                    Apply Now &raquo;
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -147,7 +151,7 @@ function abbreviateJobTitle($title) {
                                         <li class="list-group-item"><strong>Benefits:</strong>
                                             @if(is_array($job->benefits) && count($job->benefits))
                                                 <ul>
-                                                    @foreach($vajobcancy->benefits as $benefit)
+                                                    @foreach($job->benefits as $benefit)
                                                         <li>{{ $benefit['amount'] ?? '' }} - {{ $benefit['description'] ?? '' }}</li>
                                                     @endforeach
                                                 </ul>
@@ -167,4 +171,35 @@ function abbreviateJobTitle($title) {
         <div class="alert alert-info">No job vacancies available at the moment.</div>
     @endforelse
 </div>
+
+<!-- Application Confirmation Modal -->
+<div class="modal fade" id="applyConfirmModal" tabindex="-1" aria-labelledby="applyConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="applyConfirmModalLabel">Proceed with Application</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Would you like to update your personal information before applying?
+      </div>
+      <div class="modal-footer">
+        <a id="updateProfileBtn" href="{{ route('user.profile.edit') }}" class="btn btn-secondary">Update Info</a>
+        <form id="proceedApplyForm" method="GET" action="">
+          @csrf
+          <button type="submit" class="btn btn-primary">Proceed to Apply</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function showApplyModal(jobId) {
+        // Set the form action to the correct job application route
+        document.getElementById('proceedApplyForm').action = '/user/job/apply/' + jobId;
+        var applyModal = new bootstrap.Modal(document.getElementById('applyConfirmModal'));
+        applyModal.show();
+    }
+</script>
 @endsection 

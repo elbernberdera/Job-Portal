@@ -23,4 +23,32 @@ class UserProfile extends Model
         'special_skills', 'non_academic_distinctions', 'association_memberships', 'other_information',
         
     ];
+
+    public function isComplete()
+    {
+        $requiredFields = [
+            'civil_status', 'height', 'weight', 'blood_type', 'gsis_id_no', 'pagibig_id_no', 'philhealth_no', 'sss_no', 'tin_no', 'agency_employee_no',
+            'citizenship',
+            'perm_house_unit_no', 'perm_street', 'perm_barangay', 'perm_city_municipality', 'perm_province', 'perm_zipcode',
+            'res_house_unit_no', 'res_street', 'res_barangay', 'res_city_municipality', 'res_province', 'res_zipcode',
+            // Add more required fields as needed
+        ];
+        foreach ($requiredFields as $field) {
+            if (empty($this->$field)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function requiredFields()
+    {
+        return [
+            'civil_status', 'height', 'weight', 'blood_type', 'gsis_id_no', 'pagibig_id_no', 'philhealth_no', 'sss_no', 'tin_no', 'agency_employee_no',
+            'citizenship', 'dual_country_dropdown', 'dual_country',
+            'perm_house_unit_no', 'perm_street', 'perm_barangay', 'perm_city_municipality', 'perm_province', 'perm_zipcode',
+            'res_house_unit_no', 'res_street', 'res_barangay', 'res_city_municipality', 'res_province', 'res_zipcode',
+            // ...add more as needed
+        ];
+    }
 }

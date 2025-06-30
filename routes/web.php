@@ -125,6 +125,9 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::get('/user/job_vacancies', [\App\Http\Controllers\User\UserJobVacancyController::class, 'index'])->name('user.job.vacancies'); // List all jobs
     Route::get('/user/job_vacancies/{id}', [\App\Http\Controllers\User\UserJobVacancyController::class, 'show'])->name('user.job.details'); // View job details
     Route::get('/user/job_vacancies/{id}/apply', [\App\Http\Controllers\User\UserJobVacancyController::class, 'apply'])->name('user.job.apply'); // Apply to job
+
+    // Add the new route for editing the user profile
+    Route::get('/user/profile/edit', [App\Http\Controllers\User\UserProfileController::class, 'show'])->name('user.profile.edit');
 });
 
 Route::middleware('auth')->group(function () {
