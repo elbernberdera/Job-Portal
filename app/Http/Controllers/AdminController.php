@@ -22,6 +22,40 @@ class AdminController extends Controller
         $applicationCount = JobApplication::count();
         $logCount = ActivityLog::count();
 
+        // Enhanced statistics
+        $activeUsers = User::where('created_at', '>=', now()->subDays(30))->count();
+        $activeUsersPercentage = $userCount > 0 ? round(($activeUsers / $userCount) * 100, 1) : 0;
+        
+        // Qualified applicants are those with status 'shortlisted', 'interviewed', 'offered', or 'hired'
+        $qualifiedApplicants = JobApplication::whereIn('status', ['shortlisted', 'interviewed', 'offered', 'hired'])->count();
+        $qualifiedPercentage = $applicationCount > 0 ? round(($qualifiedApplicants / $applicationCount) * 100, 1) : 0;
+        
+        // Pending reviews are those with status 'applied' or 'under_review'
+        $pendingReviews = JobApplication::whereIn('status', ['applied', 'under_review'])->count();
+        $pendingPercentage = $applicationCount > 0 ? round(($pendingReviews / $applicationCount) * 100, 1) : 0;
+        
+        $thisMonthApplications = JobApplication::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        
+        $lastMonthApplications = JobApplication::whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+        
+        $monthlyGrowth = $lastMonthApplications > 0 ? round((($thisMonthApplications - $lastMonthApplications) / $lastMonthApplications) * 100, 1) : 0;
+
+        // Recent applications (last 5)
+        $recentApplications = JobApplication::with(['user', 'jobVacancy'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        // System health metrics
+        $storageUsage = 75; // Mock data - in real app, calculate actual storage usage
+        $activeSessions = 12; // Mock data - in real app, get actual session count
+        $sessionPercentage = 60; // Mock data
+        $uptime = '99.9%'; // Mock data
+
         // Recent activity (last 5 actions: login or logout)
         $recentActivities = ActivityLog::orderByDesc('login_at')
             ->orderByDesc('logout_at')
@@ -68,15 +102,45 @@ class AdminController extends Controller
                 ->count();
         }
 
+        // Donut chart data: Male/Female + Passer/Not Passer
+        $malePasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'male'); })
+            ->where('status', 'shortlisted')->count();
+        $maleNotPasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'male'); })
+            ->where('status', '!=', 'shortlisted')->count();
+        $femalePasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'female'); })
+            ->where('status', 'shortlisted')->count();
+        $femaleNotPasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'female'); })
+            ->where('status', '!=', 'shortlisted')->count();
+        $donutChartData = [
+            'Male Passer' => $malePasser,
+            'Male Not Passer' => $maleNotPasser,
+            'Female Passer' => $femalePasser,
+            'Female Not Passer' => $femaleNotPasser,
+        ];
+
         return view('admin.dashboard', compact(
             'userCount',
             'jobCount',
             'applicationCount',
             'logCount',
+            'activeUsers',
+            'activeUsersPercentage',
+            'qualifiedApplicants',
+            'qualifiedPercentage',
+            'pendingReviews',
+            'pendingPercentage',
+            'thisMonthApplications',
+            'monthlyGrowth',
+            'recentApplications',
+            'storageUsage',
+            'activeSessions',
+            'sessionPercentage',
+            'uptime',
             'recentActivities',
             'chartLabels',
             'chartData',
-            'usersChartData'
+            'usersChartData',
+            'donutChartData',
         ));
     }
 
@@ -258,11 +322,23 @@ class AdminController extends Controller
         $applicationCount = JobApplication::count();
         $logCount = ActivityLog::count();
 
+        // Enhanced statistics
+        $activeUsers = User::where('created_at', '>=', now()->subDays(30))->count();
+        $qualifiedApplicants = JobApplication::whereIn('status', ['shortlisted', 'interviewed', 'offered', 'hired'])->count();
+        $pendingReviews = JobApplication::whereIn('status', ['applied', 'under_review'])->count();
+        $thisMonthApplications = JobApplication::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
         return response()->json([
             'userCount' => $userCount,
             'jobCount' => $jobCount,
             'applicationCount' => $applicationCount,
-            'logCount' => $logCount
+            'logCount' => $logCount,
+            'activeUsers' => $activeUsers,
+            'qualifiedApplicants' => $qualifiedApplicants,
+            'pendingReviews' => $pendingReviews,
+            'thisMonthApplications' => $thisMonthApplications
         ]);
     }
 

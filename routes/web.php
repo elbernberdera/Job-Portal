@@ -12,6 +12,7 @@ use App\Http\Controllers\Hr\JobVacancyController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\JobPositionController;
 use App\Http\Controllers\User\JobApplicationController;
 use App\Http\Controllers\User\UserJobVacancyController;
 
@@ -71,6 +72,18 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     // Dashboard AJAX routes
     Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
     Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
+
+    // Admin Job Position Management Routes
+    Route::get('/admin/job-positions', [JobPositionController::class, 'index'])->name('admin.job_positions.index');
+    Route::get('/admin/job-positions/create', [JobPositionController::class, 'create'])->name('admin.job_positions.create');
+    Route::post('/admin/job-positions', [JobPositionController::class, 'store'])->name('admin.job_positions.store');
+    Route::get('/admin/job-positions/{id}', [JobPositionController::class, 'show'])->name('admin.job_positions.show');
+    Route::get('/admin/job-positions/{id}/edit', [JobPositionController::class, 'edit'])->name('admin.job_positions.edit');
+    Route::put('/admin/job-positions/{id}', [JobPositionController::class, 'update'])->name('admin.job_positions.update');
+    Route::delete('/admin/job-positions/{id}', [JobPositionController::class, 'destroy'])->name('admin.job_positions.destroy');
+    Route::post('/admin/job-positions/{id}/archive', [JobPositionController::class, 'archive'])->name('admin.job_positions.archive');
+    Route::post('/admin/job-positions/{id}/restore', [JobPositionController::class, 'restore'])->name('admin.job_positions.restore');
+    Route::get('/admin/job-positions/{id}/statistics', [JobPositionController::class, 'statistics'])->name('admin.job_positions.statistics');
 
 });
 

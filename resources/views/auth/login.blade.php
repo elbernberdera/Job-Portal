@@ -40,7 +40,7 @@
                         <a href="{{ route('password.request') }}" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
                     @endif
                 </div>
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md text-lg transition-all duration-200 ease-in-out mb-4">Log in</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md text-lg transition-all duration-200 ease-in-out mb-4">Log in</button>
             </form>
             <div class="flex items-center w-full my-2">
                 <div class="flex-grow border-t border-gray-300"></div>
@@ -53,7 +53,7 @@
             </button>
             <div class="text-center mt-2">
                 <span class="text-gray-600">Don't have an account?</span>
-                <a href="{{ route('register') }}" class="text-indigo-700 font-semibold hover:underline ml-1">Sign up</a>
+                <a href="{{ route('register') }}" class="text-blue-700 font-semibold hover:underline ml-1">Sign up</a>
             </div>
         </div>
     </div>

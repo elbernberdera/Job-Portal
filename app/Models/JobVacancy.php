@@ -26,6 +26,7 @@ class JobVacancy extends Model
         'date_posted',
         'closing_date',
         'hr_id',
+        'admin_id',
         // Qualification criteria
         'min_education_level',
         'required_course',
@@ -56,6 +57,11 @@ class JobVacancy extends Model
     public function hr()
     {
         return $this->belongsTo(User::class, 'hr_id');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
     }
 
     public function jobApplications()
