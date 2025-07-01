@@ -39,13 +39,13 @@
                     background-position: 0% 50%;
                 }
             }
-            .gradient-button {
-                background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #1e3a8a 100%);
+            .gradient-button, .register-gradient-button {
+                background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
                 color: white;
                 transition: all 0.3s ease;
             }
-            .gradient-button:hover {
-                background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 50%, #1e40af 100%);
+            .gradient-button:hover, .register-gradient-button:hover {
+                background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%);
                 transform: translateY(-2px);
             }
             .hero-logo-bg {
@@ -79,15 +79,6 @@
             }
             .text-shadow {
                 text-shadow: 0 2px 8px rgba(30, 41, 59, 0.25), 0 1px 2px rgba(0,0,0,0.15);
-            }
-            .register-gradient-button {
-                background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #1e3a8a 100%);
-                color: white;
-                transition: all 0.3s ease;
-            }
-            .register-gradient-button:hover {
-                background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 50%, #1e40af 100%);
-                transform: translateY(-2px);
             }
             .gradient-blue-text {
                 color: #2563eb;
