@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('job_vacancy_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_profile_id')->constrained('user_profiles')->onDelete('cascade');
             $table->enum('status', ['applied', 'under_review', 'shortlisted', 'interviewed', 'offered', 'hired', 'rejected', 'failed'])->default('applied');
             $table->timestamps();
         });

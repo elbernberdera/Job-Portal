@@ -82,7 +82,7 @@ function abbreviateJobTitle($title) {
                                     {{ $job->region }}
                                 </span>
                                 <div class="text-muted small mt-3">
-                                    Deadline: {{ \Carbon\Carbon::parse($job->deadline)->format('F d, Y') }}
+                                    Deadline: {{ \Carbon\Carbon::parse($job->closing_date)->format('F d, Y') }}
                                 </div>
                             </div>
                             <!-- Right: Badges, Salary, Apply -->
@@ -96,11 +96,9 @@ function abbreviateJobTitle($title) {
                                 <div class="fw-bold text-primary mb-3" style="font-size: 1.1rem;">
                                     ₱{{ number_format($job->monthly_salary, 2) }} /monthly
                                 </div>
-                                <button type="button"
-                                        class="btn btn-link p-0"
-                                        onclick="showApplyModal({{ $job->id }})">
+                                <a href="{{ route('user.pds.form', ['job' => $job->id]) }}" class="btn btn-link p-0">
                                     Apply Now &raquo;
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

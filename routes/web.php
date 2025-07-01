@@ -128,6 +128,10 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     // Add the new route for editing the user profile
     Route::get('/user/profile/edit', [App\Http\Controllers\User\UserProfileController::class, 'show'])->name('user.profile.edit');
+
+    // Add the new route for the PDS form
+    Route::get('/user/pds-form/{job}', [App\Http\Controllers\User\UserProfileController::class, 'showPDSForm'])->name('user.pds.form');
+    Route::post('/user/pds-form/{job}', [App\Http\Controllers\User\UserProfileController::class, 'storePDS'])->name('user.pds.store');
 });
 
 Route::middleware('auth')->group(function () {
