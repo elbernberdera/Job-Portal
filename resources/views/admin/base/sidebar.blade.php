@@ -54,6 +54,13 @@
               </a>
             </li>
 
+            <li class="nav-item">
+              <a href="{{ route('admin.job_positions.index') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
+                <i class="nav-icon fas fa-briefcase" style="color: #fbf8f8!important;"></i>
+                <p>Job Positions</p>
+              </a>
+            </li>
+
 
                 <!-- Add more nav-items here as needed -->
             </ul>
