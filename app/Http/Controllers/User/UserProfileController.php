@@ -69,11 +69,15 @@ class UserProfileController extends Controller
 
         // Delete old image if exists
         if ($user->profile_image) {
-            Storage::disk('public')->delete('profile_images/' . $user->profile_image);
+            $oldImagePath = public_path('profile_images/' . $user->profile_image);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
         }
 
         $imageName = time() . '.' . $request->profile_image->extension();
-        $request->profile_image->storeAs('profile_images', $imageName, 'public');
+        // Save directly to public/profile_images
+        $request->profile_image->move(public_path('profile_images'), $imageName);
 
         $user->profile_image = $imageName;
         $user->save();

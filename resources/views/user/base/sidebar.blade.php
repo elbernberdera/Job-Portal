@@ -62,8 +62,8 @@
             @endif -->
             <div class="position-relative" style="width: 120px; height: 120px;">
                 <img
-                    src="{{ Auth::user()->profile_image ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/images/image7.png') }}"
-                    alt=""
+                    src="{{ Auth::user()->profile_image ? asset('profile_images/' . Auth::user()->profile_image) : asset('profile_images/default.png') }}"
+                    alt="Profile Image"
                     class="rounded-circle"
                     style="width: 100%; height: 100%; object-fit: cover; border: 4px solid #fff;"
                 >

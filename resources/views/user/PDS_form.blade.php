@@ -1612,6 +1612,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             <button type="button" class="btn btn-secondary me-2" onclick="showSection('section8')">
                                 <i class="fas fa-arrow-left"></i> Back
                             </button>
+                            <button type="button" class="btn btn-info" onclick="showPDSPreview()">View</button>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Save
                             </button>
@@ -1632,6 +1633,20 @@ window.addEventListener('DOMContentLoaded', function() {
 
 </form>
 
+<!-- PDS Preview Modal -->
+<div class="modal fade" id="pdsPreviewModal" tabindex="-1" aria-labelledby="pdsPreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pdsPreviewModalLabel">Personal Data Sheet Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="pdsPreviewBody" style="max-height: 80vh; overflow-y: auto;">
+        <!-- The preview will be injected here -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 function addChildRow() {
@@ -1878,8 +1893,170 @@ function addMembershipField() {
     container.appendChild(div);
 }
 
+function showPDSPreview() {
+    let form = document.querySelector('form');
+    let formData = new FormData(form);
 
+    // Helper for single value
+    const val = (name) => formData.get(name) || '';
 
+    // Build the PDS-style table
+    let html = `
+    <style>
+    #pds-table {
+        width: 100%;
+        max-width: 9in;
+        margin: 0 auto;
+        border: 2px solid #000;
+    }
+    #pds-table td:not(.separator) {
+        font-size: 10px;
+        border-color: #000;
+        height: 20px;
+    }
+    #pds-table tbody {
+        border: 1px solid #000;
+    }
+    #pds-table tbody:not(.table-header) td {
+        border: 1px solid #000;
+    }
+    #pds-table .separator {
+        font-size: 12px;
+        font-style: italic;
+        font-weight: 600;
+        background-color: #757575;
+        border-top-width: 2px !important;
+        border-bottom-width: 2px !important;
+    }
+    #pds-table td.s-label {
+        background-color: #dddddd;
+        width: 20%;
+    }
+    #pds-table td .count {
+        display: inline-block;
+        width: 1.32em;
+        text-align: center;
+    }
+    .table-body.question-block td {
+        font-size: 13px !important;
+    }
+    .table-body.question-block tr td:first-child {
+        border-bottom-width: 0px !important;
+        border-top-width: 0px !important;
+    }
+    .table-body.question-block tr td:not(:first-child) {
+        border-width: 0px !important;
+    }
+    .table-body.question-block tr td:nth-child(2) {
+        padding-left: 15px;
+    }
+    </style>
+    <div class="table-responsive p-3">
+    <table id="pds-table">
+        <tbody class="table-header">
+            <tr>
+                <td colspan="12" class="h5"><i><b>CS Form No. 212</b></i></td>
+            </tr>
+            <tr>
+                <td colspan="12" class="align-top" style="max-height: 12px;">
+                    <i><b>Revised 2017</b></i>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-center"><h1><b>PERSONAL DATA SHEET</b></h1></td>
+            </tr>
+            <tr>
+                <td colspan="12"><i><b>WARNING: Any misrepresentation made in the Personal Data Sheet and the Work Experience Sheet shall cause the filing of administative/criminal case/s against the person concerned.</b></i></td>
+            </tr>
+            <tr>
+                <td colspan="12"><i><b>READ THE ATTACHED GUIDE TO FILLING OUT THE PERSONAL DATA SHEET (PDS) BEFORE ACCOMPLISHING THE PDS FORM</b></i></td>
+            </tr>
+            <tr>
+                <td colspan="9">Print legibly. Tick appropriate boxes ( <input type="checkbox" checked> ) and use separate sheet if necessary. Indicate N/A if not applicable. <b>DO NOT ABBREVIATE.</b></td>
+                <td colspan="1" style="border:1px solid#000b;background:#757575;width:8%;"><small>1. CS ID No.</small></td>
+                <td colspan="2" class="text-right" style="border:1px solid #000;width:20%;"><small>(Do not fill up. For CSC use only)</small></td>
+            </tr>
+        </tbody>
+        <tbody class="table-body">
+            <tr>
+                <td colspan="12" class="text-white separator">I. PERSONAL INFORMATION</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label border-bottom-0"><span class="count">2.</span> SURNAME</td>
+                <td colspan="11">${val('last_name')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label border-0"><span class="count"></span> FIRST NAME</td>
+                <td colspan="9">${val('first_name')}</td>
+                <td colspan="2" class="align-top"><small>NAME EXTENSION (JR.,SR)</small> ${val('suffix')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label border-0"><span class="count"></span> MIDDLE NAME</td>
+                <td colspan="11">${val('middle_initial')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label border-bottom-0"><span class="count">3.</span> DATE OF BIRTH<br><span class="count"></span> (mm/dd/yyyy)</td>
+                <td colspan="5">${val('birth_date')}</td>
+                <td colspan="3" class="s-label align-top border-bottom-0"><span class="count">16.</span> CITIZENSHIP</td>
+                <td colspan="3">${val('citizenship')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">4.</span> PLACE OF BIRTH</td>
+                <td colspan="5">${val('place_of_birth')}</td>
+                <td colspan="3" class="s-label align-top border-0 text-center small">If holder of dual citizenship, please indicate the details.</td>
+                <td colspan="3">${val('dual_country_dropdown') || val('dual_country')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">5.</span> SEX</td>
+                <td colspan="5">${val('sex')}</td>
+                <td colspan="3" class="s-label align-top border-0"></td>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label border-bottom-0"><span class="count">6.</span> CIVIL STATUS</td>
+                <td colspan="5">${val('civil_status')}</td>
+                <td colspan="2" class="s-label align-top border-bottom-0 small"><span class="count">17.</span> RESIDENTIAL ADDRESS</td>
+                <td colspan="2">${val('res_house_unit_no')} ${val('res_street')} ${val('res_barangay')} ${val('res_city_municipality')} ${val('res_province')} ${val('res_zipcode')}</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">7.</span> HEIGHT (m)</td>
+                <td colspan="5">${val('height')}</td>
+                <td colspan="2" class="s-label align-top border-0"></td>
+                <td colspan="2"></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">8.</span> WEIGHT (kg)</td>
+                <td colspan="5">${val('weight')}</td>
+                <td colspan="2" class="s-label border-0 text-center">ZIP CODE</td>
+                <td colspan="4">${val('res_zipcode')}</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">9.</span> BLOOD TYPE</td>
+                <td colspan="5">${val('blood_type')}</td>
+                <td colspan="2" class="s-label border-bottom-0"><span class="count">18.</span> PERMANENT ADDRESS</td>
+                <td colspan="2">${val('perm_house_unit_no')} ${val('perm_street')} ${val('perm_barangay')} ${val('perm_city_municipality')} ${val('perm_province')} ${val('perm_zipcode')}</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="1" class="s-label"><span class="count">10.</span> GSIS ID NO.</td>
+                <td colspan="5">${val('gsis_id_no')}</td>
+                <td colspan="2" class="s-label border-0"></td>
+                <td colspan="2"></td>
+                <td colspan="2"></td>
+            </tr>
+            <!-- Add more rows for the rest of the fields as needed -->
+        </tbody>
+        <!-- Repeat for other sections: Family Background, Education, etc. -->
+    </table>
+    </div>
+    `;
+
+    document.getElementById('pdsPreviewBody').innerHTML = html;
+    var modal = new bootstrap.Modal(document.getElementById('pdsPreviewModal'));
+    modal.show();
+}
 
 </script>
 
