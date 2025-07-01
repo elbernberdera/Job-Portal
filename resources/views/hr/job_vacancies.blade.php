@@ -260,7 +260,52 @@
                                 <!-- Job Details -->
                                 <div class="col-md-6">
                                     <label for="job_title_modal" class="form-label">Job Title</label>
-                                    <input type="text" id="job_title_modal" name="job_title" class="form-control" required>
+                                    <select id="job_title_modal" name="job_title" class="form-select" required>
+                                        <option value="">Select Job Title</option>
+                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
+                                        <option value="Budget Officer II">Budget Officer II</option>
+                                        <option value="ITO II - Provincial Officer">ITO II - Provincial Officer</option>
+                                        <option value="LINEMAN I - Messenger/Driver">LINEMAN I - Messenger/Driver</option>
+                                        <option value="Cashier II">Cashier II</option>
+                                        <option value="ITO I">ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADS">ENG3 - Provincial Officer ADS</option>
+                                        <option value="Director IV - Regional Director">Director IV - Regional Director</option>
+                                        <option value="ITO I">ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADN">ENG3 - Provincial Officer ADN</option>
+                                        <option value="Accountant III">Accountant III</option>
+                                        <option value="CEO III - Support Staff">CEO III - Support Staff</option>
+                                        <option value="ITO II - Provincial Officer PDI">ITO II - Provincial Officer PDI</option>
+                                        <option value="ADAS 3">ADAS 3</option>
+                                        <option value="ECET I">ECET I</option>
+                                        <option value="ITO I- Provincial Officer SDS">ITO I- Provincial Officer SDS</option>
+                                        <option value="Driver II">Driver II</option>
+                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
+                                        <option value="ITO III - TOD Chief">ITO III - TOD Chief</option>
+                                        <option value="HRMO II">HRMO II</option>
+                                        <option value="ITO I - Section Head, IIDB">ITO I - Section Head, IIDB</option>
+                                        <option value="ISA I">ISA I</option>
+                                        <option value="ITO 2 - Section Head, Connectivity">ITO 2 - Section Head, Connectivity</option>
+                                        <option value="Chief Administrative Officer">Chief Administrative Officer</option>
+                                        <option value="PDO I">PDO I</option>
+                                        <option value="PDO II">PDO II</option>
+                                        <option value="ENGINEER II">ENGINEER II</option>
+                                        <option value="ENGR II">ENGR II</option>
+                                        <option value="ENGR I">ENGR I</option>
+                                        <option value="ISA II">ISA II</option>
+                                        <option value="PLO II">PLO II</option>
+                                        <option value="PMO I">PMO I</option>
+                                        <option value="ENGR III">ENGR III</option>
+                                        <option value="PLA">PLA</option>
+                                        <option value="PLO I">PLO I</option>
+                                        <option value="Supply Officer I">Supply Officer I</option>
+                                        <option value="Administrative Officer II">Administrative Officer II</option>
+                                        <option value="Administrative Aide IV (Utility)">Administrative Aide IV (Utility)</option>
+                                        <option value="Administrative Aide IV (AA IV)">Administrative Aide IV (AA IV)</option>
+                                        <option value="Administrative Officer II (HRMO I)">Administrative Officer II (HRMO I)</option>
+                                        <option value="Administrative Officer II (Budget Officer I)">Administrative Officer II (Budget Officer I)</option>
+                                        <option value="Administrative Officer I (Cashier I)">Administrative Officer I (Cashier I)</option>
+                                        <option value="Records Officer I">Records Officer I</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="position_code_modal" class="form-label">Position Code</label>
@@ -268,7 +313,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="division_modal" class="form-label">Division</label>
-                                    <input type="text" id="division_modal" name="division" class="form-control" required>
+                                    <select id="division_modal" name="division" class="form-select" required>
+                                        <option value="">Select Division</option>
+                                        <option value="Admin and Finance">Admin and Finance</option>
+                                        <option value="Technical Operations Division">Technical Operations Division</option>
+                                        <option value="Office of the Regional Director">Office of the Regional Director</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="region_modal" class="form-label">Region</label>
@@ -324,17 +374,6 @@
                                     <h5>Qualification Criteria</h5>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="min_education_level_modal" class="form-label">Minimum Education Level</label>
-                                    <select id="min_education_level_modal" name="min_education_level" class="form-select">
-                                        <option value="">-- None --</option>
-                                        <option value="elementary">Elementary</option>
-                                        <option value="secondary">Secondary</option>
-                                        <option value="vocational">Vocational</option>
-                                        <option value="college">College</option>
-                                        <option value="graduate">Graduate</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
                                     <label for="required_course_modal" class="form-label">Required Course/Degree</label>
                                     <input type="text" id="required_course_modal" name="required_course" class="form-control" placeholder="e.g. BS Computer Science">
                                 </div>
@@ -343,30 +382,8 @@
                                     <input type="number" id="min_years_experience_modal" name="min_years_experience" class="form-control" min="0" placeholder="e.g. 2">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="required_eligibility_modal" class="form-label">Required Eligibility</label>
-                                    <input type="text" id="required_eligibility_modal" name="required_eligibility" class="form-control" placeholder="e.g. PRC, CSC Prof">
-                                </div>
-                                <div class="col-md-6">
                                     <label for="required_skills_modal" class="form-label">Required Skills (comma separated)</label>
                                     <input type="text" id="required_skills_modal" name="required_skills" class="form-control" placeholder="e.g. Programming, Communication">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="age_min_modal" class="form-label">Minimum Age</label>
-                                    <input type="number" id="age_min_modal" name="age_min" class="form-control" min="0">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="age_max_modal" class="form-label">Maximum Age</label>
-                                    <input type="number" id="age_max_modal" name="age_max" class="form-control" min="0">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="civil_status_requirement_modal" class="form-label">Civil Status Requirement</label>
-                                    <select id="civil_status_requirement_modal" name="civil_status_requirement" class="form-select">
-                                        <option value="">-- None --</option>
-                                        <option value="Single">Single</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Widowed">Widowed</option>
-                                        <option value="Separated">Separated</option>
-                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="citizenship_requirement_modal" class="form-label">Citizenship Requirement</label>
@@ -579,7 +596,52 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="job_title_edit_{{ $vacancy->id }}" class="form-label">Job Title</label>
-                                    <input type="text" id="job_title_edit_{{ $vacancy->id }}" name="job_title" class="form-control" value="{{ $vacancy->job_title }}" required>
+                                    <select id="job_title_edit_{{ $vacancy->id }}" name="job_title" class="form-select" required>
+                                        <option value="">Select Job Title</option>
+                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
+                                        <option value="Budget Officer II">Budget Officer II</option>
+                                        <option value="ITO II - Provincial Officer">ITO II - Provincial Officer</option>
+                                        <option value="LINEMAN I - Messenger/Driver">LINEMAN I - Messenger/Driver</option>
+                                        <option value="Cashier II">Cashier II</option>
+                                        <option value="ITO I">ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADS">ENG3 - Provincial Officer ADS</option>
+                                        <option value="Director IV - Regional Director">Director IV - Regional Director</option>
+                                        <option value="ITO I">ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADN">ENG3 - Provincial Officer ADN</option>
+                                        <option value="Accountant III">Accountant III</option>
+                                        <option value="CEO III - Support Staff">CEO III - Support Staff</option>
+                                        <option value="ITO II - Provincial Officer PDI">ITO II - Provincial Officer PDI</option>
+                                        <option value="ADAS 3">ADAS 3</option>
+                                        <option value="ECET I">ECET I</option>
+                                        <option value="ITO I- Provincial Officer SDS">ITO I- Provincial Officer SDS</option>
+                                        <option value="Driver II">Driver II</option>
+                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
+                                        <option value="ITO III - TOD Chief">ITO III - TOD Chief</option>
+                                        <option value="HRMO II">HRMO II</option>
+                                        <option value="ITO I - Section Head, IIDB">ITO I - Section Head, IIDB</option>
+                                        <option value="ISA I">ISA I</option>
+                                        <option value="ITO 2 - Section Head, Connectivity">ITO 2 - Section Head, Connectivity</option>
+                                        <option value="Chief Administrative Officer">Chief Administrative Officer</option>
+                                        <option value="PDO I">PDO I</option>
+                                        <option value="PDO II">PDO II</option>
+                                        <option value="ENGINEER II">ENGINEER II</option>
+                                        <option value="ENGR II">ENGR II</option>
+                                        <option value="ENGR I">ENGR I</option>
+                                        <option value="ISA II">ISA II</option>
+                                        <option value="PLO II">PLO II</option>
+                                        <option value="PMO I">PMO I</option>
+                                        <option value="ENGR III">ENGR III</option>
+                                        <option value="PLA">PLA</option>
+                                        <option value="PLO I">PLO I</option>
+                                        <option value="Supply Officer I">Supply Officer I</option>
+                                        <option value="Administrative Officer II">Administrative Officer II</option>
+                                        <option value="Administrative Aide IV (Utility)">Administrative Aide IV (Utility)</option>
+                                        <option value="Administrative Aide IV (AA IV)">Administrative Aide IV (AA IV)</option>
+                                        <option value="Administrative Officer II (HRMO I)">Administrative Officer II (HRMO I)</option>
+                                        <option value="Administrative Officer II (Budget Officer I)">Administrative Officer II (Budget Officer I)</option>
+                                        <option value="Administrative Officer I (Cashier I)">Administrative Officer I (Cashier I)</option>
+                                        <option value="Records Officer I">Records Officer I</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="position_code_edit_{{ $vacancy->id }}" class="form-label">Position Code</label>
@@ -587,7 +649,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                                 <div class="col-md-6">
                                     <label for="division_edit_{{ $vacancy->id }}" class="form-label">Division</label>
-                                    <input type="text" id="division_edit_{{ $vacancy->id }}" name="division" class="form-control" value="{{ $vacancy->division }}" required>
+                                    <select id="division_edit_{{ $vacancy->id }}" name="division" class="form-select" required>
+                                        <option value="">Select Division</option>
+                                        <option value="Admin and Finance">Admin and Finance</option>
+                                        <option value="Technical Operations Division">Technical Operations Division</option>
+                                        <option value="Office of the Regional Director">Office of the Regional Director</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="region_edit_{{ $vacancy->id }}" class="form-label">Region</label>
@@ -644,17 +711,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <h5>Qualification Criteria</h5>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="min_education_level_edit_{{ $vacancy->id }}" class="form-label">Minimum Education Level</label>
-                                    <select id="min_education_level_edit_{{ $vacancy->id }}" name="min_education_level" class="form-select">
-                                        <option value="" {{ empty($vacancy->min_education_level) ? 'selected' : '' }}>-- None --</option>
-                                        <option value="elementary" {{ $vacancy->min_education_level == 'elementary' ? 'selected' : '' }}>Elementary</option>
-                                        <option value="secondary" {{ $vacancy->min_education_level == 'secondary' ? 'selected' : '' }}>Secondary</option>
-                                        <option value="vocational" {{ $vacancy->min_education_level == 'vocational' ? 'selected' : '' }}>Vocational</option>
-                                        <option value="college" {{ $vacancy->min_education_level == 'college' ? 'selected' : '' }}>College</option>
-                                        <option value="graduate" {{ $vacancy->min_education_level == 'graduate' ? 'selected' : '' }}>Graduate</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
                                     <label for="required_course_edit_{{ $vacancy->id }}" class="form-label">Required Course/Degree</label>
                                     <input type="text" id="required_course_edit_{{ $vacancy->id }}" name="required_course" class="form-control" value="{{ $vacancy->required_course }}" placeholder="e.g. BS Computer Science">
                                 </div>
@@ -663,30 +719,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <input type="number" id="min_years_experience_edit_{{ $vacancy->id }}" name="min_years_experience" class="form-control" min="0" value="{{ $vacancy->min_years_experience }}" placeholder="e.g. 2">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="required_eligibility_edit_{{ $vacancy->id }}" class="form-label">Required Eligibility</label>
-                                    <input type="text" id="required_eligibility_edit_{{ $vacancy->id }}" name="required_eligibility" class="form-control" value="{{ $vacancy->required_eligibility }}" placeholder="e.g. PRC, CSC Prof">
-                                </div>
-                                <div class="col-md-6">
                                     <label for="required_skills_edit_{{ $vacancy->id }}" class="form-label">Required Skills (comma separated)</label>
                                     <input type="text" id="required_skills_edit_{{ $vacancy->id }}" name="required_skills" class="form-control" value="{{ is_array($vacancy->required_skills) ? implode(', ', $vacancy->required_skills) : $vacancy->required_skills }}" placeholder="e.g. Programming, Communication">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="age_min_edit_{{ $vacancy->id }}" class="form-label">Minimum Age</label>
-                                    <input type="number" id="age_min_edit_{{ $vacancy->id }}" name="age_min" class="form-control" min="0" value="{{ $vacancy->age_min }}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="age_max_edit_{{ $vacancy->id }}" class="form-label">Maximum Age</label>
-                                    <input type="number" id="age_max_edit_{{ $vacancy->id }}" name="age_max" class="form-control" min="0" value="{{ $vacancy->age_max }}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="civil_status_requirement_edit_{{ $vacancy->id }}" class="form-label">Civil Status Requirement</label>
-                                    <select id="civil_status_requirement_edit_{{ $vacancy->id }}" name="civil_status_requirement" class="form-select">
-                                        <option value="" {{ empty($vacancy->civil_status_requirement) ? 'selected' : '' }}>-- None --</option>
-                                        <option value="Single" {{ $vacancy->civil_status_requirement == 'Single' ? 'selected' : '' }}>Single</option>
-                                        <option value="Married" {{ $vacancy->civil_status_requirement == 'Married' ? 'selected' : '' }}>Married</option>
-                                        <option value="Widowed" {{ $vacancy->civil_status_requirement == 'Widowed' ? 'selected' : '' }}>Widowed</option>
-                                        <option value="Separated" {{ $vacancy->civil_status_requirement == 'Separated' ? 'selected' : '' }}>Separated</option>
-                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="citizenship_requirement_edit_{{ $vacancy->id }}" class="form-label">Citizenship Requirement</label>

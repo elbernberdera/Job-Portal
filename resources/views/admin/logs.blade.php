@@ -217,9 +217,11 @@
             }
         });
     });
-    
+</script>
+
+@if(!isset($selectedDate))
+<script>
     // Auto-refresh logs (only if no date is selected)
-    @if(!isset($selectedDate))
     setInterval(function() {
         fetch("{{ route('admin.logs.ajax') }}")
             .then(response => {
@@ -235,9 +237,9 @@
                 console.error('Error updating logs:', error);
             });
     }, 5000); // 5 seconds
-    @endif
 </script>
+@endif
 @endsection
 
-
+ 
 

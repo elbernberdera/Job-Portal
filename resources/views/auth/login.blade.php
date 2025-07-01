@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DICT Job Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="flex flex-col items-center justify-center w-full min-h-screen">
@@ -20,14 +21,14 @@
                 @csrf
                 <!-- Email Address -->
                 <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input id="email" name="email" type="email" required autofocus autocomplete="username" value="{{ old('email') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" name="email" type="email" required autofocus autocomplete="username" value="{{ old('email') }}" class="form-control" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
                 <!-- Password -->
                 <div class="mb-2">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input id="password" name="password" type="password" required autocomplete="current-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                    <label for="password" class="form-label">Password</label>
+                    <input id="password" name="password" type="password" required autocomplete="current-password" class="form-control" />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
                 <div class="flex items-center justify-between mb-4">

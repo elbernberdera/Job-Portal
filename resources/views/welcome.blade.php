@@ -16,10 +16,49 @@
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         
+        <!-- Typed.js for Typewriter Effect -->
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        
         <!-- Custom Styles -->
         <style>
             .gradient-bg {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(-45deg, #3b82f6, #fbbf24, rgb(59, 140, 246));
+                background-size: 200% 200%;
+                animation: gradient-move 8s ease-in-out infinite;
+                position: relative;
+                overflow: hidden;
+            }
+            @keyframes gradient-move {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+            .gradient-button {
+                background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #1e3a8a 100%);
+                color: white;
+                transition: all 0.3s ease;
+            }
+            .gradient-button:hover {
+                background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 50%, #1e40af 100%);
+                transform: translateY(-2px);
+            }
+            .hero-logo-bg {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 700px;
+                max-width: 80vw;
+                opacity: 0.15;
+                z-index: 1;
+                pointer-events: none;
+                user-select: none;
             }
             .card-hover:hover {
                 transform: translateY(-5px);
@@ -27,6 +66,40 @@
             }
             .search-shadow {
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .typed-sub {
+                display: block;
+                font-size: 1.25rem;
+                font-weight: 400;
+                color: rgb(255 255 255 / 0.9);
+                margin-top: 1rem;
+            }
+            .fade-out {
+                animation: fadeOut 1s forwards;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 8px rgba(30, 41, 59, 0.25), 0 1px 2px rgba(0,0,0,0.15);
+            }
+            .register-gradient-button {
+                background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #1e3a8a 100%);
+                color: white;
+                transition: all 0.3s ease;
+            }
+            .register-gradient-button:hover {
+                background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 50%, #1e40af 100%);
+                transform: translateY(-2px);
+            }
+            .gradient-blue-text {
+                color: #2563eb;
+                text-shadow: 0 0 12px #2563eb, 0 0 24px #60a5fa;
+            }
+            .glass-card {
+                background: rgba(255, 255, 255, 0.25);
+                border-radius: 1rem;
+                box-shadow: 0 4px 24px rgba(30, 41, 59, 0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255,255,255,0.18);
             }
         </style>
     </head>
@@ -36,16 +109,16 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <a href="/" class="text-2xl font-bold text-indigo-600">JobPortal</a>
+                        <a href="/" class="text-2xl font-bold text-blue-600">JobPortal</a>
                     </div>
                     <div class="flex items-center space-x-4">
                         @if (Route::has('login'))
                             @auth
                                 <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-indigo-600">Dashboard</a>
                             @else
-                                <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600">Log in</a>
+                                <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600">Log in</a>
                                 @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Register</a>
+                                    <a href="{{ route('register') }}" class="register-gradient-button px-4 py-2 rounded-md font-semibold">Register</a>
                                 @endif
                             @endauth
                         @endif
@@ -56,18 +129,16 @@
 
         <!-- Hero Section -->
         <div class="gradient-bg">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                <div class="text-center" data-aos="fade-up">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Find Your Dream Job Today
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center min-h-[570px]">
+                <img src="/assets/images/dict logo.png" alt="Logo" class="hero-logo-bg" aria-hidden="true">
+                <div class="text-center relative z-10" data-aos="fade-up">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 text-shadow">
+                        <span id="typed-title"></span>
                     </h1>
-                    <p class="text-xl text-white/90 mb-8">
-                        Discover thousands of job opportunities with top companies
-                    </p>
                     <form method="GET" action="/" class="bg-white p-4 rounded-lg search-shadow max-w-3xl mx-auto flex flex-col md:flex-row gap-4">
                         <input type="text" name="job_title" placeholder="Job title or keyword" value="{{ request('job_title') }}" class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <input type="text" name="location" placeholder="Location" value="{{ request('location') }}" class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button type="submit" class="bg-indigo-600 text-white px-8 py-2 rounded-md hover:bg-indigo-700">
+                        <button type="submit" class="gradient-button px-8 py-2 rounded-md">
                             Search Jobs
                         </button>
                     </form>
@@ -104,7 +175,7 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach($jobs as $job)
-                            <div class="bg-white rounded-lg shadow-md p-6 card-hover" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                            <div class="glass-card bg-white rounded-lg shadow-md p-6 card-hover" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                                 <div class="flex items-center justify-between mb-4">
                                     <h3 class="text-xl font-semibold text-gray-900 truncate" title="{{ $job->job_title }}">
                                         {{ $job->job_title }}
@@ -146,11 +217,11 @@
 
                                 <div class="flex justify-end space-x-2">
                                     @auth
-                                        <a href="{{ route('user.profile') }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
+                                        <a href="{{ route('user.profile') }}" class="gradient-button px-4 py-2 rounded">
                                             Apply Now
                                         </a>
                                     @else
-                                        <a href="{{ route('login') }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
+                                        <a href="{{ route('login') }}" class="gradient-button px-4 py-2 rounded">
                                             Login to Apply
                                         </a>
                                     @endauth
@@ -161,7 +232,7 @@
 
                     @if(count($jobs) >= 8)
                         <div class="text-center mt-12">
-                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            <a href="{{ route('login') }}" class="gradient-button inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md">
                                 View All Jobs
                                 <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -176,14 +247,14 @@
         <!-- Call to Action -->
         <div class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-indigo-600 rounded-2xl p-8 md:p-12 text-center" data-aos="fade-up">
-                    <h2 class="text-3xl font-bold text-white mb-4">Ready to Start Your Career Journey?</h2>
+                <div class="rounded-2xl p-8 md:p-12 text-center" data-aos="fade-up" style="background: linear-gradient(135deg, #3b82f6 0%, #fbbf24 100%);">
+                    <h2 class="text-3xl font-bold text-white mb-4 text-shadow">Ready to Start Your Career Journey?</h2>
                     <p class="text-white/90 mb-8 text-lg">Join thousands of people who've found their dream jobs through our platform</p>
                     <div class="flex flex-col md:flex-row gap-4 justify-center">
-                        <a href="{{ route('register') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-md hover:bg-gray-100 font-semibold">
+                        <a href="{{ route('register') }}" class="register-gradient-button px-8 py-3 rounded-md font-semibold">
                             Create an Account
                         </a>
-                        <a href="{{ route('login') }}" class="bg-indigo-500 text-white px-8 py-3 rounded-md hover:bg-indigo-400 font-semibold">
+                        <a href="{{ route('login') }}" class="gradient-button px-8 py-3 rounded-md font-semibold">
                             Sign In
                         </a>
                     </div>
@@ -219,8 +290,22 @@
         <script>
             // Initialize AOS animations
             AOS.init({
-                duration: 800,
+                duration: 1000,
                 once: true
+            });
+
+            // Single Typed.js instance for the full sequence
+            new Typed('#typed-title', {
+                strings: [
+                    'Welcome to <span class="gradient-blue-text">DICT</span> Job Portal',
+                    'Find Your Dream Job Today<span class="typed-sub">Discover thousands of job opportunities with top companies</span>'
+                ],
+                typeSpeed: 40,
+                backSpeed: 70,
+                backDelay: 900,
+                showCursor: false,
+                loop: true,
+                smartBackspace: false,
             });
         </script>
     </body>
