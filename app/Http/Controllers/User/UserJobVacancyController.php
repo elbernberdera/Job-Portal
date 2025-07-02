@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobVacancy;
+use Illuminate\Support\Facades\Auth;
+use App\Models\JobApplication;
 
 class UserJobVacancyController extends Controller
 {
@@ -88,5 +90,17 @@ class UserJobVacancyController extends Controller
             }
         }
         return count($fields) > 0 ? round(($filled / count($fields)) * 100) : 0;
+    }
+
+    /**
+     * Display a listing of the jobs the user has applied to.
+     */
+    public function appliedJobs()
+    {
+        $userId = Auth::id();
+        $appliedJobs = JobApplication::where('user_id', $userId)
+            ->with('jobVacancy')
+            ->get();
+        return view('user.applied_jobs', compact('appliedJobs'));
     }
 } 
