@@ -12,8 +12,10 @@ class UserController extends Controller
      */
     public function dashboard()
     {
-        $openJobVacancies = \App\Models\JobVacancy::where('status', 'open')->get();
-        return view('user.dashboard', compact('openJobVacancies'));
+        $user = auth()->user();
+        $openJobs = \App\Models\JobVacancy::where('status', 'open')->whereNotNull('hr_id')->count();
+        $appliedJobs = $user->jobApplications()->count();
+        return view('user.dashboard', compact('openJobs', 'appliedJobs'));
     }
 
     public function editProfile(Request $request)

@@ -30,8 +30,9 @@ class DashboardController extends Controller
                 return view('hr.dashboard');
             case 3:
             default:
-                // Count of open job vacancies
-                $openJobs = JobVacancy::where('status', 'open')->count();
+                // Always get the current count of open job vacancies from HR postings
+                $openJobs = \App\Models\JobVacancy::where('status', 'open')->whereNotNull('hr_id')->count();
+                \Log::info('Open jobs count:', ['count' => $openJobs]);
                 
                 // Count of jobs the user has applied for
                 $appliedJobs = $user->jobApplications()->count();
