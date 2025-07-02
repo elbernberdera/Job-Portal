@@ -68,6 +68,7 @@ class RegisteredUserController extends Controller
             'role' => 3, // default user role
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_image' => 'assets/images/image7.png', // Set default profile image
         ]);
 
         event(new Registered($user));
