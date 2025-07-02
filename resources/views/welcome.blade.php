@@ -92,6 +92,38 @@
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255,255,255,0.18);
             }
+            
+            /* Predictive Search Styles */
+            .suggestion-item {
+                transition: background-color 0.15s ease;
+            }
+            
+            .suggestion-item:hover {
+                background-color: #f3f4f6 !important;
+            }
+            
+            .suggestion-item.bg-blue-100 {
+                background-color: #dbeafe !important;
+            }
+            
+            #job_title_suggestions,
+            #location_suggestions {
+                top: 100%;
+                left: 0;
+                right: 0;
+                margin-top: 2px;
+            }
+            
+            /* Loading animation */
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
         </style>
     </head>
     <body class="antialiased bg-gray-50">
@@ -127,8 +159,14 @@
                         <span id="typed-title"></span>
                     </h1>
                     <form method="GET" action="/" class="bg-white p-4 rounded-lg search-shadow max-w-3xl mx-auto flex flex-col md:flex-row gap-4">
-                        <input type="text" name="job_title" placeholder="Job title or keyword" value="{{ request('job_title') }}" class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <input type="text" name="location" placeholder="Location" value="{{ request('location') }}" class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex-1 relative">
+                            <input type="text" name="job_title" id="job_title_input" placeholder="Job title or keyword" value="{{ request('job_title') }}" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <div id="job_title_suggestions" class="absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                        </div>
+                        <div class="flex-1 relative">
+                            <input type="text" name="location" id="location_input" placeholder="Location" value="{{ request('location') }}" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <div id="location_suggestions" class="absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                        </div>
                         <button type="submit" class="gradient-button px-8 py-2 rounded-md">
                             Search Jobs
                         </button>
@@ -297,6 +335,185 @@
                 showCursor: false,
                 loop: true,
                 smartBackspace: false,
+            });
+
+            // Predictive Search Functionality
+            class PredictiveSearch {
+                constructor(inputId, suggestionsId, type) {
+                    this.input = document.getElementById(inputId);
+                    this.suggestionsContainer = document.getElementById(suggestionsId);
+                    this.type = type;
+                    this.debounceTimer = null;
+                    this.isLoading = false;
+                    
+                    this.init();
+                }
+                
+                init() {
+                    // Input event listener
+                    this.input.addEventListener('input', (e) => {
+                        this.handleInput(e.target.value);
+                    });
+                    
+                    // Focus event listener
+                    this.input.addEventListener('focus', () => {
+                        if (this.input.value.length >= 3) {
+                            this.showSuggestions();
+                        }
+                    });
+                    
+                    // Blur event listener (hide suggestions after a delay)
+                    this.input.addEventListener('blur', () => {
+                        setTimeout(() => {
+                            this.hideSuggestions();
+                        }, 200);
+                    });
+                    
+                    // Keyboard navigation
+                    this.input.addEventListener('keydown', (e) => {
+                        this.handleKeydown(e);
+                    });
+                }
+                
+                handleInput(value) {
+                    clearTimeout(this.debounceTimer);
+                    
+                    if (value.length < 3) {
+                        this.hideSuggestions();
+                        return;
+                    }
+                    
+                    this.debounceTimer = setTimeout(() => {
+                        this.fetchSuggestions(value);
+                    }, 300);
+                }
+                
+                async fetchSuggestions(query) {
+                    if (this.isLoading) return;
+                    
+                    this.isLoading = true;
+                    // Show spinner only if fetch takes longer than 150ms
+                    const spinnerTimeout = setTimeout(() => {
+                        if (this.isLoading) {
+                            this.suggestionsContainer.innerHTML = `
+                                <div class=\"p-3 text-gray-500 text-center\">
+                                    <div class=\"inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600\"></div>
+                                    <span class=\"ml-2\">Searching...</span>
+                                </div>
+                            `;
+                            this.showSuggestions();
+                        }
+                    }, 150);
+                    
+                    try {
+                        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}&type=${this.type}`);
+                        const suggestions = await response.json();
+                        clearTimeout(spinnerTimeout);
+                        this.displaySuggestions(suggestions);
+                    } catch (error) {
+                        clearTimeout(spinnerTimeout);
+                        console.error('Error fetching suggestions:', error);
+                        this.hideSuggestions();
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+                
+                displaySuggestions(suggestions) {
+                    if (suggestions.length === 0) {
+                        this.suggestionsContainer.innerHTML = `
+                            <div class="p-3 text-gray-500 text-center">
+                                No suggestions found
+                            </div>
+                        `;
+                    } else {
+                        this.suggestionsContainer.innerHTML = suggestions
+                            .map(suggestion => `
+                                <div class="suggestion-item px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0" 
+                                     data-value="${suggestion}">
+                                    <div class="flex items-center">
+                                        <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                        </svg>
+                                        <span class="text-gray-700">${suggestion}</span>
+                                    </div>
+                                </div>
+                            `)
+                            .join('');
+                        
+                        // Add click event listeners to suggestion items
+                        this.suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                this.selectSuggestion(item.dataset.value);
+                            });
+                        });
+                    }
+                    
+                    this.showSuggestions();
+                }
+                
+                selectSuggestion(value) {
+                    this.input.value = value;
+                    this.hideSuggestions();
+                    this.input.focus();
+                    
+                    // Trigger form submission after selection
+                    setTimeout(() => {
+                        this.input.closest('form').submit();
+                    }, 100);
+                }
+                
+                handleKeydown(e) {
+                    const items = this.suggestionsContainer.querySelectorAll('.suggestion-item');
+                    const currentIndex = Array.from(items).findIndex(item => item.classList.contains('bg-blue-100'));
+                    
+                    switch (e.key) {
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            this.navigateSuggestions(items, currentIndex, 1);
+                            break;
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            this.navigateSuggestions(items, currentIndex, -1);
+                            break;
+                        case 'Enter':
+                            if (currentIndex >= 0 && items[currentIndex]) {
+                                e.preventDefault();
+                                this.selectSuggestion(items[currentIndex].dataset.value);
+                            }
+                            break;
+                        case 'Escape':
+                            this.hideSuggestions();
+                            break;
+                    }
+                }
+                
+                navigateSuggestions(items, currentIndex, direction) {
+                    items.forEach(item => item.classList.remove('bg-blue-100'));
+                    
+                    let newIndex = currentIndex + direction;
+                    if (newIndex < 0) newIndex = items.length - 1;
+                    if (newIndex >= items.length) newIndex = 0;
+                    
+                    if (items[newIndex]) {
+                        items[newIndex].classList.add('bg-blue-100');
+                        items[newIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                }
+                
+                showSuggestions() {
+                    this.suggestionsContainer.classList.remove('hidden');
+                }
+                
+                hideSuggestions() {
+                    this.suggestionsContainer.classList.add('hidden');
+                }
+            }
+            
+            // Initialize predictive search for both inputs
+            document.addEventListener('DOMContentLoaded', function() {
+                new PredictiveSearch('job_title_input', 'job_title_suggestions', 'job_title');
+                new PredictiveSearch('location_input', 'location_suggestions', 'location');
             });
         </script>
     </body>
