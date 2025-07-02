@@ -1,6 +1,6 @@
 @extends('user.base.base')
 
-@section('page_title', 'Apply for ' . $job->job_title)
+
 
 @section('main_content')
 <div class="container mt-4">

@@ -145,6 +145,9 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     // Add the new route for the PDS form
     Route::get('/user/pds-form/{job}', [App\Http\Controllers\User\UserProfileController::class, 'showPDSForm'])->name('user.pds.form');
     Route::post('/user/pds-form/{job}', [App\Http\Controllers\User\UserProfileController::class, 'storePDS'])->name('user.pds.store');
+
+    // Add the new route for the user's applied jobs
+    Route::get('/user/applied-jobs', [UserJobVacancyController::class, 'appliedJobs'])->name('user.appliedJob');
 });
 
 Route::middleware('auth')->group(function () {
