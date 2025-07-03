@@ -148,6 +148,9 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     // Add the new route for the user's applied jobs
     Route::get('/user/applied-jobs', [UserJobVacancyController::class, 'appliedJobs'])->name('user.appliedJob');
+
+    // Route to check profile completeness before applying
+    Route::get('/user/apply-for-job/{job}', [App\Http\Controllers\User\UserProfileController::class, 'applyForJob'])->name('user.apply_for_job');
 });
 
 Route::middleware('auth')->group(function () {

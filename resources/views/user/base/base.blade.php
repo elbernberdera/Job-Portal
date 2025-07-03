@@ -171,5 +171,7 @@
 {{-- For Custom JS --}}
 @yield('custom_js')
 
+@yield('scripts')
+
 </body>
 </html>

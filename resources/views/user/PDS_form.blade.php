@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
                                    id="last_name" name="last_name" 
                                    value="{{ old('last_name', $user->last_name) }}" 
-                                   placeholder="Enter your surname" required>
+                                   placeholder="Enter your surname" readonly>
                             @error('last_name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -103,7 +103,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
                                    id="first_name" name="first_name" 
                                    value="{{ old('first_name', $user->first_name) }}" 
-                                   placeholder="Enter your first name" required>
+                                   placeholder="Enter your first name" readonly>
                             @error('first_name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -114,34 +114,20 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
+                            <label for="middle_name">Middle Name</label>
                             <label for="middle_initial">Middle Name</label>
-                            <input type="text" class="form-control @error('middle_initial') is-invalid @enderror" 
-                                   id="middle_initial" name="middle_initial" 
-                                   value="{{ old('middle_initial', $user->middle_name) }}" 
-                                   placeholder="Middle Name">
-                            @error('middle_initial')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input type="text" class="form-control" 
+                                    name="middle_initial" 
+                                   value="{{ $user->middle_name }}" 
+                                   placeholder="Middle Name" readonly>
                         </div>
                     </div>
                     
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="suffix">Suffix</label>
-                            <select class="form-select @error('suffix') is-invalid @enderror" 
-                                    id="suffix" name="suffix">
-                                <option value="">Select Suffix</option>
-                                <option value="Jr." {{ old('suffix', $user->suffix) == 'Jr.' ? 'selected' : '' }}>Jr.</option>
-                                <option value="Sr." {{ old('suffix', $user->suffix) == 'Sr.' ? 'selected' : '' }}>Sr.</option>
-                                <option value="I" {{ old('suffix', $user->suffix) == 'I' ? 'selected' : '' }}>I</option>
-                                <option value="II" {{ old('suffix', $user->suffix) == 'II' ? 'selected' : '' }}>II</option>
-                                <option value="III" {{ old('suffix', $user->suffix) == 'III' ? 'selected' : '' }}>III</option>
-                                <option value="IV" {{ old('suffix', $user->suffix) == 'IV' ? 'selected' : '' }}>IV</option>
-                                <option value="V" {{ old('suffix', $user->suffix) == 'V' ? 'selected' : '' }}>V</option>
-                            </select>
-                            @error('suffix')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input type="text" class="form-control" id="suffix" name="suffix"
+                                   value="{{ $user->suffix }}" readonly>
                         </div>
                     </div>
                     
@@ -161,7 +147,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             <label for="birth_date">Date of Birth <span class="text-danger">*</span></label>
                             <input type="date" class="form-control @error('birth_date') is-invalid @enderror" 
                                    id="birth_date" name="birth_date" 
-                                   value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('Y-m-d') : '') }}" required>
+                                   value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('Y-m-d') : '') }}" readonly>
                             @error('birth_date')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -172,7 +158,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             <label for="place_of_birth">Place of Birth <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('place_of_birth') is-invalid @enderror" 
                                    id="place_of_birth" name="place_of_birth" 
-                                   value="{{ old('place_of_birth', $user->place_of_birth) }}" required>
+                                   value="{{ old('place_of_birth', $user->place_of_birth) }}" readonly>
                             @error('place_of_birth')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -182,32 +168,14 @@ window.addEventListener('DOMContentLoaded', function() {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="sex">Sex <span class="text-danger">*</span></label>
-                            <select class="form-select select2" id="sex" name="sex">
-                                <option value="">Select Sex</option>
-                                <option value="male" {{ old('sex', $user->sex) == 'male' ? 'selected' : '' }}>Male</option>
-                                <option value="female" {{ old('sex', $user->sex) == 'female' ? 'selected' : '' }}>Female</option>
-                                <option value="other" {{ old('sex', $user->sex) == 'other' ? 'selected' : '' }}>Other</option>
-                            </select>
-                            @error('sex')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input type="text" class="form-control" id="sex" name="sex" value="{{ $user->sex }}" readonly>
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="civil_status">Civil Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="civil_status" name="civil_status" required>
-                                <option value="">Select Status</option>
-                                <option value="Single" {{ old('civil_status', $profile->civil_status ?? '') == 'Single' ? 'selected' : '' }}>Single</option>
-                                <option value="Married" {{ old('civil_status', $profile->civil_status ?? '') == 'Married' ? 'selected' : '' }}>Married</option>
-                                <option value="Widowed" {{ old('civil_status', $profile->civil_status ?? '') == 'Widowed' ? 'selected' : '' }}>Widowed</option>
-                                <option value="Separated" {{ old('civil_status', $profile->civil_status ?? '') == 'Separated' ? 'selected' : '' }}>Separated</option>
-                                <option value="Divorced" {{ old('civil_status', $profile->civil_status ?? '') == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                            </select>
-                            @error('civil_status')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input type="text" class="form-control" id="civil_status" name="civil_status" value="{{ $profile->civil_status ?? '' }}" readonly>
                         </div>
                     </div>
                 </div>
@@ -215,54 +183,35 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="height" class="form-label">Height (m)</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('height') is-invalid @enderror" id="height" name="height" value="{{ old('height', $profile->height ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
-                        @error('height')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <input type="text" class="form-control" id="height" name="height" value="{{ $profile->height ?? '' }}" readonly />
                     </div>
                     <div class="col-md-4">
                         <label for="weight" class="form-label">Weight (kg)</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('weight') is-invalid @enderror" id="weight" name="weight" value="{{ old('weight', $profile->weight ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                        @error('weight')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <input type="text" class="form-control" id="weight" name="weight" value="{{ $profile->weight ?? '' }}" readonly/>
                     </div>
                     <div class="col-md-4">
                         <label for="blood_type" class="form-label">Blood Type</label>
-                        <select class="form-select" id="blood_type" name="blood_type">
-                            <option value="">Select Blood Type</option>
-                            <option value="A+" {{ old('blood_type', $profile->blood_type ?? '') == 'A+' ? 'selected' : '' }}>A+</option>
-                            <option value="A-" {{ old('blood_type', $profile->blood_type ?? '') == 'A-' ? 'selected' : '' }}>A-</option>
-                            <option value="B+" {{ old('blood_type', $profile->blood_type ?? '') == 'B+' ? 'selected' : '' }}>B+</option>
-                            <option value="B-" {{ old('blood_type', $profile->blood_type ?? '') == 'B-' ? 'selected' : '' }}>B-</option>
-                            <option value="AB+" {{ old('blood_type', $profile->blood_type ?? '') == 'AB+' ? 'selected' : '' }}>AB+</option>
-                            <option value="AB-" {{ old('blood_type', $profile->blood_type ?? '') == 'AB-' ? 'selected' : '' }}>AB-</option>
-                            <option value="O+" {{ old('blood_type', $profile->blood_type ?? '') == 'O+' ? 'selected' : '' }}>O+</option>
-                            <option value="O-" {{ old('blood_type', $profile->blood_type ?? '') == 'O-' ? 'selected' : '' }}>O-</option>
-                        </select>
-                        @error('blood_type')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <input type="text" class="form-control" id="blood_type" name="blood_type" value="{{ $profile->blood_type ?? '' }}" readonly/>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="gsis_id_no" class="form-label">GSIS ID No.</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('gsis_id_no') is-invalid @enderror" id="gsis_id_no" name="gsis_id_no" value="{{ old('gsis_id_no', $profile->gsis_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('gsis_id_no') is-invalid @enderror" id="gsis_id_no" name="gsis_id_no" value="{{ old('gsis_id_no', $profile->gsis_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" readonly>
                         @error('gsis_id_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
                         <label for="pagibig_id_no" class="form-label">PAG-IBIG ID No.</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('pagibig_id_no') is-invalid @enderror" id="pagibig_id_no" name="pagibig_id_no" value="{{ old('pagibig_id_no', $profile->pagibig_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('pagibig_id_no') is-invalid @enderror" id="pagibig_id_no" name="pagibig_id_no" value="{{ old('pagibig_id_no', $profile->pagibig_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" readonly>
                         @error('pagibig_id_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
                         <label for="philhealth_no" class="form-label">PhilHealth No.</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('philhealth_no') is-invalid @enderror" id="philhealth_no" name="philhealth_no" value="{{ old('philhealth_no', $profile->philhealth_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('philhealth_no') is-invalid @enderror" id="philhealth_no" name="philhealth_no" value="{{ old('philhealth_no', $profile->philhealth_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" readonly>
                         @error('philhealth_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -271,14 +220,14 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="sss_no" class="form-label">SSS No.</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('sss_no') is-invalid @enderror" id="sss_no" name="sss_no" value="{{ old('sss_no', $profile->sss_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('sss_no') is-invalid @enderror" id="sss_no" name="sss_no" value="{{ old('sss_no', $profile->sss_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" readonly>
                         @error('sss_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="tin_no" class="form-label">TIN No.</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('tin_no') is-invalid @enderror" id="tin_no" name="tin_no" value="{{ old('tin_no', $profile->tin_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('tin_no') is-invalid @enderror" id="tin_no" name="tin_no" value="{{ old('tin_no', $profile->tin_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" readonly>
                             @error('tin_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror

@@ -351,7 +351,8 @@ class UserProfileController extends Controller
     {
         $job = \App\Models\JobVacancy::findOrFail($jobId);
         $user = Auth::user();
-        return view('user.PDS_form', compact('job', 'user'));
+        $profile = $user->profile;
+        return view('user.PDS_form', compact('job', 'user', 'profile'));
     }
 
     public function storePDS(Request $request, $jobId)
@@ -606,5 +607,48 @@ class UserProfileController extends Controller
         $application->save();
 
         return redirect()->route('user.dashboard')->with('success', 'Your application and PDS have been submitted!');
+    }
+
+    // Helper to check if user profile is complete
+    private function isProfileComplete($user)
+    {
+        $requiredUserFields = [
+            'first_name', 'last_name', 'birth_date', 'sex', 'place_of_birth'
+        ];
+        foreach ($requiredUserFields as $field) {
+            if (empty($user->$field)) {
+                return false;
+            }
+        }
+        $profile = $user->profile;
+        if (!$profile) return false;
+        $requiredProfileFields = [
+            'height', 'weight', 'blood_type', 'gsis_id_no', 'pagibig_id_no', 'philhealth_no', 'sss_no', 'tin_no', 'agency_employee_no',
+            'perm_house_unit_no', 'perm_street', 'perm_barangay', 'perm_city_municipality', 'perm_province', 'perm_zipcode',
+            'res_house_unit_no', 'res_street', 'res_barangay', 'res_city_municipality', 'res_province', 'res_zipcode',
+            'civil_status'
+        ];
+        foreach ($requiredProfileFields as $field) {
+            if (empty($profile->$field)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Route handler for apply-for-job
+    public function applyForJob($jobId)
+    {
+        $user = auth()->user();
+        if (!$this->isProfileComplete($user)) {
+            // Redirect to PDS form to complete profile
+            //user.pds.form
+            return redirect()->route('user.profile.edit', ['job' => $jobId])
+                ->with('warning', 'Please complete your profile before applying.');
+        }
+        // If complete, redirect back to job vacancies with modal flag
+        return redirect()->route('user.job.vacancies')
+            ->with('show_apply_modal', true)
+            ->with('job_id', $jobId);
     }
 } 

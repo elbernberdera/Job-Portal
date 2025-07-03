@@ -114,12 +114,12 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="middle_initial">Middle Name</label>
-                            <input type="text" class="form-control @error('middle_initial') is-invalid @enderror" 
-                                   id="middle_initial" name="middle_initial" 
-                                   value="{{ old('middle_initial', $user->middle_name) }}" 
+                            <label for="middle_name">Middle Name</label>
+                            <input type="text" class="form-control @error('middle_name') is-invalid @enderror" 
+                                   id="middle_name" name="middle_name" 
+                                   value="{{ old('middle_name', $user->middle_name) }}" 
                                    placeholder="Middle Name">
-                            @error('middle_initial')
+                            @error('middle_name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
