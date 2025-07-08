@@ -655,47 +655,48 @@ class AdminController extends Controller
     // ========================================
 
     /**
-     * Show site configuration page
+     * Show the site configuration page.
      */
     public function siteConfig()
     {
-        // Get current site settings from config or database
         $settings = [
-            'maintenance_mode' => Setting::getValue('maintenance_mode', false),
-            'site_name' => config('app.name', 'Job Portal'),
-            'site_description' => config('app.description', ''),
-            'contact_email' => config('mail.from.address', ''),
-            'notification_enabled' => config('app.notifications_enabled', true),
-            'job_approval_required' => config('app.job_approval_required', true),
-            'max_job_applications' => config('app.max_job_applications', 5),
-            'auto_archive_days' => config('app.auto_archive_days', 30),
+            'site_name' => Setting::get('site_name', config('app.name')),
+            'site_description' => Setting::get('site_description', ''),
+            'contact_email' => Setting::get('contact_email', ''),
+            'maintenance_mode' => Setting::get('maintenance_mode', false),
+            'notification_enabled' => Setting::get('notification_enabled', true),
+            'job_approval_required' => Setting::get('job_approval_required', true),
+            'max_job_applications' => Setting::get('max_job_applications', 5),
+            'auto_archive_days' => Setting::get('auto_archive_days', 30),
         ];
 
         return view('admin.system-settings.site-config', compact('settings'));
     }
 
     /**
-     * Update site configuration
+     * Update site configuration.
      */
     public function updateSiteConfig(Request $request)
     {
         $request->validate([
             'site_name' => 'required|string|max:255',
-            'site_description' => 'nullable|string|max:500',
+            'site_description' => 'nullable|string',
             'contact_email' => 'required|email',
-            'maintenance_mode' => 'nullable',
-            'notification_enabled' => 'nullable',
-            'job_approval_required' => 'nullable',
             'max_job_applications' => 'required|integer|min:1|max:20',
             'auto_archive_days' => 'required|integer|min:1|max:365',
         ]);
 
-        // Save maintenance mode to settings table
-        Setting::setValue('maintenance_mode', $request->has('maintenance_mode') ? '1' : '0');
+        // Update settings
+        Setting::set('site_name', $request->site_name);
+        Setting::set('site_description', $request->site_description);
+        Setting::set('contact_email', $request->contact_email);
+        Setting::set('maintenance_mode', $request->has('maintenance_mode'));
+        Setting::set('notification_enabled', $request->has('notification_enabled'));
+        Setting::set('job_approval_required', $request->has('job_approval_required'));
+        Setting::set('max_job_applications', $request->max_job_applications);
+        Setting::set('auto_archive_days', $request->auto_archive_days);
 
-        // (Other settings can be saved similarly if needed)
-
-        return redirect()->route('admin.site-config')->with('success', 'Site configuration updated successfully!');
+        return redirect()->route('admin.site-config')->with('success', 'Site configuration updated successfully.');
     }
 
     /**

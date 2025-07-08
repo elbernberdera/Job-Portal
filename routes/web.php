@@ -16,8 +16,9 @@ use App\Http\Controllers\Admin\JobPositionController;
 use App\Http\Controllers\User\JobApplicationController;
 use App\Http\Controllers\User\UserJobVacancyController;
 
-
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
+
+Route::middleware(['maintenance'])->group(function () {
 
 Route::get('/dashboard-test', function () {
     $openJobs = \App\Models\JobVacancy::where('status', 'open')->count();
@@ -44,36 +45,12 @@ Route::get('/dashboard', function () {
 
 // Admin routes
 Route::middleware(['auth', 'role:1'])->group(function () {
+    // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
-
-    
-
-    // Account management routes
-    Route::get('/admin/accounts', [AdminController::class, 'accounts'])->name('admin.accounts');
-    Route::post('/admin/accounts', [AdminController::class, 'storeAccount'])->name('admin.accounts.store');
-    Route::put('/admin/accounts/{user}', [AdminController::class, 'updateAccount'])->name('admin.accounts.update');
-    Route::delete('/admin/accounts/{user}', [AdminController::class, 'deleteAccount'])->name('admin.accounts.destroy');
-
-    // create here the update_profile
-    Route::get('/admin/update_profile', [AdminController::class, 'editProfile'])->name('update.profile');
-    Route::put('/admin/update_profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
-
-    // cretae here the routes of the log
-    Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs');
-    Route::get('/admin/logs/ajax', [\App\Http\Controllers\Admin\LogController::class, 'ajaxLogs'])->name('admin.logs.ajax');
-    Route::get('/admin/logs/export', [LogController::class, 'export'])->name('admin.logs.export');
-    
-    // New routes for date filtering
-    Route::post('/admin/logs/filter-by-date', [LogController::class, 'filterByDate'])->name('admin.logs.filter-by-date');
-    Route::post('/admin/logs/ajax-by-date', [LogController::class, 'ajaxLogsByDate'])->name('admin.logs.ajax-by-date');
-    Route::post('/admin/logs/export-by-date', [LogController::class, 'exportByDate'])->name('admin.logs.export-by-date');
-    
-    // Dashboard AJAX routes
     Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
     Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
 
-    // Admin Job Position Management Routes
+    // Job Positions
     Route::get('/admin/job-positions', [JobPositionController::class, 'index'])->name('admin.job_positions.index');
     Route::get('/admin/job-positions/create', [JobPositionController::class, 'create'])->name('admin.job_positions.create');
     Route::post('/admin/job-positions', [JobPositionController::class, 'store'])->name('admin.job_positions.store');
@@ -85,6 +62,68 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     Route::post('/admin/job-positions/{id}/restore', [JobPositionController::class, 'restore'])->name('admin.job_positions.restore');
     Route::get('/admin/job-positions/{id}/statistics', [JobPositionController::class, 'statistics'])->name('admin.job_positions.statistics');
 
+    // User Management
+    Route::get('/admin/applicants', [AdminController::class, 'applicants'])->name('admin.applicants');
+    Route::get('/admin/applicants/{user}', [AdminController::class, 'viewApplicant'])->name('admin.applicants.view');
+    Route::post('/admin/applicants/{user}/deactivate', [AdminController::class, 'deactivateApplicant'])->name('admin.applicants.deactivate');
+    Route::post('/admin/applicants/{user}/activate', [AdminController::class, 'activateApplicant'])->name('admin.applicants.activate');
+    Route::delete('/admin/applicants/{user}', [AdminController::class, 'deleteApplicant'])->name('admin.applicants.delete');
+
+    // HR Accounts
+    Route::get('/admin/hr-accounts', [AdminController::class, 'hrAccounts'])->name('admin.hr-accounts');
+    Route::get('/admin/hr-accounts/{user}/activity', [AdminController::class, 'hrActivity'])->name('admin.hr-accounts.activity');
+    Route::post('/admin/hr-accounts/{user}/approve', [AdminController::class, 'approveHrAccount'])->name('admin.hr-accounts.approve');
+    Route::post('/admin/hr-accounts/{user}/reject', [AdminController::class, 'rejectHrAccount'])->name('admin.hr-accounts.reject');
+    Route::post('/admin/hr-accounts/{user}/deactivate', [AdminController::class, 'deactivateHrAccount'])->name('admin.hr-accounts.deactivate');
+    Route::post('/admin/hr-accounts/{user}/activate', [AdminController::class, 'activateHrAccount'])->name('admin.hr-accounts.activate');
+    Route::delete('/admin/hr-accounts/{user}', [AdminController::class, 'deleteHrAccount'])->name('admin.hr-accounts.delete');
+
+    // Admin Accounts
+    Route::get('/admin/admin-accounts', [AdminController::class, 'adminAccounts'])->name('admin.admin-accounts');
+    Route::post('/admin/admin-accounts', [AdminController::class, 'storeAdminAccount'])->name('admin.admin-accounts.store');
+    Route::put('/admin/admin-accounts/{user}', [AdminController::class, 'updateAdminAccount'])->name('admin.admin-accounts.update');
+    Route::delete('/admin/admin-accounts/{user}', [AdminController::class, 'deleteAdminAccount'])->name('admin.admin-accounts.delete');
+
+    // System Settings
+    Route::get('/admin/site-config', [AdminController::class, 'siteConfig'])->name('admin.site-config');
+    Route::post('/admin/site-config', [AdminController::class, 'updateSiteConfig'])->name('admin.site-config.update');
+    
+    // Job Categories
+    Route::get('/admin/job-categories', [AdminController::class, 'jobCategories'])->name('admin.job-categories');
+    Route::post('/admin/job-categories', [AdminController::class, 'storeJobCategory'])->name('admin.job-categories.store');
+    Route::put('/admin/job-categories/{id}', [AdminController::class, 'updateJobCategory'])->name('admin.job-categories.update');
+    Route::delete('/admin/job-categories/{id}', [AdminController::class, 'deleteJobCategory'])->name('admin.job-categories.delete');
+
+    // Locations
+    Route::get('/admin/locations', [AdminController::class, 'locations'])->name('admin.locations');
+    Route::post('/admin/locations', [AdminController::class, 'storeLocation'])->name('admin.locations.store');
+    Route::put('/admin/locations/{id}', [AdminController::class, 'updateLocation'])->name('admin.locations.update');
+    Route::delete('/admin/locations/{id}', [AdminController::class, 'deleteLocation'])->name('admin.locations.delete');
+
+    // Industries
+    Route::get('/admin/industries', [AdminController::class, 'industries'])->name('admin.industries');
+    Route::post('/admin/industries', [AdminController::class, 'storeIndustry'])->name('admin.industries.store');
+    Route::put('/admin/industries/{id}', [AdminController::class, 'updateIndustry'])->name('admin.industries.update');
+    Route::delete('/admin/industries/{id}', [AdminController::class, 'deleteIndustry'])->name('admin.industries.delete');
+
+    // Logs
+    Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs');
+    Route::get('/admin/logs/ajax', [LogController::class, 'ajaxLogs'])->name('admin.logs.ajax');
+    Route::get('/admin/logs/export', [LogController::class, 'export'])->name('admin.logs.export');
+    Route::post('/admin/logs/filter-by-date', [LogController::class, 'filterByDate'])->name('admin.logs.filter-by-date');
+    Route::post('/admin/logs/ajax-by-date', [LogController::class, 'ajaxLogsByDate'])->name('admin.logs.ajax-by-date');
+    Route::post('/admin/logs/export-by-date', [LogController::class, 'exportByDate'])->name('admin.logs.export-by-date');
+
+    // Settings and Profile
+    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::get('/admin/update_profile', [AdminController::class, 'editProfile'])->name('update.profile');
+    Route::put('/admin/update_profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+
+    // Legacy Account Management
+    Route::get('/admin/accounts', [AdminController::class, 'accounts'])->name('admin.accounts');
+    Route::post('/admin/accounts', [AdminController::class, 'storeAccount'])->name('admin.accounts.store');
+    Route::put('/admin/accounts/{user}', [AdminController::class, 'updateAccount'])->name('admin.accounts.update');
+    Route::delete('/admin/accounts/{user}', [AdminController::class, 'deleteAccount'])->name('admin.accounts.destroy');
 });
 
 // HR routes
@@ -159,5 +198,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+}); // End maintenance middleware group
 
 require __DIR__.'/auth.php';

@@ -4,23 +4,38 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
 
 class CheckForMaintenanceMode
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        $maintenance = Setting::getValue('maintenance_mode', false);
-        $isAdmin = Auth::check() && Auth::user()->role == 1;
+        if (Setting::get('maintenance_mode', false)) {
+            // 1. If logged in and admin, allow all access
+            if (Auth::check() && Auth::user()->role === 1) {
+                return $next($request);
+            }
 
-        if ($maintenance && !$isAdmin) {
-            // If not admin, show maintenance page
+            // 2. Allow access to landing, login, register, and logout pages
+            if ($request->is('/') || $request->is('login') || $request->is('register') || $request->is('logout')) {
+                return $next($request);
+            }
+
+            // 3. If logged in but not admin, log out and show maintenance page
+            if (Auth::check() && Auth::user()->role !== 1) {
+                Auth::logout();
+                return response()->view('maintenance');
+            }
+
+            // 4. All others see maintenance page
             return response()->view('maintenance');
         }
 
