@@ -99,6 +99,28 @@ class UserProfileController extends Controller
             'civil_status' => 'required|string',
             'citizenship' => 'required|string',
             'dual_country_dropdown' => 'nullable|string',
+            'height' => 'required|string|max:10',
+            'weight' => 'required|string|max:10',
+            'blood_type' => 'required', 
+            'gsis_id_no' => 'required',
+            'pagibig_id_no' => 'required',
+            'philhealth_no' => 'required', 
+            'sss_no' => 'requied',
+            'tin_no' => 'requied',  
+            'agency_employee_no' => 'required', 
+            'citizenship' => 'required',
+            'perm_house_unit_no' => 'required',
+            'perm_street' => 'required',
+            'perm_barangay' => 'required',
+            'perm_city_municipality' => 'required',
+            'perm_province' => 'required',
+            'perm_zipcode' => 'required',
+            'res_house_unit_no' => 'required',
+            'res_street' => 'required',
+            'res_barangay' => 'required',
+            'res_city_municipality' => 'required',
+            'res_province' => 'required',
+            'res_zipcode' => 'required',
         ]);
         $user->update([
             'first_name' => $request->input('first_name'),
@@ -125,11 +147,7 @@ class UserProfileController extends Controller
             'civil_status',
             'dual_country_dropdown',
         ]);
-
-        // Validate civil_status for profile
-        $request->validate([
-            'civil_status' => 'required|string',
-        ]);
+    
 
         // Prepare children array
         $children = [];
@@ -368,6 +386,8 @@ class UserProfileController extends Controller
             'sex' => 'required|string',
             'civil_status' => 'required|string',
             'citizenship' => 'required|string',
+            'height' => 'required|string|max:10',
+            'weight' => 'required|string|max:10',
         ]);
 
         // Save user basic info (optional, or skip if you don't want to update user table)

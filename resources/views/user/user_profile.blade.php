@@ -214,21 +214,21 @@ window.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <label for="height" class="form-label">Height (m)</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('height') is-invalid @enderror" id="height" name="height" value="{{ old('height', $profile->height ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                        <label for="height" class="form-label">Height (m) <span class="text-danger">*</span></label>
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('height') is-invalid @enderror" id="height" name="height" value="{{ old('height', $profile->height ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required />
                         @error('height')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="weight" class="form-label">Weight (kg)</label>
-                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('weight') is-invalid @enderror" id="weight" name="weight" value="{{ old('weight', $profile->weight ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <label for="weight" class="form-label">Weight (kg) <span class="text-danger">*</span></label>
+                        <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('weight') is-invalid @enderror" id="weight" name="weight" value="{{ old('weight', $profile->weight ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                         @error('weight')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="blood_type" class="form-label">Blood Type</label>
+                        <label for="blood_type" class="form-label">Blood Type <span class="text-danger">*</span></label>
                         <select class="form-select" id="blood_type" name="blood_type">
                             <option value="">Select Blood Type</option>
                             <option value="A+" {{ old('blood_type', $profile->blood_type ?? '') == 'A+' ? 'selected' : '' }}>A+</option>
@@ -247,21 +247,21 @@ window.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <label for="gsis_id_no" class="form-label">GSIS ID No.</label>
+                        <label for="gsis_id_no" class="form-label">GSIS ID No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('gsis_id_no') is-invalid @enderror" id="gsis_id_no" name="gsis_id_no" value="{{ old('gsis_id_no', $profile->gsis_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         @error('gsis_id_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="pagibig_id_no" class="form-label">PAG-IBIG ID No.</label>
+                        <label for="pagibig_id_no" class="form-label">PAG-IBIG ID No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('pagibig_id_no') is-invalid @enderror" id="pagibig_id_no" name="pagibig_id_no" value="{{ old('pagibig_id_no', $profile->pagibig_id_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         @error('pagibig_id_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="philhealth_no" class="form-label">PhilHealth No.</label>
+                        <label for="philhealth_no" class="form-label">PhilHealth No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('philhealth_no') is-invalid @enderror" id="philhealth_no" name="philhealth_no" value="{{ old('philhealth_no', $profile->philhealth_no ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
                         @error('philhealth_no')
                             <span class="invalid-feedback">{{ $message }}</span>
@@ -270,21 +270,21 @@ window.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <label for="sss_no" class="form-label">SSS No.</label>
+                        <label for="sss_no" class="form-label">SSS No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('sss_no') is-invalid @enderror" id="sss_no" name="sss_no" value="{{ old('sss_no', $profile->sss_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         @error('sss_no')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="tin_no" class="form-label">TIN No.</label>
+                            <label for="tin_no" class="form-label">TIN No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('tin_no') is-invalid @enderror" id="tin_no" name="tin_no" value="{{ old('tin_no', $profile->tin_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                             @error('tin_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="agency_employee_no" class="form-label">Agency Employee No.</label>
+                            <label for="agency_employee_no" class="form-label">Agency Employee No. <span class="text-danger">*</span></label>
                         <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('agency_employee_no') is-invalid @enderror" id="agency_employee_no" name="agency_employee_no" value="{{ old('agency_employee_no', $profile->agency_employee_no ?? '') }}" inputmode="decimal" pattern="^\d*\.?\d*$" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                             @error('agency_employee_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
@@ -293,7 +293,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
-                            <label for="citizenship" class="form-label">Citizenship</label>
+                            <label for="citizenship" class="form-label">Citizenship <span class="text-danger">*</span></label>
                             <select id="citizenship" name="citizenship" class="form-select" onchange="toggleDualDetails()">
                                 <option value="">-- Select Citizenship --</option>
                             <option value="Filipino" {{ old('citizenship', $profile->citizenship ?? '') == 'Filipino' ? 'selected' : '' }}>Filipino</option>
@@ -361,42 +361,42 @@ window.addEventListener('DOMContentLoaded', function() {
                                 <h5>Permanent Address</h5>
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_house_unit_no" class="form-label">House/Unit No.</label>
+                                <label for="perm_house_unit_no" class="form-label">House/Unit No. <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('perm_house_unit_no') is-invalid @enderror" id="perm_house_unit_no" name="perm_house_unit_no" value="{{ old('perm_house_unit_no', $profile->perm_house_unit_no ?? '') }}">
                                 @error('perm_house_unit_no')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_street" class="form-label">Street</label>
+                                <label for="perm_street" class="form-label">Street <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('perm_street') is-invalid @enderror" id="perm_street" name="perm_street" value="{{ old('perm_street', $profile->perm_street ?? '') }}">
                                 @error('perm_street')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_barangay" class="form-label">Barangay</label>
+                                <label for="perm_barangay" class="form-label">Barangay <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('perm_barangay') is-invalid @enderror" id="perm_barangay" name="perm_barangay" value="{{ old('perm_barangay', $profile->perm_barangay ?? '') }}">
                                 @error('perm_barangay')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_city_municipality" class="form-label">City/Municipality</label>
+                                <label for="perm_city_municipality" class="form-label">City/Municipality <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('perm_city_municipality') is-invalid @enderror" id="perm_city_municipality" name="perm_city_municipality" value="{{ old('perm_city_municipality', $profile->perm_city_municipality ?? '') }}">
                                 @error('perm_city_municipality')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_province" class="form-label">Province</label>
+                                <label for="perm_province" class="form-label">Province <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('perm_province') is-invalid @enderror" id="perm_province" name="perm_province" value="{{ old('perm_province', $profile->perm_province ?? '') }}">
                                 @error('perm_province')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="perm_zipcode" class="form-label">Zip Code</label>
+                                <label for="perm_zipcode" class="form-label">Zip Code <span class="text-danger">*</span></label>
                             <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('perm_zipcode') is-invalid @enderror" id="perm_zipcode" name="perm_zipcode" value="{{ old('perm_zipcode', $profile->perm_zipcode ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                 @error('perm_zipcode')
                                     <span class="invalid-feedback">{{ $message }}</span>
@@ -408,42 +408,42 @@ window.addEventListener('DOMContentLoaded', function() {
                                 <h5>Resident Address </h5>
                             </div>
                             <div class="col-md-2">
-                                <label for="res_house_unit_no" class="form-label">House/Unit No.</label>
+                                <label for="res_house_unit_no" class="form-label">House/Unit No. <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('res_house_unit_no') is-invalid @enderror" id="res_house_unit_no" name="res_house_unit_no" value="{{ old('res_house_unit_no', $profile->res_house_unit_no ?? '') }}">
                                 @error('res_house_unit_no')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="res_street" class="form-label">Street</label>
+                                <label for="res_street" class="form-label">Street <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('res_street') is-invalid @enderror" id="res_street" name="res_street" value="{{ old('res_street', $profile->res_street ?? '') }}">
                                 @error('res_street')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="res_barangay" class="form-label">Barangay</label>
+                                <label for="res_barangay" class="form-label">Barangay <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('res_barangay') is-invalid @enderror" id="res_barangay" name="res_barangay" value="{{ old('res_barangay', $profile->res_barangay ?? '') }}">
                                 @error('res_barangay')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="res_city_municipality" class="form-label">City/Municipality</label>
+                                <label for="res_city_municipality" class="form-label">City/Municipality <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('res_city_municipality') is-invalid @enderror" id="res_city_municipality" name="res_city_municipality" value="{{ old('res_city_municipality', $profile->res_city_municipality ?? '') }}">
                                 @error('res_city_municipality')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="res_province" class="form-label">Province</label>
+                                <label for="res_province" class="form-label">Province <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('res_province') is-invalid @enderror" id="res_province" name="res_province" value="{{ old('res_province', $profile->res_province ?? '') }}">
                                 @error('res_province')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="res_zipcode" class="form-label">Zip Code</label>
+                                <label for="res_zipcode" class="form-label">Zip Code <span class="text-danger">*</span></label>
                             <input type="text" inputmode="decimal" pattern="^\d*\.?\d*$" class="form-control @error('res_zipcode') is-invalid @enderror" id="res_zipcode" name="res_zipcode" value="{{ old('res_zipcode', $profile->res_zipcode ?? '') }}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                 @error('res_zipcode')
                                     <span class="invalid-feedback">{{ $message }}</span>
