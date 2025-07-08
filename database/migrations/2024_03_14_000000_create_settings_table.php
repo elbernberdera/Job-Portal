@@ -20,6 +20,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
+
+
+
+
+
+
+
+
+
+
+        
         // Insert default settings
         DB::table('settings')->insert([
             [
