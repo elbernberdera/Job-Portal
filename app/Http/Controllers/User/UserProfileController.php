@@ -375,7 +375,7 @@ class UserProfileController extends Controller
 
         $user->profile()->updateOrCreate(['user_id' => $user->id], $profileData);
 
-        return redirect()->back()->with('success', 'Profile updated!');
+        return redirect()->route('user.job.vacancies')->with('success', 'Profile updated!');
     }
 
     public function showPDSForm($jobId)

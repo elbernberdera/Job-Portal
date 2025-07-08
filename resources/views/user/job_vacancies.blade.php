@@ -1,5 +1,6 @@
 @extends('user.base.base')
 
+
 <style>
 .custom-hover-card {
     border: 1px solid #dee2e6;
