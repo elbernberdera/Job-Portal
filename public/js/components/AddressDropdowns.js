@@ -32,21 +32,18 @@ class AddressDropdowns {
 
     bindEvents() {
         if (this.elements.region) {
-            this.elements.region.addEventListener('change', () => {
-                this.onRegionChange();
-            });
+            this.regionChangeHandler = () => this.onRegionChange();
+            this.elements.region.addEventListener('change', this.regionChangeHandler);
         }
 
         if (this.elements.province) {
-            this.elements.province.addEventListener('change', () => {
-                this.onProvinceChange();
-            });
+            this.provinceChangeHandler = () => this.onProvinceChange();
+            this.elements.province.addEventListener('change', this.provinceChangeHandler);
         }
 
         if (this.elements.city) {
-            this.elements.city.addEventListener('change', () => {
-                this.onCityChange();
-            });
+            this.cityChangeHandler = () => this.onCityChange();
+            this.elements.city.addEventListener('change', this.cityChangeHandler);
         }
     }
 
@@ -278,6 +275,19 @@ class AddressDropdowns {
                     });
                 }
             });
+        }
+    }
+
+    // Method to destroy the instance and clean up event listeners
+    destroy() {
+        if (this.elements.region && this.regionChangeHandler) {
+            this.elements.region.removeEventListener('change', this.regionChangeHandler);
+        }
+        if (this.elements.province && this.provinceChangeHandler) {
+            this.elements.province.removeEventListener('change', this.provinceChangeHandler);
+        }
+        if (this.elements.city && this.cityChangeHandler) {
+            this.elements.city.removeEventListener('change', this.cityChangeHandler);
         }
     }
 }

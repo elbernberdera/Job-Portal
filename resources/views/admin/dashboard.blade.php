@@ -1,7 +1,7 @@
 @extends('admin.base.base')
 
 @section('page_title')
-    Admin Dashboard
+    Admin Dashboard - Overview
 @endsection
 
 @section('main_content')
@@ -9,13 +9,14 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Welcome, {{ Auth::user()->first_name ?? 'Admin' }}!</h1>
+                <h1 class="m-0 text-dark">Dashboard Overview</h1>
+                <p class="text-muted">Welcome back, {{ Auth::user()->first_name ?? 'Admin' }}!</p>
             </div>
             <div class="col-sm-6">
                 <div class="float-right">
                     <div class="btn-group" role="group">
                         <a href="{{ route('admin.job_positions.create') }}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus"></i> New Job Position
+                            <i class="fas fa-plus"></i> New Job
                         </a>
                         <a href="{{ route('admin.accounts') }}" class="btn btn-info btn-sm">
                             <i class="fas fa-user-plus"></i> Add User
@@ -30,184 +31,198 @@
     </div>
 </div>
 
-<!-- Notifications Section -->
-@if($pendingReviews > 0 || $thisMonthApplications > 0)
 <div class="content">
     <div class="container-fluid">
+        <!-- Key Statistics Row -->
         <div class="row">
-            <div class="col-12">
-                <div class="alert alert-info alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="icon fas fa-info"></i> Quick Actions Needed!</h5>
-                    @if($pendingReviews > 0)
-                        <p><strong>{{ $pendingReviews }}</strong> job applications need review.</p>
-                    @endif
-                    @if($thisMonthApplications > 0)
-                        <p><strong>{{ $thisMonthApplications }}</strong> new applications this month.</p>
-                    @endif
-                    <div class="mt-2">
-                        <a href="{{ route('admin.job_positions.index') }}" class="btn btn-sm btn-primary">Review Applications</a>
-                        <a href="{{ route('admin.accounts') }}" class="btn btn-sm btn-outline-secondary">Manage Users</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Users -->
+            <!-- Total Job Listings -->
             <div class="col-lg-3 col-md-6">
-                <div class="small-box bg-info">
+                <div class="small-box bg-primary">
                     <div class="inner">
-                        <h3 id="userCount">{{ $userCount ?? 0 }}</h3>
-                        <p>Users</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <a href="{{ route('admin.accounts') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- Job Posts -->
-            <div class="col-lg-3 col-md-6">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3 id="jobCount">{{ $jobCount ?? 0 }}</h3>
-                        <p>Job Posts</p>
+                        <h3>{{ number_format($totalJobListings) }}</h3>
+                        <p>Total Job Listings</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-briefcase"></i>
                     </div>
-                    <a href="{{ route('admin.job_positions.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('admin.job_positions.index') }}" class="small-box-footer">
+                        View All Jobs <i class="fas fa-arrow-circle-right"></i>
+                    </a>
                 </div>
             </div>
-            <!-- Applications -->
+
+            <!-- HR Users -->
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ number_format($hrUsers) }}</h3>
+                        <p>HR Users</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <a href="{{ route('admin.accounts') }}" class="small-box-footer">
+                        Manage Users <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Applicant Users -->
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ number_format($applicantUsers) }}</h3>
+                        <p>Registered Applicants</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <a href="{{ route('admin.accounts') }}" class="small-box-footer">
+                        View Applicants <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Total Applications -->
             <div class="col-lg-3 col-md-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3 id="applicationCount">{{ $applicationCount ?? 0 }}</h3>
-                        <p>Applications</p>
+                        <h3>{{ number_format($totalApplications) }}</h3>
+                        <p>Total Applications</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- Logs -->
-            <div class="col-lg-3 col-md-6">
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3 id="logCount">{{ $logCount ?? 0 }}</h3>
-                        <p>Logs</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <a href="{{ route('admin.logs') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('admin.job_positions.index') }}" class="small-box-footer">
+                        Review Applications <i class="fas fa-arrow-circle-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Statistics Row -->
+        <!-- Application Status Overview -->
         <div class="row">
-            <div class="col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon bg-primary"><i class="fas fa-user-check"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Active Users</span>
-                        <span class="info-box-number" id="activeUsers">{{ $activeUsers ?? 0 }}</span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $activeUsersPercentage ?? 0 }}%"></div>
-                        </div>
-                        <span class="progress-description">{{ $activeUsersPercentage ?? 0 }}% of total users</span>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Application Status Overview</h3>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Qualified Applicants</span>
-                        <span class="info-box-number" id="qualifiedApplicants">{{ $qualifiedApplicants ?? 0 }}</span>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width: {{ $qualifiedPercentage ?? 0 }}%"></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="info-box bg-warning">
+                                    <span class="info-box-icon"><i class="fas fa-clock"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Pending Review</span>
+                                        <span class="info-box-number">{{ number_format($pendingApplications) }}</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: {{ $totalApplications > 0 ? ($pendingApplications / $totalApplications) * 100 : 0 }}%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            {{ $totalApplications > 0 ? round(($pendingApplications / $totalApplications) * 100, 1) : 0 }}% of total applications
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-box bg-success">
+                                    <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Approved</span>
+                                        <span class="info-box-number">{{ number_format($approvedApplications) }}</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" style="width: {{ $totalApplications > 0 ? ($approvedApplications / $totalApplications) * 100 : 0 }}%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            {{ $totalApplications > 0 ? round(($approvedApplications / $totalApplications) * 100, 1) : 0 }}% of total applications
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-box bg-danger">
+                                    <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Rejected</span>
+                                        <span class="info-box-number">{{ number_format($rejectedApplications) }}</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" style="width: {{ $totalApplications > 0 ? ($rejectedApplications / $totalApplications) * 100 : 0 }}%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            {{ $totalApplications > 0 ? round(($rejectedApplications / $totalApplications) * 100, 1) : 0 }}% of total applications
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <span class="progress-description">{{ $qualifiedPercentage ?? 0 }}% of applications</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Pending Reviews</span>
-                        <span class="info-box-number" id="pendingReviews">{{ $pendingReviews ?? 0 }}</span>
-                        <div class="progress">
-                            <div class="progress-bar bg-warning" style="width: {{ $pendingPercentage ?? 0 }}%"></div>
-                        </div>
-                        <span class="progress-description">{{ $pendingPercentage ?? 0 }}% need attention</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon bg-info"><i class="fas fa-calendar-alt"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">This Month</span>
-                        <span class="info-box-number" id="thisMonthApplications">{{ $thisMonthApplications ?? 0 }}</span>
-                        <div class="progress">
-                            <div class="progress-bar bg-info" style="width: {{ $monthlyGrowth ?? 0 }}%"></div>
-                        </div>
-                        <span class="progress-description">{{ $monthlyGrowth ?? 0 }}% vs last month</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Chart & Recent Activity -->
+        <!-- Charts Row -->
         <div class="row">
+            <!-- Job Post Trends -->
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Applicants by Gender & Passer Status</h3>
-                        <div class="card-tools">
-                            <span class="badge badge-info" id="lastUpdate">Last updated: {{ now()->format('H:i:s') }}</span>
-                        </div>
+                        <h3 class="card-title">Job Post Trends (Last 6 Months)</h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="donutChart" width="300" height="300"></canvas>
+                        <canvas id="jobTrendsChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
+
+            <!-- User Activity -->
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Registered Users Over Time</h3>
-                        <div class="card-tools">
-                            <span class="badge badge-info" id="lastUpdateUsers">Last updated: {{ now()->format('H:i:s') }}</span>
-                            <span class="badge badge-warning d-none" id="updatingIndicatorUsers">Updating...</span>
-                        </div>
+                        <h3 class="card-title">User Registration Activity (Last 6 Months)</h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="usersChart" height="120"></canvas>
+                        <canvas id="userActivityChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Applications & System Health -->
+        <!-- Distribution Charts Row -->
         <div class="row">
+            <!-- Application Status Distribution -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Application Status Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="applicationStatusChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Role Distribution -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Role Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="userRoleChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Applications & Activity Logs -->
+        <div class="row">
+            <!-- Recent Applications -->
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Recent Job Applications</h3>
                         <div class="card-tools">
-                            <a href="{{ route('admin.job_positions.index') }}" class="btn btn-sm btn-outline-primary">View All Applications</a>
+                            <a href="{{ route('admin.job_positions.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -222,8 +237,8 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recentApplicationsTable">
-                                    @forelse($recentApplications ?? [] as $application)
+                                <tbody>
+                                    @forelse($recentApplications as $application)
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -262,68 +277,33 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Recent Activity Logs -->
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">System Health</h3>
+                        <h3 class="card-title">Recent Activity Logs</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="system-health-item mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>Database</span>
-                                <span class="badge badge-success">Healthy</span>
-                            </div>
-                            <div class="progress mt-1" style="height: 4px;">
-                                <div class="progress-bar bg-success" style="width: 100%"></div>
-                            </div>
-                        </div>
-                        <div class="system-health-item mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>Storage</span>
-                                <span class="badge badge-info">{{ $storageUsage ?? '75%' }}</span>
-                            </div>
-                            <div class="progress mt-1" style="height: 4px;">
-                                <div class="progress-bar bg-info" style="width: {{ $storageUsage ?? 75 }}%"></div>
-                            </div>
-                        </div>
-                        <div class="system-health-item mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>Active Sessions</span>
-                                <span class="badge badge-primary">{{ $activeSessions ?? 0 }}</span>
-                            </div>
-                            <div class="progress mt-1" style="height: 4px;">
-                                <div class="progress-bar bg-primary" style="width: {{ $sessionPercentage ?? 0 }}%"></div>
-                            </div>
-                        </div>
-                        <div class="system-health-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>Uptime</span>
-                                <span class="badge badge-success">{{ $uptime ?? '99.9%' }}</span>
-                            </div>
-                            <div class="progress mt-1" style="height: 4px;">
-                                <div class="progress-bar bg-success" style="width: 99.9%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Recent Activity</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group" id="recentActivities">
-                            @forelse($recentActivities ?? [] as $activity)
-                                <li class="list-group-item">{{ $activity }}</li>
+                    <div class="card-body p-0">
+                        <div class="activity-feed">
+                            @forelse($recentActivities as $activity)
+                                <div class="activity-item">
+                                    <div class="activity-icon {{ $activity['type'] === 'login' ? 'bg-success' : 'bg-warning' }}">
+                                        <i class="fas {{ $activity['type'] === 'login' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">
+                                            <strong>{{ $activity['user'] }}</strong> {{ $activity['action'] }}
+                                        </div>
+                                        <div class="activity-time">
+                                            {{ \Carbon\Carbon::parse($activity['time'])->diffForHumans() }}
+                                        </div>
+                                    </div>
+                                </div>
                             @empty
-                                <li class="list-group-item text-muted">No recent activity.</li>
+                                <div class="text-center text-muted py-3">No recent activity</div>
                             @endforelse
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -334,14 +314,90 @@
 
 @section('extra_styles')
 <style>
-    .badge-warning {
-        animation: pulse 1.5s infinite;
+    .info-box {
+        min-height: 80px;
     }
     
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+    .info-box-icon {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.875rem;
+    }
+    
+    .info-box-content {
+        padding: 5px 10px;
+    }
+    
+    .info-box-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .info-box-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .progress {
+        height: 3px;
+        margin: 5px 0;
+    }
+    
+    .progress-description {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+    
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .activity-feed {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+        border-bottom: 1px solid #f4f6f9;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-text {
+        font-size: 0.875rem;
+        margin-bottom: 2px;
+    }
+    
+    .activity-time {
+        font-size: 0.75rem;
+        color: #6c757d;
     }
     
     .card-tools {
@@ -350,50 +406,12 @@
         gap: 10px;
     }
     
-    .card-tools .badge {
-        font-size: 0.75rem;
-    }
-    
-    .chart-container {
-        position: relative;
-        height: 300px;
-    }
-
-    .avatar-sm {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
-    }
-
-    .system-health-item .progress {
-        background-color: #f8f9fa;
-    }
-
     .btn-group .btn {
         margin-right: 5px;
     }
-
+    
     .btn-group .btn:last-child {
         margin-right: 0;
-    }
-
-    .info-box .progress {
-        height: 3px;
-        margin: 5px 0;
-    }
-
-    .info-box .progress-description {
-        font-size: 0.75rem;
-        color: #6c757d;
-    }
-
-    #donutChart {
-        max-width: 350px;
-        max-height: 350px;
-        width: 100% !important;
-        height: auto !important;
-        margin: 0 auto;
-        display: block;
     }
 </style>
 @endsection
@@ -401,46 +419,47 @@
 @section('extra_scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    let donutChart;
-    let usersChart;
-
-    function initializeDonutChart(labels, data) {
-        const ctx = document.getElementById('donutChart').getContext('2d');
-        donutChart = new Chart(ctx, {
-            type: 'doughnut',
+    document.addEventListener('DOMContentLoaded', function() {
+        // Job Trends Chart
+        const jobTrendsCtx = document.getElementById('jobTrendsChart').getContext('2d');
+        new Chart(jobTrendsCtx, {
+            type: 'line',
             data: {
-                labels: labels,
+                labels: @json($jobTrendLabels),
                 datasets: [{
-                    data: data,
-                    backgroundColor: [
-                        '#2563eb', // Male Passer
-                        '#60a5fa', // Male Not Passer
-                        '#f472b6', // Female Passer
-                        '#fbbf24'  // Female Not Passer
-                    ],
-                    borderWidth: 1
+                    label: 'Job Posts',
+                    data: @json($jobTrendData),
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: { enabled: true }
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
                 }
             }
         });
-    }
 
-    function initializeUsersChart(labels, data) {
-        const ctx = document.getElementById('usersChart').getContext('2d');
-        usersChart = new Chart(ctx, {
+        // User Activity Chart
+        const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+        new Chart(userActivityCtx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: @json($userActivityLabels),
                 datasets: [{
-                    label: 'Users',
-                    data: data,
+                    label: 'New Users',
+                    data: @json($userActivityData),
                     backgroundColor: 'rgba(34, 197, 94, 0.2)',
                     borderColor: 'rgba(34, 197, 94, 1)',
                     borderWidth: 2,
@@ -450,23 +469,67 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: { display: false }
                 },
                 scales: {
-                    y: { beginAtZero: true }
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
                 }
             }
         });
-    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Donut chart data from backend
-        const donutLabels = @json(array_keys($donutChartData));
-        const donutData = @json(array_values($donutChartData));
-        initializeDonutChart(donutLabels, donutData);
-        // Users chart (keep as is)
-        initializeUsersChart(@json($chartLabels ?? []), @json($usersChartData ?? []));
+        // Application Status Chart
+        const applicationStatusCtx = document.getElementById('applicationStatusChart').getContext('2d');
+        new Chart(applicationStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_keys($applicationStatusData)),
+                datasets: [{
+                    data: @json(array_values($applicationStatusData)),
+                    backgroundColor: [
+                        '#fbbf24', // Pending - Warning
+                        '#22c55e', // Approved - Success
+                        '#ef4444'  // Rejected - Danger
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // User Role Chart
+        const userRoleCtx = document.getElementById('userRoleChart').getContext('2d');
+        new Chart(userRoleCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json(array_keys($userRoleData)),
+                datasets: [{
+                    data: @json(array_values($userRoleData)),
+                    backgroundColor: [
+                        '#22c55e', // HR Users - Success
+                        '#3b82f6'  // Applicants - Info
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
     });
 </script>
 @endsection

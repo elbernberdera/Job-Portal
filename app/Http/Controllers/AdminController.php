@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\JobVacancy;
 use App\Models\JobApplication;
 use App\Models\ActivityLog;
+use App\Models\Setting;
 
 class AdminController extends Controller
 {
@@ -17,49 +18,30 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        $userCount = User::count();
-        $jobCount = JobVacancy::count();
-        $applicationCount = JobApplication::count();
-        $logCount = ActivityLog::count();
-
-        // Enhanced statistics
-        $activeUsers = User::where('created_at', '>=', now()->subDays(30))->count();
-        $activeUsersPercentage = $userCount > 0 ? round(($activeUsers / $userCount) * 100, 1) : 0;
+        // Total job listings
+        $totalJobListings = JobVacancy::count();
         
-        // Qualified applicants are those with status 'shortlisted', 'interviewed', 'offered', or 'hired'
-        $qualifiedApplicants = JobApplication::whereIn('status', ['shortlisted', 'interviewed', 'offered', 'hired'])->count();
-        $qualifiedPercentage = $applicationCount > 0 ? round(($qualifiedApplicants / $applicationCount) * 100, 1) : 0;
+        // Users by role (1=Admin, 2=HR, 3=Applicant)
+        $hrUsers = User::where('role', 2)->count();
+        $applicantUsers = User::where('role', 3)->count();
+        $totalUsers = User::count();
         
-        // Pending reviews are those with status 'applied' or 'under_review'
-        $pendingReviews = JobApplication::whereIn('status', ['applied', 'under_review'])->count();
-        $pendingPercentage = $applicationCount > 0 ? round(($pendingReviews / $applicationCount) * 100, 1) : 0;
+        // Applications by status
+        $pendingApplications = JobApplication::whereIn('status', ['applied', 'under_review'])->count();
+        $approvedApplications = JobApplication::whereIn('status', ['shortlisted', 'interviewed', 'offered', 'hired'])->count();
+        $rejectedApplications = JobApplication::whereIn('status', ['rejected', 'not_qualified'])->count();
+        $totalApplications = JobApplication::count();
         
-        $thisMonthApplications = JobApplication::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        
-        $lastMonthApplications = JobApplication::whereMonth('created_at', now()->subMonth()->month)
-            ->whereYear('created_at', now()->subMonth()->year)
-            ->count();
-        
-        $monthlyGrowth = $lastMonthApplications > 0 ? round((($thisMonthApplications - $lastMonthApplications) / $lastMonthApplications) * 100, 1) : 0;
-
-        // Recent applications (last 5)
+        // Recent applications (last 10)
         $recentApplications = JobApplication::with(['user', 'jobVacancy'])
             ->orderBy('created_at', 'desc')
-            ->limit(5)
+            ->limit(10)
             ->get();
 
-        // System health metrics
-        $storageUsage = 75; // Mock data - in real app, calculate actual storage usage
-        $activeSessions = 12; // Mock data - in real app, get actual session count
-        $sessionPercentage = 60; // Mock data
-        $uptime = '99.9%'; // Mock data
-
-        // Recent activity (last 5 actions: login or logout)
+        // Recent activity logs (last 20)
         $recentActivities = ActivityLog::orderByDesc('login_at')
             ->orderByDesc('logout_at')
-            ->limit(10)
+            ->limit(20)
             ->get()
             ->flatMap(function($log) {
                 $actions = collect();
@@ -68,6 +50,7 @@ class AdminController extends Controller
                         'user' => $log->user_name,
                         'action' => 'logged in',
                         'time' => $log->login_at,
+                        'type' => 'login'
                     ]);
                 }
                 if ($log->logout_at) {
@@ -75,72 +58,68 @@ class AdminController extends Controller
                         'user' => $log->user_name,
                         'action' => 'logged out',
                         'time' => $log->logout_at,
+                        'type' => 'logout'
                     ]);
                 }
                 return $actions;
             })
             ->sortByDesc('time')
-            ->take(5)
-            ->map(function($item) {
-                return $item['user'] . ' ' . $item['action'] . ' at ' . $item['time'];
-            });
+            ->take(15);
 
-        // Chart data: Applications per month (last 6 months)
-        $chartLabels = [];
-        $chartData = [];
-        $usersChartData = [];
+        // Chart data: Job post trends (last 6 months)
+        $jobTrendLabels = [];
+        $jobTrendData = [];
         $months = collect(range(0, 5))->map(function($i) {
             return now()->subMonths($i)->format('Y-m');
         })->reverse();
+        
         foreach ($months as $month) {
-            $chartLabels[] = date('M Y', strtotime($month.'-01'));
-            $chartData[] = JobApplication::whereYear('created_at', substr($month, 0, 4))
-                ->whereMonth('created_at', substr($month, 5, 2))
-                ->count();
-            $usersChartData[] = User::whereYear('created_at', substr($month, 0, 4))
+            $jobTrendLabels[] = date('M Y', strtotime($month.'-01'));
+            $jobTrendData[] = JobVacancy::whereYear('created_at', substr($month, 0, 4))
                 ->whereMonth('created_at', substr($month, 5, 2))
                 ->count();
         }
 
-        // Donut chart data: Male/Female + Passer/Not Passer
-        $malePasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'male'); })
-            ->where('status', 'shortlisted')->count();
-        $maleNotPasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'male'); })
-            ->where('status', '!=', 'shortlisted')->count();
-        $femalePasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'female'); })
-            ->where('status', 'shortlisted')->count();
-        $femaleNotPasser = JobApplication::whereHas('user', function($q){ $q->where('sex', 'female'); })
-            ->where('status', '!=', 'shortlisted')->count();
-        $donutChartData = [
-            'Male Passer' => $malePasser,
-            'Male Not Passer' => $maleNotPasser,
-            'Female Passer' => $femalePasser,
-            'Female Not Passer' => $femaleNotPasser,
+        // User activity chart (last 6 months)
+        $userActivityLabels = [];
+        $userActivityData = [];
+        foreach ($months as $month) {
+            $userActivityLabels[] = date('M Y', strtotime($month.'-01'));
+            $userActivityData[] = User::whereYear('created_at', substr($month, 0, 4))
+                ->whereMonth('created_at', substr($month, 5, 2))
+                ->count();
+        }
+
+        // Application status distribution for pie chart
+        $applicationStatusData = [
+            'Pending' => $pendingApplications,
+            'Approved' => $approvedApplications,
+            'Rejected' => $rejectedApplications,
+        ];
+
+        // User role distribution for pie chart
+        $userRoleData = [
+            'HR Users' => $hrUsers,
+            'Applicants' => $applicantUsers,
         ];
 
         return view('admin.dashboard', compact(
-            'userCount',
-            'jobCount',
-            'applicationCount',
-            'logCount',
-            'activeUsers',
-            'activeUsersPercentage',
-            'qualifiedApplicants',
-            'qualifiedPercentage',
-            'pendingReviews',
-            'pendingPercentage',
-            'thisMonthApplications',
-            'monthlyGrowth',
+            'totalJobListings',
+            'hrUsers',
+            'applicantUsers',
+            'totalUsers',
+            'pendingApplications',
+            'approvedApplications',
+            'rejectedApplications',
+            'totalApplications',
             'recentApplications',
-            'storageUsage',
-            'activeSessions',
-            'sessionPercentage',
-            'uptime',
             'recentActivities',
-            'chartLabels',
-            'chartData',
-            'usersChartData',
-            'donutChartData',
+            'jobTrendLabels',
+            'jobTrendData',
+            'userActivityLabels',
+            'userActivityData',
+            'applicationStatusData',
+            'userRoleData'
         ));
     }
 
@@ -342,5 +321,617 @@ class AdminController extends Controller
         ]);
     }
 
-    // create here for the for the logs that display the times stamp what time they login and logout  
+    // ========================================
+    // APPLICANTS MANAGEMENT
+    // ========================================
+
+    /**
+     * Show all applicants
+     */
+    public function applicants(Request $request)
+    {
+        $query = User::where('role', 3); // Applicants only
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        // Sort functionality
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+
+        $applicants = $query->with(['jobApplications'])->paginate(15);
+
+        return view('admin.applicants.index', compact('applicants'));
+    }
+
+    /**
+     * View applicant profile and resume
+     */
+    public function viewApplicant(User $user)
+    {
+        if ($user->role !== 3) {
+            return redirect()->route('admin.applicants')->with('error', 'User is not an applicant');
+        }
+
+        $user->load(['jobApplications.jobVacancy', 'profile']);
+        return view('admin.applicants.view', compact('user'));
+    }
+
+    /**
+     * Deactivate applicant account
+     */
+    public function deactivateApplicant(User $user)
+    {
+        if ($user->role !== 3) {
+            return redirect()->back()->with('error', 'User is not an applicant');
+        }
+
+        $user->update(['is_active' => false]);
+        return redirect()->back()->with('success', 'Applicant account deactivated successfully');
+    }
+
+    /**
+     * Activate applicant account
+     */
+    public function activateApplicant(User $user)
+    {
+        if ($user->role !== 3) {
+            return redirect()->back()->with('error', 'User is not an applicant');
+        }
+
+        $user->update(['is_active' => true]);
+        return redirect()->back()->with('success', 'Applicant account activated successfully');
+    }
+
+    /**
+     * Delete applicant account
+     */
+    public function deleteApplicant(User $user)
+    {
+        if ($user->role !== 3) {
+            return redirect()->back()->with('error', 'User is not an applicant');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.applicants')->with('success', 'Applicant account deleted successfully');
+    }
+
+    // ========================================
+    // HR ACCOUNTS MANAGEMENT
+    // ========================================
+
+    /**
+     * Show all HR accounts
+     */
+    public function hrAccounts(Request $request)
+    {
+        $query = User::where('role', 2); // HR users only
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by approval status
+        if ($request->filled('approval_status')) {
+            if ($request->approval_status === 'pending') {
+                $query->where('is_approved', false);
+            } elseif ($request->approval_status === 'approved') {
+                $query->where('is_approved', true);
+            }
+        }
+
+        // Filter by account status
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $hrAccounts = $query->with(['jobVacancies'])->paginate(15);
+
+        return view('admin.hr-accounts.index', compact('hrAccounts'));
+    }
+
+    /**
+     * Approve HR account
+     */
+    public function approveHrAccount(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $user->update(['is_approved' => true]);
+        return redirect()->back()->with('success', 'HR account approved successfully');
+    }
+
+    /**
+     * Reject HR account
+     */
+    public function rejectHrAccount(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $user->update(['is_approved' => false]);
+        return redirect()->back()->with('success', 'HR account rejected');
+    }
+
+    /**
+     * Deactivate HR account
+     */
+    public function deactivateHrAccount(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $user->update(['is_active' => false]);
+        return redirect()->back()->with('success', 'HR account deactivated successfully');
+    }
+
+    /**
+     * Activate HR account
+     */
+    public function activateHrAccount(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $user->update(['is_active' => true]);
+        return redirect()->back()->with('success', 'HR account activated successfully');
+    }
+
+    /**
+     * Delete HR account
+     */
+    public function deleteHrAccount(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.hr-accounts')->with('success', 'HR account deleted successfully');
+    }
+
+    /**
+     * View HR activity logs
+     */
+    public function hrActivity(User $user)
+    {
+        if ($user->role !== 2) {
+            return redirect()->back()->with('error', 'User is not an HR account');
+        }
+
+        $postedJobs = JobVacancy::where('created_by', $user->id)->with('applications')->get();
+        $hiredUsers = JobApplication::whereHas('jobVacancy', function($q) use ($user) {
+            $q->where('created_by', $user->id);
+        })->whereIn('status', ['hired'])->with(['user', 'jobVacancy'])->get();
+
+        return view('admin.hr-accounts.activity', compact('user', 'postedJobs', 'hiredUsers'));
+    }
+
+    // ========================================
+    // ADMIN ACCOUNTS MANAGEMENT
+    // ========================================
+
+    /**
+     * Show all admin accounts
+     */
+    public function adminAccounts(Request $request)
+    {
+        $query = User::where('role', 1); // Admin users only
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $adminAccounts = $query->paginate(15);
+
+        return view('admin.admin-accounts.index', compact('adminAccounts'));
+    }
+
+    /**
+     * Store new admin account
+     */
+    public function storeAdminAccount(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'birth_date' => 'required|date',
+            'phone_number' => 'required|regex:/^09\\d{9}$/',
+            'place_of_birth' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'street_building_unit' => 'required|string|max:255',
+            'zipcode' => 'required|string|max:255',
+        ]);
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 1, // Admin role
+            'birth_date' => $request->birth_date,
+            'phone_number' => $request->phone_number,
+            'place_of_birth' => $request->place_of_birth,
+            'region' => $request->region,
+            'province' => $request->province,
+            'city' => $request->city,
+            'barangay' => $request->barangay,
+            'street_building_unit' => $request->street_building_unit,
+            'zipcode' => $request->zipcode,
+            'is_active' => true,
+            'is_approved' => true,
+        ]);
+
+        return redirect()->route('admin.admin-accounts')->with('success', 'Admin account created successfully!');
+    }
+
+    /**
+     * Update admin account
+     */
+    public function updateAdminAccount(Request $request, User $user)
+    {
+        if ($user->role !== 1) {
+            return redirect()->back()->with('error', 'User is not an admin account');
+        }
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+        ]);
+
+        return redirect()->route('admin.admin-accounts')->with('success', 'Admin account updated successfully');
+    }
+
+    /**
+     * Delete admin account
+     */
+    public function deleteAdminAccount(User $user)
+    {
+        if ($user->role !== 1) {
+            return redirect()->back()->with('error', 'User is not an admin account');
+        }
+
+        // Prevent deleting the current user
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'You cannot delete your own account');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.admin-accounts')->with('success', 'Admin account deleted successfully');
+    }
+
+    // ========================================
+    // SYSTEM SETTINGS / CONFIGURATION
+    // ========================================
+
+    /**
+     * Show site configuration page
+     */
+    public function siteConfig()
+    {
+        // Get current site settings from config or database
+        $settings = [
+            'maintenance_mode' => Setting::getValue('maintenance_mode', false),
+            'site_name' => config('app.name', 'Job Portal'),
+            'site_description' => config('app.description', ''),
+            'contact_email' => config('mail.from.address', ''),
+            'notification_enabled' => config('app.notifications_enabled', true),
+            'job_approval_required' => config('app.job_approval_required', true),
+            'max_job_applications' => config('app.max_job_applications', 5),
+            'auto_archive_days' => config('app.auto_archive_days', 30),
+        ];
+
+        return view('admin.system-settings.site-config', compact('settings'));
+    }
+
+    /**
+     * Update site configuration
+     */
+    public function updateSiteConfig(Request $request)
+    {
+        $request->validate([
+            'site_name' => 'required|string|max:255',
+            'site_description' => 'nullable|string|max:500',
+            'contact_email' => 'required|email',
+            'maintenance_mode' => 'nullable',
+            'notification_enabled' => 'nullable',
+            'job_approval_required' => 'nullable',
+            'max_job_applications' => 'required|integer|min:1|max:20',
+            'auto_archive_days' => 'required|integer|min:1|max:365',
+        ]);
+
+        // Save maintenance mode to settings table
+        Setting::setValue('maintenance_mode', $request->has('maintenance_mode') ? '1' : '0');
+
+        // (Other settings can be saved similarly if needed)
+
+        return redirect()->route('admin.site-config')->with('success', 'Site configuration updated successfully!');
+    }
+
+    /**
+     * Show job categories management page
+     */
+    public function jobCategories(Request $request)
+    {
+        $query = \App\Models\JobCategory::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        $categories = $query->withCount('jobVacancies')->paginate(15);
+        
+        return view('admin.system-settings.job-categories', compact('categories'));
+    }
+
+    /**
+     * Store new job category
+     */
+    public function storeJobCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:job_categories',
+            'description' => 'nullable|string|max:500',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\JobCategory::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.job-categories')->with('success', 'Job category created successfully!');
+    }
+
+    /**
+     * Update job category
+     */
+    public function updateJobCategory(Request $request, $id)
+    {
+        $category = \App\Models\JobCategory::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255|unique:job_categories,name,' . $id,
+            'description' => 'nullable|string|max:500',
+            'is_active' => 'boolean',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.job-categories')->with('success', 'Job category updated successfully!');
+    }
+
+    /**
+     * Delete job category
+     */
+    public function deleteJobCategory($id)
+    {
+        $category = \App\Models\JobCategory::findOrFail($id);
+        
+        // Check if category has associated jobs
+        if ($category->jobVacancies()->count() > 0) {
+            return redirect()->back()->with('error', 'Cannot delete category with associated job vacancies');
+        }
+
+        $category->delete();
+        return redirect()->route('admin.job-categories')->with('success', 'Job category deleted successfully!');
+    }
+
+    /**
+     * Show locations management page
+     */
+    public function locations(Request $request)
+    {
+        $query = \App\Models\Location::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('region', 'like', "%{$search}%")
+                  ->orWhere('province', 'like', "%{$search}%");
+        }
+
+        $locations = $query->withCount('jobVacancies')->paginate(15);
+        
+        return view('admin.system-settings.locations', compact('locations'));
+    }
+
+    /**
+     * Store new location
+     */
+    public function storeLocation(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\Location::create([
+            'name' => $request->name,
+            'region' => $request->region,
+            'province' => $request->province,
+            'city' => $request->city,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.locations')->with('success', 'Location created successfully!');
+    }
+
+    /**
+     * Update location
+     */
+    public function updateLocation(Request $request, $id)
+    {
+        $location = \App\Models\Location::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        $location->update([
+            'name' => $request->name,
+            'region' => $request->region,
+            'province' => $request->province,
+            'city' => $request->city,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.locations')->with('success', 'Location updated successfully!');
+    }
+
+    /**
+     * Delete location
+     */
+    public function deleteLocation($id)
+    {
+        $location = \App\Models\Location::findOrFail($id);
+        
+        // Check if location has associated jobs
+        if ($location->jobVacancies()->count() > 0) {
+            return redirect()->back()->with('error', 'Cannot delete location with associated job vacancies');
+        }
+
+        $location->delete();
+        return redirect()->route('admin.locations')->with('success', 'Location deleted successfully!');
+    }
+
+    /**
+     * Show industries management page
+     */
+    public function industries(Request $request)
+    {
+        $query = \App\Models\Industry::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        $industries = $query->withCount('jobVacancies')->paginate(15);
+        
+        return view('admin.system-settings.industries', compact('industries'));
+    }
+
+    /**
+     * Store new industry
+     */
+    public function storeIndustry(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:industries',
+            'description' => 'nullable|string|max:500',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\Industry::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.industries')->with('success', 'Industry created successfully!');
+    }
+
+    /**
+     * Update industry
+     */
+    public function updateIndustry(Request $request, $id)
+    {
+        $industry = \App\Models\Industry::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255|unique:industries,name,' . $id,
+            'description' => 'nullable|string|max:500',
+            'is_active' => 'boolean',
+        ]);
+
+        $industry->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.industries')->with('success', 'Industry updated successfully!');
+    }
+
+    /**
+     * Delete industry
+     */
+    public function deleteIndustry($id)
+    {
+        $industry = \App\Models\Industry::findOrFail($id);
+        
+        // Check if industry has associated jobs
+        if ($industry->jobVacancies()->count() > 0) {
+            return redirect()->back()->with('error', 'Cannot delete industry with associated job vacancies');
+        }
+
+        $industry->delete();
+        return redirect()->route('admin.industries')->with('success', 'Industry deleted successfully!');
+    }
 } 

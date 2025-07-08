@@ -36,6 +36,9 @@ class User extends Authenticatable
         'role',
         'email',
         'password',
+        'is_active',
+        'is_approved',
+        'created_by',
     ];
 
     /**
@@ -58,6 +61,8 @@ class User extends Authenticatable
         'birth_date' => 'date',
         'role' => 'integer',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     public function jobApplications()
@@ -68,5 +73,20 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(\App\Models\UserProfile::class);
+    }
+
+    public function jobVacancies()
+    {
+        return $this->hasMany(\App\Models\JobVacancy::class, 'created_by');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 }

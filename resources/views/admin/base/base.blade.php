@@ -29,6 +29,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+  <!-- jQuery (guaranteed first) -->
+  <script src="{{ asset('assets/static/jquery/jquery.min.js') }}"></script>
   
   @yield('custom_css')
 </head>
@@ -113,9 +116,7 @@
   <!-- ./wrapper -->
 
 
-<!-- jQuery -->
-<script src="{{ asset('assets/static/jquery/jquery.min.js') }}"></script>
-<!-- jQuery UI 1.11.4 -->
+<!-- jQuery UI (if needed) -->
 <script src="{{ asset('assets/static/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
@@ -145,26 +146,26 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('assets/static/dist/js/adminlte.js') }}"></script>
 
-<!-- Scripts - Order is important! -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- DataTables -->
+<!-- DataTables (after jQuery) -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 
+<!-- Address Dropdowns (after all dependencies) -->
+<script src="{{ asset('js/components/AddressDropdowns.js') }}"></script>
+
 <!-- Initialize DataTables -->
 <script>
     $(document).ready(function() {
-        $('#user_Table').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['pdf', 'print'],
-            responsive: true,
-            pageLength: 10,
-            order: [[0, 'asc']]
-        });
+        if (!$.fn.DataTable.isDataTable('#user_Table')) {
+            $('#user_Table').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['pdf', 'print'],
+                responsive: true,
+                pageLength: 10,
+                order: [[0, 'asc']]
+            });
+        }
     });
 </script>
 
