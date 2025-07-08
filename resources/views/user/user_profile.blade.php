@@ -637,7 +637,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 <h6>ELEMENTARY</h6>
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <label for="elementary_school_name" class="form-label">Name of School</label>
+                        <label for="elementary_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
                         <input type="text" id="elementary_school_name" name="elementary_school_name" class="form-control" value="{{ old('elementary_school_name', $elementary['school_name'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
@@ -645,7 +645,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="elementary_degree" name="elementary_degree" class="form-control" value="{{ old('elementary_degree', $elementary['degree'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="elementary_from" class="form-label">From</label>
+                        <label for="elementary_from" class="form-label">From <span class="text-danger">*</span></label>
                         <select id="elementary_from" name="elementary_from" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -654,7 +654,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="elementary_to" class="form-label">To</label>
+                        <label for="elementary_to" class="form-label">To <span class="text-danger">*</span></label>
                         <select id="elementary_to" name="elementary_to" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -669,7 +669,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="elementary_highest_level" name="elementary_highest_level" class="form-control" value="{{ old('elementary_highest_level', $elementary['highest_level'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="elementary_year_graduated" class="form-label">Year Graduated</label>
+                        <label for="elementary_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
                         <input type="text" id="elementary_year_graduated" name="elementary_year_graduated" class="form-control" value="{{ old('elementary_year_graduated', $elementary['year_graduated'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
@@ -682,7 +682,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 <h6>SECONDARY</h6>
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <label for="secondary_school_name" class="form-label">Name of School</label>
+                        <label for="secondary_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
                         <input type="text" id="secondary_school_name" name="secondary_school_name" class="form-control" value="{{ old('secondary_school_name', $secondary['school_name'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
@@ -690,7 +690,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="secondary_degree" name="secondary_degree" class="form-control" value="{{ old('secondary_degree', $secondary['degree'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="secondary_from" class="form-label">From</label>
+                        <label for="secondary_from" class="form-label">From <span class="text-danger">*</span></label>
                         <select id="secondary_from" name="secondary_from" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -699,7 +699,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="secondary_to" class="form-label">To</label>
+                        <label for="secondary_to" class="form-label">To <span class="text-danger">*</span></label>
                         <select id="secondary_to" name="secondary_to" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -714,7 +714,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="secondary_highest_level" name="secondary_highest_level" class="form-control" value="{{ old('secondary_highest_level', $secondary['highest_level'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="secondary_year_graduated" class="form-label">Year Graduated</label>
+                        <label for="secondary_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
                         <input type="text" id="secondary_year_graduated" name="secondary_year_graduated" class="form-control" value="{{ old('secondary_year_graduated', $secondary['year_graduated'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
@@ -772,15 +772,15 @@ window.addEventListener('DOMContentLoaded', function() {
                 <h6>COLLEGE</h6>
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <label for="college_school_name" class="form-label">Name of School</label>
+                        <label for="college_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
                         <input type="text" id="college_school_name" name="college_school_name" class="form-control" value="{{ old('college_school_name', $college['school_name'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="college_degree" class="form-label">Degree or Course</label>
+                        <label for="college_degree" class="form-label">Degree or Course <span class="text-danger">*</span></label>
                         <input type="text" id="college_degree" name="college_degree" class="form-control" value="{{ old('college_degree', $college['degree'] ?? '') }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="college_from" class="form-label">From</label>
+                        <label for="college_from" class="form-label">From <span class="text-danger">*</span></label>
                         <select id="college_from" name="college_from" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -789,7 +789,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="college_to" class="form-label">To</label>
+                        <label for="college_to" class="form-label">To <span class="text-danger">*</span></label>
                         <select id="college_to" name="college_to" class="form-select">
                             <option value="">Year</option>
                             @for ($year = date('Y'); $year >= 1900; $year--)
@@ -804,7 +804,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="college_highest_level" name="college_highest_level" class="form-control" value="{{ old('college_highest_level', $college['highest_level'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="college_year_graduated" class="form-label">Year Graduated</label>
+                        <label for="college_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
                         <input type="text" id="college_year_graduated" name="college_year_graduated" class="form-control" value="{{ old('college_year_graduated', $college['year_graduated'] ?? '') }}">
                     </div>
                     <div class="col-md-4">
