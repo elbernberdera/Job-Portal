@@ -154,7 +154,7 @@
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center min-h-[570px]">
                 <img src="/assets/images/dict logo.png" alt="Logo" class="hero-logo-bg" aria-hidden="true">
                 <div class="text-center relative z-10" data-aos="fade-up">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 text-shadow">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 text-shadow" style="min-height: 80px;">
                         <span id="typed-title"></span>
                     </h1>
                     <form method="GET" action="/" class="bg-white p-4 rounded-lg search-shadow max-w-3xl mx-auto flex flex-col md:flex-row gap-4">
