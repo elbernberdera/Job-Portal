@@ -31,6 +31,7 @@
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>No.</th>
                                     <th>Applicant Name</th>
                                     <th>Email</th>
                                     <th>Job Position</th>
@@ -43,6 +44,7 @@
                             <tbody>
                                 @forelse($qualifiedApplicants as $item)
                                     <tr>
+                                        <td>{{number_format($loop->iteration, 0) }}</td>
                                         <td>
                                             <strong>{{ $item['application']->user->first_name }} {{ $item['application']->user->last_name }}</strong>
                                         </td>
@@ -82,7 +84,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">
+                                        <td colspan="8" class="text-center text-muted py-4">
                                             <i class="fas fa-users fa-3x mb-3"></i>
                                             <br>
                                             No qualified applicants found.

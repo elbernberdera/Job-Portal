@@ -1,6 +1,6 @@
 <style>
 .sidebar-gradient-bg {
-    background: linear-gradient(135deg,rgb(11, 13, 134), #2d5193), url("{{ asset('assets/static/image/image2.png') }}");
+    background: linear-gradient(135deg,rgb(6, 10, 204),rgb(114, 143, 239)), url("{{ asset('assets/static/image/image2.png') }}");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -14,6 +14,15 @@
 #webcamVideo, #webcamCanvas {
     border-radius: 50% !important;
     object-fit: cover;
+}
+
+.active-custom {
+    background: #fff !important;
+    color: #007bff !important; /* Bootstrap primary blue */
+}
+.active-custom i,
+.active-custom p {
+    color: #007bff !important;
 }
 </style>
 
@@ -101,26 +110,25 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-              <a href="{{ route('user.dashboard') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-home" style="color: #fbf8f8!important;"></i>
-                <p>Home</p>
-              </a>
-            </li>
+                    <a href="{{ route('user.dashboard') }}" class="nav-link {{ request()->routeIs('user.dashboard') ? 'active-custom' : '' }}" style="color: #fdfafa!important;">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>Home</p>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-            <a href="{{ route('user.job.vacancies') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-briefcase" style="color: #fbf8f8!important;"></i>
-                <p>Job Vacancies</p>
-              </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('user.job.vacancies') }}" class="nav-link {{ request()->routeIs('user.job.vacancies') ? 'active-custom' : '' }}" style="color: #fdfafa!important;">
+                        <i class="nav-icon fas fa-briefcase"></i>
+                        <p>Job Vacancies</p>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-            <a href="{{ route('user.appliedJob') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-briefcase" style="color: #fbf8f8!important;"></i>
-                <p>Applied Job</p>
-              </a>
-            </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('user.appliedJob') }}" class="nav-link {{ request()->routeIs('user.appliedJob') ? 'active-custom' : '' }}" style="color: #fdfafa!important;">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Applied Jobs</p>
+                    </a>
+                </li>
 
                 <!-- Add more nav-items here as needed -->
             </ul>
