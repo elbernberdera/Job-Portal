@@ -515,18 +515,21 @@
     value = value.replace(/[<>\"'&]/g, '');
     input.value = value;
 
+    if (value.length === 0) {
+      confirmPasswordMatch.innerHTML = '';
+      confirmPasswordMatch.className = 'text-xs mt-1 font-medium hidden';
+      input.style.borderColor = '';
+      return;
+    }
+
     if (passwordInput.value === value) {
       confirmPasswordMatch.innerHTML = '✅ Passwords match';
       confirmPasswordMatch.className = 'text-xs mt-1 font-medium text-green-600';
       input.style.borderColor = '#10b981'; // Green border
-    } else if (value.length > 0) {
+    } else {
       confirmPasswordMatch.innerHTML = '❌ Passwords do not match';
       confirmPasswordMatch.className = 'text-xs mt-1 font-medium text-red-600';
       input.style.borderColor = '#ef4444'; // Red border
-    } else {
-      confirmPasswordMatch.innerHTML = '';
-      confirmPasswordMatch.className = 'text-xs mt-1 font-medium';
-      input.style.borderColor = '';
     }
   }
 
