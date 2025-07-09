@@ -24,7 +24,6 @@
             .gradient-bg {
                 background: linear-gradient(-45deg, #3b82f6, #fbbf24, rgb(59, 140, 246));
                 background-size: 200% 200%;
-                animation: gradient-move 8s ease-in-out infinite;
                 position: relative;
                 overflow: hidden;
             }

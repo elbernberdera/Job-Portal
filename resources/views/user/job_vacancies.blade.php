@@ -63,7 +63,6 @@ function abbreviateJobTitle($title) {
                                             <h1 class="card-title mb-1" style="font-weight: bold; font-size: 1.3rem; margin-bottom: 0;">
                                                 {{ $job->job_title }}
                                             </h1>
-                                           
                                         </div>
                                         <div class="mt-1">
                                         <span class="badge bg-secondary ms-2" style="white-space:nowrap;">
