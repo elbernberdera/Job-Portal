@@ -168,8 +168,14 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     // Route to store the data in the new user_profiles table and update the users table
     Route::post('/user/profile', [App\Http\Controllers\User\UserProfileController::class, 'store'])->name('user.profile.store');
+
+
     // Job application route
     Route::post('/user/apply/{job}', [JobApplicationController::class, 'apply'])->name('user.apply');
+    
+    // Route for applying to job via AJAX
+    Route::post('/user/apply-job', [JobApplicationController::class, 'applyJob'])->name('user.apply.job');
+    
 
     // =====================
     // User Job Vacancies (NEW)
@@ -190,6 +196,9 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     // Route to check profile completeness before applying
     Route::get('/user/apply-for-job/{job}', [App\Http\Controllers\User\UserProfileController::class, 'applyForJob'])->name('user.apply_for_job');
+
+    // Route to check if user already applied for a job
+    Route::post('/user/check-application', [JobApplicationController::class, 'checkApplication'])->name('user.check.application');
 });
 
 Route::middleware('auth')->group(function () {

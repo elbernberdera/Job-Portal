@@ -51,8 +51,20 @@ class UserJobVacancyController extends Controller
             abort(404, 'Job vacancy is not accepting applications.');
         }
 
-        // If profile does not exist, treat as 0% complete
-        $completion = $profile ? $this->getProfileCompletion($profile) : 0;
+        // If profile does not exist at all, redirect to profile page
+        if (!$profile) {
+            return redirect()->route('user.profile.edit')
+                ->with('warning', 'Please complete your profile before applying.');
+        }
+
+        // If profile exists but is empty, redirect to profile page
+        if ($this->isProfileEmpty($profile)) {
+            return redirect()->route('user.profile.edit')
+                ->with('warning', 'Please complete your profile before applying.');
+        }
+
+        // If profile exists and is not empty, check completion percentage
+        $completion = $this->getProfileCompletion($profile);
 
         if ($completion < 80) {
             return redirect()->route('user.profile.edit')

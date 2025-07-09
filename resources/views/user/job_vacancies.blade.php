@@ -18,6 +18,20 @@
 </style>
 
 @section('main_content')
+
+@if(session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'info',
+            title: 'Already Applied',
+            html: "{{ session('error') }}",
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+@endif
+
 @php
 function abbreviateJobTitle($title) {
     $map = [
@@ -176,18 +190,26 @@ function abbreviateJobTitle($title) {
         @endif
         <!-- Modal HTML -->
         <div class="modal fade" id="applyModal-{{ $job->id }}" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Proceed to Apply?</h5>
+              <div class="modal-header border-0 text-center d-block">
+                <div class="text-center mb-3">
+                  <img src="{{ asset('assets/static/image/dict.jpg') }}" alt="logo" style="width: 100px; height: 100px; margin: 0 auto;">
+                </div>
+                <h5 class="modal-title text-center w-100">Do you want to proceed with your application or update your profile?</h5>
               </div>
-              <div class="modal-body">
-                <p>Your profile is complete. Do you want to proceed with your application or update your profile?</p>
+              
+              <div class="modal-body text-center">
+                <p class="text-muted">Please choose an option below:</p>
               </div>
-              <div class="modal-footer">
-                <a href="{{ route('user.pds.form', ['job' => $job->id]) }}" class="btn btn-secondary">Update Profile</a>
-                <a href="#" class="btn btn-primary proceed-btn" data-job-title="{{ $job->job_title }}">Proceed</a>
-                
+              
+              <div class="modal-footer justify-content-center border-0">
+                <a href="#" class="btn btn-secondary update-profile-btn me-2" data-job-id="{{ $job->id }}" data-job-title="{{ $job->job_title }}">
+                  <i class="fas fa-edit"></i> Update Profile
+                </a>
+                <a href="#" class="btn btn-primary proceed-btn" data-job-id="{{ $job->id }}" data-job-title="{{ $job->job_title }}">
+                  <i class="fas fa-check"></i> Proceed
+                </a>
               </div>
             </div>
           </div>
@@ -204,14 +226,77 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.proceed-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
+            const jobId = this.getAttribute('data-job-id');
             const jobTitle = this.getAttribute('data-job-title');
-            Swal.fire({
-                icon: 'success',
-                title: 'Congratulations!',
-                html: `You have been applied for this job: <b>${jobTitle}</b>`,
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = "{{ route('user.dashboard') }}";
+
+            fetch("{{ route('user.apply.job') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ job_id: jobId })
+            })
+            .then(response => {
+                if (response.status === 409) {
+                    return response.json().then(data => { throw new Error(data.message); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Congratulations!',
+                    html: `You have been applied for this job: <b>${jobTitle}</b>`,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = "{{ route('user.dashboard') }}";
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message || 'Something went wrong!'
+                });
+            });
+        });
+    });
+
+    // Update Profile button logic
+    document.querySelectorAll('.update-profile-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const jobId = this.getAttribute('data-job-id');
+            const jobTitle = this.getAttribute('data-job-title');
+            fetch("{{ route('user.check.application') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ job_id: jobId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.applied) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Already Applied',
+                        html: `You have already applied for this job: <b>${jobTitle}</b>`,
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Redirect to update profile page
+                    window.location.href = "/user/pds-form/" + jobId;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!'
+                });
             });
         });
     });

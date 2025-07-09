@@ -7,10 +7,11 @@
         window.onload = function() {
             Swal.fire({
                 icon: 'success',
-                title: 'Success',
-                text: "{{ session('success') }}",
-                timer: 2000,
-                showConfirmButton: false
+                title: 'Success!',
+                html: "{{ session('success') }}",
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = "{{ route('user.dashboard') }}";
             });
         };
     </script>
@@ -20,10 +21,26 @@
         window.onload = function() {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                html: '{!! implode("<br>", $errors->all()) !!}'
+                title: 'Validation Error',
+                html: '{!! implode("<br>", $errors->all()) !!}',
+                confirmButtonText: 'OK'
             });
         };
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Already Applied',
+                html: "{{ session('error') }}",
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = "{{ route('user.job.vacancies') }}";
+            });
+        });
     </script>
 @endif
 
@@ -71,7 +88,7 @@ window.addEventListener('DOMContentLoaded', function() {
 <link href="{{ asset('assets/static/select2/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 
-<form action="{{ route('user.pds.store', ['job' => $job->id]) }}" method="POST">
+<form action="{{ route('user.pds.store', ['job' => $job->id]) }}" method="POST" id="pdsForm">
     @csrf
 
     <!-- section I: Personal Information -->
@@ -1561,9 +1578,9 @@ window.addEventListener('DOMContentLoaded', function() {
                             <button type="button" class="btn btn-secondary me-2" onclick="showSection('section8')">
                                 <i class="fas fa-arrow-left"></i> Back
                             </button>
-                            <button type="button" class="btn btn-info" onclick="showPDSPreview()">View</button>
+                            <button type="button" class="btn btn-info me-2" onclick="showPDSPreview()">View</button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-save"></i> Submit
                             </button>
                         </div>
                     </div>
@@ -2006,6 +2023,26 @@ function showPDSPreview() {
     var modal = new bootstrap.Modal(document.getElementById('pdsPreviewModal'));
     modal.show();
 }
+
+// Form submission handler
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('pdsForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Show loading SweetAlert
+            Swal.fire({
+                title: 'Submitting Application...',
+                html: 'Please wait while we process your application.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+    }
+});
 
 </script>
 

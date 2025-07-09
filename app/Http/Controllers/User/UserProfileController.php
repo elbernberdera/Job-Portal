@@ -626,6 +626,20 @@ class UserProfileController extends Controller
         ];
         $profileData['other_information'] = json_encode($other_information);
 
+        // Check if user already applied for this job
+        $alreadyApplied = \App\Models\JobApplication::where('user_id', $user->id)
+            ->where('job_vacancy_id', $jobId)
+            ->exists();
+
+        if ($alreadyApplied) {
+            // Get job title for the error message
+            $job = \App\Models\JobVacancy::find($jobId);
+            $jobTitle = $job ? $job->job_title : 'this job';
+            
+            return redirect()->route('user.job.vacancies')
+                ->with('error', 'You have already applied for this job: ' . $jobTitle);
+        }
+
         // Always create a new UserProfile for each application
         $profile = new \App\Models\UserProfile($profileData);
         $profile->user_id = $user->id;
@@ -639,7 +653,7 @@ class UserProfileController extends Controller
         $application->status = 'applied';
         $application->save();
 
-        return redirect()->route('user.dashboard')->with('success', 'Your application and PDS have been submitted!');
+        return redirect()->route('user.dashboard')->with('success', 'Congratulations! Your application and PDS have been submitted successfully. You will be notified of any updates regarding your application.');
     }
 
     // Helper to check if user profile is complete
@@ -673,9 +687,23 @@ class UserProfileController extends Controller
     public function applyForJob($jobId)
     {
         $user = auth()->user();
+        
+        // Check if user already applied for this job
+        $alreadyApplied = \App\Models\JobApplication::where('user_id', $user->id)
+            ->where('job_vacancy_id', $jobId)
+            ->exists();
+
+        if ($alreadyApplied) {
+            // Get job title for the error message
+            $job = \App\Models\JobVacancy::find($jobId);
+            $jobTitle = $job ? $job->job_title : 'this job';
+            
+            return redirect()->route('user.job.vacancies')
+                ->with('error', 'You have already applied for this job: ' . $jobTitle);
+        }
+        
         if (!$this->isProfileComplete($user)) {
             // Redirect to PDS form to complete profile
-            //user.pds.form
             return redirect()->route('user.profile.edit', ['job' => $jobId])
                 ->with('warning', 'Please complete your profile before applying.');
         }
