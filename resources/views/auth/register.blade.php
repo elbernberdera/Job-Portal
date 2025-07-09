@@ -233,12 +233,12 @@
                       </div>
 
                        <!-- Google reCAPTCHA widget (NoCaptcha) -->
-<div class="w-full flex justify-start">
-    {!! NoCaptcha::display() !!}
-</div>
-@if ($errors->has('g-recaptcha-response'))
-    <span class="text-red-600 text-sm">{{ $errors->first('g-recaptcha-response') }}</span>
-@endif
+                          <div class="w-full flex justify-start">
+                              {!! NoCaptcha::display() !!}
+                          </div>
+                          @if ($errors->has('g-recaptcha-response'))
+                              <span class="text-red-600 text-sm">{{ $errors->first('g-recaptcha-response') }}</span>
+                          @endif
 
 
 
@@ -760,6 +760,25 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 
 <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {!! NoCaptcha::renderJs() !!} -->
+
+<!-- Add this script before the closing body tag -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/regions')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                let regionSelect = document.getElementById('region');
+                data.regions.forEach(region => {
+                    let option = document.createElement('option');
+                    option.value = region.code;
+                    option.text = region.name;
+                    regionSelect.add(option);
+                });
+            }
+        });
+});
+</script>
 </body>
 </html>
 

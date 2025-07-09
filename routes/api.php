@@ -38,3 +38,5 @@ Route::get('/search/suggestions', function (Illuminate\Http\Request $request) {
     return response()->json($suggestions);
 });
 
+Route::get('/regions', [PsgcController::class, 'getRegions']);
+
