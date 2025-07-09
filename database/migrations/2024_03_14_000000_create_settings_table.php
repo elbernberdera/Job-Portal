@@ -19,17 +19,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
-
-
-
-
-
-
-
-
-
-
-
         
         // Insert default settings
         DB::table('settings')->insert([

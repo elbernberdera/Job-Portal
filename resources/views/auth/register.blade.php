@@ -26,13 +26,22 @@
         position: relative;
         z-index: 1;
     } */
+    .animated-gradient {
+      background: linear-gradient(to right, #2563eb,rgb(214, 214, 214));
+      background-size: 200% 100%;
+      background-position: left;
+      transition: background-position 0.4s ease-in-out;
+    }
+    .animated-gradient:hover {
+      background-position: right;
+    }
     </style>
 </head>
 <body class="bg-gray-100">
 
 <div class="flex flex-col md:flex-row min-h-screen">
     <!-- Left Side (Logo & Title) -->
-    <div class="hidden md:flex md:w-1/3 bg-gradient-to-b from-indigo-700 to-purple-500 flex-col items-center justify-start p-8 text-white relative">
+    <div class="hidden md:flex md:w-1/3 bg-gradient-to-b from-blue-700 to-yellow-300 flex-col items-center justify-start p-8 text-white relative">
         <img src="{{ asset('assets/images/image2.png') }}" alt="" class="w-44 h-44 object-contain" />
         <h1 class="text-3xl font-extrabold  select-none tracking-wide">JOB PORTAL</h1>
         <img src="{{ asset('assets/images/image3.png') }}" alt="" class="w-90 h-90 object-contain mb-1" />
@@ -250,7 +259,7 @@
                     <!-- Login Link -->
                     <div class="text-center mt-6">
                         <span>Already have an account?</span>
-                        <a href="{{ route('login') }}" class="text-indigo-700 font-semibold hover:underline ml-1">Login Here</a>
+                        <a href="{{ route('login') }}" class="text-blue-700 font-semibold hover:underline ml-1">Login Here</a>
                     </div>
                 </div>
             </div>
@@ -639,24 +648,12 @@
   termsCheckbox.addEventListener('change', () => {
     if (termsCheckbox.checked) {
       signupButton.disabled = false;
-      signupButton.classList.remove('bg-gray-400');
-      signupButton.classList.add(
-        'bg-gradient-to-r',
-        'from-blue-600',
-        'to-indigo-700',
-        'hover:from-blue-700',
-        'hover:to-indigo-800'
-      );
+      signupButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+      signupButton.classList.add('animated-gradient', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded-lg', 'shadow-md', 'text-lg', 'transition-all', 'duration-500', 'ease-in-out', 'w-full');
     } else {
       signupButton.disabled = true;
-      signupButton.classList.add('bg-gray-400');
-      signupButton.classList.remove(
-        'bg-gradient-to-r',
-        'from-blue-600',
-        'to-indigo-700',
-        'hover:from-blue-700',
-        'hover:to-indigo-800'
-      );
+      signupButton.classList.remove('animated-gradient');
+      signupButton.classList.add('bg-gray-400', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded-lg', 'shadow-md', 'text-lg', 'transition-all', 'duration-500', 'ease-in-out', 'w-full', 'cursor-not-allowed');
     }
   });
 
