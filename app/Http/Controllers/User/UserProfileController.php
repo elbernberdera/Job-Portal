@@ -61,6 +61,13 @@ class UserProfileController extends Controller
 
     public function uploadProfileImage(Request $request)
     {
+        \Log::info('Profile upload request received', [
+            'has_file' => $request->hasFile('profile_image'),
+            'all_data' => $request->all(),
+            'user_id' => Auth::id(),
+            'user_role' => Auth::user()->role
+        ]);
+
         $request->validate([
             'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -81,6 +88,11 @@ class UserProfileController extends Controller
 
         $user->profile_image = $imageName;
         $user->save();
+
+        \Log::info('Profile image uploaded successfully', [
+            'image_name' => $imageName,
+            'user_id' => $user->id
+        ]);
 
         return back()->with('success', 'Profile image updated!');
     }

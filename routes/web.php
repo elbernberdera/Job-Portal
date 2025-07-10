@@ -152,6 +152,8 @@ Route::middleware(['auth', 'role:2'])->group(function () {
     // HR Qualified Applicants
     Route::get('/qualified-applicants', [App\Http\Controllers\Hr\JobApplicationController::class, 'qualifiedApplicants'])->name('hr.qualified-applicants');
 
+    // HR profile image upload
+    Route::post('/hr/profile/upload', [HRController::class, 'uploadProfileImage'])->name('hr.profile.upload');
 });
 
 // User routes

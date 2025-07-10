@@ -99,5 +99,45 @@ class HRController extends Controller
         return redirect()->route('update_profile_hr')->with('success', 'Profile updated successfully!');
     }
 
+    // HR profile image upload
+    public function uploadProfileImage(Request $request)
+    {
+        \Log::info('HR upload start', [
+            'hasFile' => $request->hasFile('profile_image'),
+            'fileInfo' => $request->file('profile_image'),
+            'all' => $request->all(),
+            'user_id' => auth()->id(),
+            'user_role' => auth()->user()->role
+        ]);
+
+        // TEMP: Relax validation for webcam debug
+        $request->validate([
+            'profile_image' => 'required|file|max:2048',
+        ]);
+
+        $user = auth()->user();
+
+        // Delete old image if exists
+        if ($user->profile_image) {
+            $oldImagePath = public_path('profile_images/' . $user->profile_image);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+
+        $imageName = time() . '.' . $request->file('profile_image')->getClientOriginalExtension();
+        $request->file('profile_image')->move(public_path('profile_images'), $imageName);
+
+        $user->profile_image = $imageName;
+        $user->save();
+
+        \Log::info('HR profile image uploaded successfully', [
+            'image_name' => $imageName,
+            'user_id' => $user->id
+        ]);
+
+        return back()->with('success', 'Profile image updated!');
+    }
+
     //create here the controller to create job vacancies can display data and add job vacancies
 } 

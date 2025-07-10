@@ -737,8 +737,8 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         regionSelect.focus();
         return false;
     }
-    
-    if (!provinceSelect.value) {
+    // Skip province validation if region is NCR (by name or code)
+    if (regionSelect.value !== 'NCR' && regionSelect.value !== '130000000' && !provinceSelect.value) {
         e.preventDefault();
         alert('Please select a province.');
         provinceSelect.focus();

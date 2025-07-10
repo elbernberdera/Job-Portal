@@ -40,7 +40,16 @@ class RegisteredUserController extends Controller
             'phone_number' => ['required', 'string', 'max:20'],
             'place_of_birth' => ['required', 'string', 'max:255'],
             'region' => ['required', 'string', 'max:255'],
-            'province' => ['required', 'string', 'max:255'],
+            'province' => [
+                function ($attribute, $value, $fail) use ($request) {
+                    if (!in_array($request->region, ['NCR', '130000000']) && empty($value)) {
+                        $fail('The province field is required.');
+                    }
+                },
+                'nullable',
+                'string',
+                'max:255'
+            ],
             'city' => ['required', 'string', 'max:255'],
             'barangay' => ['required', 'string', 'max:255'],
             'street_building_unit' => ['required', 'string', 'max:255'],
@@ -49,6 +58,12 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             // 'g-recaptcha-response' => ['required', 'captcha'], // captcha temporarily disabled
         ]);
+
+        // Set province to null if region is NCR
+        $province = $request->province;
+        if (in_array($request->region, ['NCR', '130000000'])) {
+            $province = null;
+        }
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -60,12 +75,11 @@ class RegisteredUserController extends Controller
             'phone_number' => $request->phone_number,
             'place_of_birth' => $request->place_of_birth,
             'region' => $request->region,
-            'province' => $request->province,
+            'province' => $province,
             'city' => $request->city,
             'barangay' => $request->barangay,
             'street_building_unit' => $request->street_building_unit,
             'zipcode' => $request->zipcode,
-            'role' => 3, // default user role
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'profile_image' => 'assets/images/image7.png', // Set default profile image
