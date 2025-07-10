@@ -212,8 +212,9 @@ class UserProfileController extends Controller
         }
         $profileData['eligibility'] = json_encode($eligibility);
 
-        // Collect arrays from the request
-        $work_inclusive_dates = $request->input('work_inclusive_dates', []);
+        // Work experience
+        $work_date_from = $request->input('work_date_from', []);
+        $work_date_to = $request->input('work_date_to', []);
         $work_position_title = $request->input('work_position_title', []);
         $work_department = $request->input('work_department', []);
         $work_monthly_salary = $request->input('work_monthly_salary', []);
@@ -222,9 +223,17 @@ class UserProfileController extends Controller
         $work_govt_service = $request->input('work_govt_service', []);
 
         $work_experience = [];
-        for ($i = 0; $i < count($work_inclusive_dates); $i++) {
+        for ($i = 0; $i < count($work_date_from); $i++) {
+            $date_from = $work_date_from[$i] ?? '';
+            $date_to = $work_date_to[$i] ?? '';
+            $inclusive_dates = '';
+            if ($date_from && $date_to) {
+                $inclusive_dates = date('m/d/Y', strtotime($date_from)) . ' - ' . date('m/d/Y', strtotime($date_to));
+            }
             $work_experience[] = [
-                'inclusive_dates' => $work_inclusive_dates[$i] ?? '',
+                'inclusive_dates' => $inclusive_dates,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
                 'position_title' => $work_position_title[$i] ?? '',
                 'department' => $work_department[$i] ?? '',
                 'monthly_salary' => $work_monthly_salary[$i] ?? '',
@@ -490,8 +499,28 @@ class UserProfileController extends Controller
         $work_govt_service = $request->input('work_govt_service', []);
         $work_experience = [];
         for ($i = 0; $i < count($work_inclusive_dates); $i++) {
+            // Parse inclusive dates to extract from and to dates
+            $inclusive_dates = $work_inclusive_dates[$i] ?? '';
+            $date_from = '';
+            $date_to = '';
+            
+            if (!empty($inclusive_dates)) {
+                // Handle different date formats: "01/01/2020 - 12/31/2020" or "2020-01-01 to 2020-12-31"
+                if (strpos($inclusive_dates, ' - ') !== false) {
+                    $dates = explode(' - ', $inclusive_dates);
+                    $date_from = trim($dates[0] ?? '');
+                    $date_to = trim($dates[1] ?? '');
+                } elseif (strpos($inclusive_dates, ' to ') !== false) {
+                    $dates = explode(' to ', $inclusive_dates);
+                    $date_from = trim($dates[0] ?? '');
+                    $date_to = trim($dates[1] ?? '');
+                }
+            }
+            
             $work_experience[] = [
-                'inclusive_dates' => $work_inclusive_dates[$i] ?? '',
+                'inclusive_dates' => $inclusive_dates,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
                 'position_title' => $work_position_title[$i] ?? '',
                 'department' => $work_department[$i] ?? '',
                 'monthly_salary' => $work_monthly_salary[$i] ?? '',

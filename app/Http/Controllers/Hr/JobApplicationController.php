@@ -38,15 +38,44 @@ class JobApplicationController extends Controller
             foreach ($job->jobApplications as $application) {
                 $profile = $application->user->profile;
                 if ($profile) {
-                    $result = $job->checkQualification($application->user);
+                    $result = $profile->calculateQualificationScore($job->required_course);
+                    $check = $job->checkQualification($application->user);
+
+                    // Debug: Print everything you need
+                    \Log::info('Applicant Debug', [
+                        'profile_id' => $profile->id,
+                        'user_id' => $application->user->id,
+                        'job_id' => $job->id,
+                        'job_title' => $job->job_title,
+                        'job_required_course' => $job->required_course,
+                        'job_min_years_experience' => $job->min_years_experience,
+                        'job_required_eligibility' => $job->required_eligibility,
+                        'score' => $result['score'],
+                        'breakdown' => $result['breakdown'],
+                        'qualified' => $check['qualified'],
+                        'failed_criteria' => $check['failed_criteria'],
+                        'raw_profile' => [
+                            'college' => $profile->college,
+                            'graduate' => $profile->graduate,
+                            'work_experience' => $profile->work_experience,
+                            'eligibility' => $profile->eligibility,
+                            'special_skills' => $profile->special_skills,
+                            'learning_development' => $profile->learning_development,
+                            'non_academic_distinctions' => $profile->non_academic_distinctions,
+                            'voluntary_work' => $profile->voluntary_work,
+                            'association_memberships' => $profile->association_memberships,
+                        ]
+                    ]);
+
                     $allApplicants->push([
                         'job' => $job,
                         'application' => $application,
-                        'score' => $result['score'] ?? 0,
-                        'percentage' => $result['percentage'] ?? 0,
-                        'total_criteria' => $result['total_criteria'] ?? 100,
-                        'failed_criteria' => $result['failed_criteria'] ?? [],
-                        'qualified' => $result['qualified'] ?? false,
+                        'score' => $result['score'],
+                        'breakdown' => $result['breakdown'],
+                        'percentage' => $check['percentage'] ?? 0,
+                        'total_criteria' => $check['total_criteria'] ?? 100,
+                        'failed_criteria' => $check['failed_criteria'] ?? [],
+                        'qualified' => $check['qualified'] ?? false,
                     ]);
                 }
             }

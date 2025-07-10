@@ -970,12 +970,16 @@ window.addEventListener('DOMContentLoaded', function() {
                         @foreach($work_experience as $idx => $entry)
                             <div class="work-experience-row mb-3">
                                 <div class="row g-2 align-items-end">
-                                    <div class="col-12 mb-2">
+                                    <div class="col-mb-2">
                                         <strong class="entry-number">{{ $idx + 1 }}.</strong>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Inclusive Dates<br><small>(mm/dd/yyyy)</small></label>
-                                        <input type="text" name="work_inclusive_dates[]" class="form-control" value="{{ $entry['inclusive_dates'] ?? '' }}">
+                                        <label>From</label>
+                                        <input type="date" name="work_date_from[]" class="form-control" value="{{ $entry['date_from'] ?? '' }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>To</label>
+                                        <input type="date" name="work_date_to[]" class="form-control" value="{{ $entry['date_to'] ?? '' }}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
@@ -1015,8 +1019,12 @@ window.addEventListener('DOMContentLoaded', function() {
                                     <strong class="entry-number">1.</strong>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Inclusive Dates<br><small>(mm/dd/yyyy)</small></label>
-                                    <input type="text" name="work_inclusive_dates[]" class="form-control">
+                                    <label>From</label>
+                                    <input type="date" name="work_date_from[]" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>To</label>
+                                    <input type="date" name="work_date_to[]" class="form-control">
                                 </div>
                                 <div class="col-md-4">
                                     <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
