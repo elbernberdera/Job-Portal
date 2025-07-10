@@ -1,19 +1,26 @@
 <style>
 .sidebar-gradient-bg {
-    background: linear-gradient(135deg,rgb(11, 13, 134), #2d5193), url("{{ asset('assets/static/image/image2.png') }}");
+  background: linear-gradient(135deg,rgb(6, 10, 204),rgb(114, 143, 239)), url("{{ asset('assets/static/image/image2.png') }}");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
+  .active-custom {
+    background: #fff !important;
+    color: #007bff !important;
+  }
+  .active-custom .nav-icon {
+    color: #007bff !important;
+  }
 </style>
 
 <aside class="main-sidebar sidebar-dark-success elevation-4 sidebar-gradient-bg">
       <!-- Brand Logo -->
-      <a href="{{ route('admin.dashboard') }}" class="brand-link" style="display: flex; justify-content: center; align-items: center;">
+      <!-- <a href="{{ route('admin.dashboard') }}" class="brand-link" style="display: flex; justify-content: center; align-items: center;">
         <img src="{{ asset('assets/static/image/image3.png') }}"
              alt="Logo"
              style="width: 110px; height: 80px; " />
-      </a>
+      </a> -->
 
        <!-- Sidebar -->
     <div class="sidebar" style="color: #000!important;">
@@ -46,22 +53,28 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-              <a href="{{ route('hr.dashboard') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-home" style="color: #fbf8f8!important;"></i>
+              <a href="{{ route('hr.dashboard') }}"
+                 class="nav-link {{ request()->routeIs('hr.dashboard') ? 'active-custom' : '' }}"
+                 style="{{ request()->routeIs('hr.dashboard') ? 'background: #fff; color: #007bff !important;' : 'color: #fdfafa!important;' }}">
+                <i class="nav-icon fas fa-home" style="{{ request()->routeIs('hr.dashboard') ? 'color: #007bff !important;' : 'color: #fbf8f8!important;' }}"></i>
                 <p>Home</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="{{ route('job_vacancies') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-users" style="color: #fbf8f8!important;"></i>
+              <a href="{{ route('job_vacancies') }}"
+                 class="nav-link {{ request()->routeIs('job_vacancies') ? 'active-custom' : '' }}"
+                 style="{{ request()->routeIs('job_vacancies') ? 'background: #fff; color: #007bff !important;' : 'color: #fdfafa!important;' }}">
+                <i class="nav-icon fas fa-users" style="{{ request()->routeIs('job_vacancies') ? 'color: #007bff !important;' : 'color: #fbf8f8!important;' }}"></i>
                 <p>Job Vacancies</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="{{ route('hr.qualified-applicants') }}" class="nav-link {% if request.resolver_match.url_name == '' %}bg-success text-white{% endif %}" style="color: #fdfafa!important;">
-                <i class="nav-icon fas fa-user-check" style="color: #fbf8f8!important;"></i>
+              <a href="{{ route('hr.qualified-applicants') }}"
+                 class="nav-link {{ request()->routeIs('hr.qualified-applicants') ? 'active-custom' : '' }}"
+                 style="{{ request()->routeIs('hr.qualified-applicants') ? 'background: #fff; color: #007bff !important;' : 'color: #fdfafa!important;' }}">
+                <i class="nav-icon fas fa-user-check" style="{{ request()->routeIs('hr.qualified-applicants') ? 'color: #007bff !important;' : 'color: #fbf8f8!important;' }}"></i>
                 <p>Qualified Applicants</p>
               </a>
             </li>

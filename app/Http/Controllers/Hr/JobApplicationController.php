@@ -27,31 +27,34 @@ class JobApplicationController extends Controller
 
     public function qualifiedApplicants()
     {
-        $qualifiedApplicants = collect();
-        
-        // Get all job vacancies with applications
-        $jobVacancies = JobVacancy::with(['jobApplications.user'])->get();
-        
+        $allApplicants = collect();
+
+        // Get all open job vacancies with applications and user profiles
+        $jobVacancies = JobVacancy::with(['jobApplications.user.profile'])
+            ->where('status', JobVacancy::STATUS_OPEN)
+            ->get();
+
         foreach ($jobVacancies as $job) {
             foreach ($job->jobApplications as $application) {
-                $result = $job->checkQualification($application->user);
-                
-                // Check if result is an array and user is qualified
-                if (is_array($result) && isset($result['qualified']) && $result['qualified']) {
-                    $qualifiedApplicants->push([
+                $profile = $application->user->profile;
+                if ($profile) {
+                    $result = $job->checkQualification($application->user);
+                    $allApplicants->push([
                         'job' => $job,
                         'application' => $application,
-                        'result' => $result
+                        'score' => $result['score'] ?? 0,
+                        'percentage' => $result['percentage'] ?? 0,
+                        'total_criteria' => $result['total_criteria'] ?? 100,
+                        'failed_criteria' => $result['failed_criteria'] ?? [],
+                        'qualified' => $result['qualified'] ?? false,
                     ]);
                 }
             }
         }
-        
-        // Sort by qualification score (highest first)
-        $qualifiedApplicants = $qualifiedApplicants->sortByDesc(function ($item) {
-            return $item['result']['percentage'] ?? 0;
-        });
-        
-        return view('hr.qualified_applicants', compact('qualifiedApplicants'));
+
+        // Sort by highest percentage score
+        $allApplicants = $allApplicants->sortByDesc('percentage');
+
+        return view('hr.qualified_applicants', ['qualifiedApplicants' => $allApplicants]);
     }
 } 

@@ -43,15 +43,14 @@
                             </thead>
                             <tbody>
                                 @forelse($qualifiedApplicants as $item)
-                                    <tr>
-                                        <td>{{number_format($loop->iteration, 0) }}</td>
+                                    <tr @if(!$item['qualified']) style="background: #ffeaea;" @endif>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <strong>{{ $item['application']->user->first_name }} {{ $item['application']->user->last_name }}</strong>
                                         </td>
                                         <td>{{ $item['application']->user->email }}</td>
                                         <td>
-                                            <span class="badge badge-primary">{{ $item['job']->job_title }}</span>
-                                            <br>
+                                            <span class="badge badge-primary">{{ $item['job']->job_title }}</span><br>
                                             <small class="text-muted">{{ $item['job']->position_code }}</small>
                                         </td>
                                         <td>{{ $item['job']->division }}</td>
@@ -59,19 +58,25 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="progress flex-grow-1 me-2" style="height: 20px;">
-                                                    <div class="progress-bar bg-success" role="progressbar" 
-                                                         style="width: {{ $item['result']['percentage'] }}%"
-                                                         aria-valuenow="{{ $item['result']['percentage'] }}" 
+                                                    <div class="progress-bar {{ $item['qualified'] ? 'bg-success' : 'bg-danger' }}" role="progressbar" 
+                                                         style="width: {{ $item['percentage'] }}%"
+                                                         aria-valuenow="{{ $item['percentage'] }}" 
                                                          aria-valuemin="0" aria-valuemax="100">
-                                                        {{ $item['result']['percentage'] }}%
+                                                        {{ $item['percentage'] }}%
                                                     </div>
                                                 </div>
-                                                <small class="text-muted">{{ $item['result']['score'] }}/{{ $item['result']['total_criteria'] }}</small>
+                                                <small class="text-muted">{{ $item['score'] }}/{{ $item['total_criteria'] }}</small>
                                             </div>
+                                            @if(!$item['qualified'])
+                                                <br>
+                                                <span class="text-danger" title="Failed Criteria: {{ implode('; ', $item['failed_criteria']) }}">
+                                                    <i class="fas fa-exclamation-circle"></i> Not qualified: {{ implode('; ', $item['failed_criteria']) }}
+                                                </span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('user.profile.show', $item['application']->user->id) }}" 
+                                                <a href="" 
                                                    class="btn btn-info btn-sm" title="View PDS" target="_blank">
                                                     <i class="fas fa-id-card"></i> View PDS
                                                 </a>
@@ -87,9 +92,7 @@
                                         <td colspan="8" class="text-center text-muted py-4">
                                             <i class="fas fa-users fa-3x mb-3"></i>
                                             <br>
-                                            No qualified applicants found.
-                                            <br>
-                                            <small>Applicants will appear here once they meet the qualification criteria for any job position.</small>
+                                            No applicants found.
                                         </td>
                                     </tr>
                                 @endforelse

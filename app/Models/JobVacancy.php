@@ -130,222 +130,52 @@ class JobVacancy extends Model
     {
         $profile = $user->profile;
         if (!$profile) {
-            return false;
+            return ['qualified' => false];
         }
 
-        $qualificationScore = 0;
-        $totalCriteria = 0;
+        // Pass the job's required_course to profile scoring
+        $score = $profile->calculateQualificationScore($this->required_course);
+        $totalCriteria = 100;
+        $percentage = round(($score / $totalCriteria) * 100);
+
+        $minPassingScore = 70; // Minimum score to qualify
+
         $failedCriteria = [];
 
-        // Check education level
-        if ($this->min_education_level) {
-            $totalCriteria++;
-            $userEducationLevel = $this->getUserEducationLevel($profile);
-            if ($this->isEducationLevelSufficient($userEducationLevel, $this->min_education_level)) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Education level: Required {$this->min_education_level}, Applicant has {$userEducationLevel}";
-            }
+        // Education level check
+        if (empty($profile->graduate) && empty($profile->college)) {
+            $failedCriteria[] = 'Education Level';
         }
 
-        // Check required course
-        if ($this->required_course) {
-            $totalCriteria++;
-            $userCourses = $this->getUserCourses($profile);
-            if (in_array(strtolower($this->required_course), array_map('strtolower', $userCourses))) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Required course: {$this->required_course}";
-            }
+        // Course/Degree alignment check
+        $applicantCourse = strtolower(trim($profile->college ?? ''));
+        $requiredCourse = strtolower(trim($this->required_course ?? ''));
+
+        if ($requiredCourse !== '' && $applicantCourse !== $requiredCourse &&
+            strpos($applicantCourse, $requiredCourse) === false &&
+            strpos($requiredCourse, $applicantCourse) === false) {
+            $failedCriteria[] = 'Course/Degree Alignment';
         }
 
-        // Check years of experience
-        if ($this->min_years_experience) {
-            $totalCriteria++;
-            $userExperience = $this->getUserTotalExperience($profile);
-            if ($userExperience >= $this->min_years_experience) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Experience: Required {$this->min_years_experience} years, Applicant has {$userExperience} years";
-            }
+        // Work experience check
+        if (empty($profile->work_experience)) {
+            $failedCriteria[] = 'Work Experience';
         }
 
-        // Check eligibility
-        if ($this->required_eligibility) {
-            $totalCriteria++;
-            $userEligibilities = $this->getUserEligibilities($profile);
-            if (in_array(strtolower($this->required_eligibility), array_map('strtolower', $userEligibilities))) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Required eligibility: {$this->required_eligibility}";
-            }
+        // Eligibility check
+        $eligibility = json_decode($profile->eligibility, true);
+        if (empty($eligibility) || count($eligibility) === 0) {
+            $failedCriteria[] = 'Eligibility';
         }
 
-        // Check age requirements
-        if ($this->age_min || $this->age_max) {
-            $totalCriteria++;
-            $userAge = $user->birth_date ? $user->birth_date->age : null;
-            if ($userAge !== null) {
-                $ageQualified = true;
-                if ($this->age_min && $userAge < $this->age_min) {
-                    $ageQualified = false;
-                    $failedCriteria[] = "Age: Minimum {$this->age_min}, Applicant is {$userAge}";
-                }
-                if ($this->age_max && $userAge > $this->age_max) {
-                    $ageQualified = false;
-                    $failedCriteria[] = "Age: Maximum {$this->age_max}, Applicant is {$userAge}";
-                }
-                if ($ageQualified) {
-                    $qualificationScore++;
-                }
-            } else {
-                $failedCriteria[] = "Age: Unable to determine applicant age";
-            }
-        }
-
-        // Check civil status requirement
-        if ($this->civil_status_requirement && $profile->civil_status) {
-            $totalCriteria++;
-            if (strtolower($profile->civil_status) === strtolower($this->civil_status_requirement)) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Civil status: Required {$this->civil_status_requirement}, Applicant is {$profile->civil_status}";
-            }
-        }
-
-        // Check citizenship requirement
-        if ($this->citizenship_requirement && $profile->citizenship) {
-            $totalCriteria++;
-            if (strtolower($profile->citizenship) === strtolower($this->citizenship_requirement)) {
-                $qualificationScore++;
-            } else {
-                $failedCriteria[] = "Citizenship: Required {$this->citizenship_requirement}, Applicant is {$profile->citizenship}";
-            }
-        }
+        $qualified = $score >= $minPassingScore;
 
         return [
-            'qualified' => $totalCriteria > 0 && $qualificationScore === $totalCriteria,
-            'score' => $qualificationScore,
+            'qualified' => $qualified,
+            'score' => $score,
+            'percentage' => $percentage,
             'total_criteria' => $totalCriteria,
-            'percentage' => $totalCriteria > 0 ? round(($qualificationScore / $totalCriteria) * 100, 2) : 0,
-            'failed_criteria' => $failedCriteria,
+            'failed_criteria' => $qualified ? [] : $failedCriteria,
         ];
-    }
-
-    /**
-     * Get user's highest education level
-     */
-    private function getUserEducationLevel($profile)
-    {
-        $levels = ['elementary', 'secondary', 'vocational', 'college', 'graduate'];
-        $highestLevel = 'none';
-
-        foreach ($levels as $level) {
-            if ($profile->$level) {
-                $educationData = json_decode($profile->$level, true);
-                if (is_array($educationData) && !empty($educationData)) {
-                    foreach ($educationData as $education) {
-                        if (!empty($education['name_of_school']) && !empty($education['basic_education_degree_course'])) {
-                            $highestLevel = $level;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $highestLevel;
-    }
-
-    /**
-     * Get user's courses/degrees
-     */
-    private function getUserCourses($profile)
-    {
-        $courses = [];
-        $levels = ['elementary', 'secondary', 'vocational', 'college', 'graduate'];
-
-        foreach ($levels as $level) {
-            if ($profile->$level) {
-                $educationData = json_decode($profile->$level, true);
-                if (is_array($educationData)) {
-                    foreach ($educationData as $education) {
-                        if (!empty($education['basic_education_degree_course'])) {
-                            $courses[] = $education['basic_education_degree_course'];
-                        }
-                    }
-                }
-            }
-        }
-
-        return array_unique($courses);
-    }
-
-    /**
-     * Get user's total years of experience
-     */
-    private function getUserTotalExperience($profile)
-    {
-        if (!$profile->work_experience) {
-            return 0;
-        }
-
-        $workExperience = json_decode($profile->work_experience, true);
-        if (!is_array($workExperience)) {
-            return 0;
-        }
-
-        $totalYears = 0;
-        foreach ($workExperience as $experience) {
-            if (!empty($experience['from']) && !empty($experience['to'])) {
-                $from = \Carbon\Carbon::parse($experience['from']);
-                $to = \Carbon\Carbon::parse($experience['to']);
-                $totalYears += $from->diffInYears($to);
-            }
-        }
-
-        return $totalYears;
-    }
-
-    /**
-     * Get user's eligibilities
-     */
-    private function getUserEligibilities($profile)
-    {
-        if (!$profile->eligibility) {
-            return [];
-        }
-
-        $eligibilities = json_decode($profile->eligibility, true);
-        if (!is_array($eligibilities)) {
-            return [];
-        }
-
-        $eligibilityList = [];
-        foreach ($eligibilities as $eligibility) {
-            if (!empty($eligibility['eligibility_name'])) {
-                $eligibilityList[] = $eligibility['eligibility_name'];
-            }
-        }
-
-        return $eligibilityList;
-    }
-
-    /**
-     * Check if education level is sufficient
-     */
-    private function isEducationLevelSufficient($userLevel, $requiredLevel)
-    {
-        $levels = [
-            'elementary' => 1,
-            'secondary' => 2,
-            'vocational' => 3,
-            'college' => 4,
-            'graduate' => 5
-        ];
-
-        $userLevelValue = $levels[$userLevel] ?? 0;
-        $requiredLevelValue = $levels[strtolower($requiredLevel)] ?? 0;
-
-        return $userLevelValue >= $requiredLevelValue;
     }
 } 
