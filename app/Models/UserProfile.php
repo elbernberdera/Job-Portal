@@ -53,18 +53,24 @@ class UserProfile extends Model
     }
 
    // Calculate qualification score out of 100 including course alignment
-   public function calculateQualificationScore($requiredCourse = null)
+   public function calculateQualificationScore($requiredCourse = null, $minYearsExperience = null, $requiredEligibility = null, $requiredSkills = [])
    {
        $score = 0;
+       $breakdown = [];
 
        // 1. Education Level
        if (!empty($this->graduate)) {
            $score += 15;
+           $breakdown['education'] = 15;
        } elseif (!empty($this->college)) {
            $score += 10;
+           $breakdown['education'] = 10;
+       } else {
+           $breakdown['education'] = 0;
        }
 
        // 2. Course/Degree Alignment
+       $coursePoints = 0;
        if ($requiredCourse) {
            // Try to extract the degree/course from the college JSON
            $collegeArr = json_decode($this->college, true);
@@ -72,7 +78,7 @@ class UserProfile extends Model
            if (is_array($collegeArr) && count($collegeArr) > 0) {
                // Try to use 'degree' or 'basic_education_degree_course'
                $applicantCourse = strtolower(trim(
-                   $collegeArr[0]['degree'] ?? $collegeArr[0]['basic_education_degree_course'] ?? ''
+                   $collegeArr['degree'] ?? $collegeArr['basic_education_degree_course'] ?? ''
                ));
            } else {
                $applicantCourse = strtolower(trim($this->college ?? ''));
@@ -80,12 +86,14 @@ class UserProfile extends Model
            $requiredCourse = strtolower(trim($requiredCourse));
 
            if ($applicantCourse === $requiredCourse) {
-               $score += 15; // Exact match
+               $coursePoints = 15; // Exact match
            } elseif (strpos($applicantCourse, $requiredCourse) !== false || strpos($requiredCourse, $applicantCourse) !== false) {
-               $score += 10; // Partial match
+               $coursePoints = 10; // Partial match
            }
            // else 0 points if no match
        }
+       $score += $coursePoints;
+       $breakdown['course'] = $coursePoints;
 
        // 3. Work Experience (2 pts per year, max 20)
        $workYears = 0;
@@ -96,44 +104,78 @@ class UserProfile extends Model
                    if (!empty($job['date_from']) && !empty($job['date_to'])) {
                        $start = \Carbon\Carbon::parse($job['date_from']);
                        $end = \Carbon\Carbon::parse($job['date_to']);
-                       $workYears += $end->diffInYears($start);
+                       if ($end->greaterThan($start)) {
+                           $workYears += $start->diffInYears($end);
+                       }
                    }
                }
            }
        }
-       $score += min($workYears * 2, 20);
-
-       // 4. Eligibility (15 points if any eligibility present)
-       $eligibility = json_decode($this->eligibility, true);
-       if (is_array($eligibility) && count($eligibility) > 0) {
-           $score += 15;
+       $workPoints = min($workYears * 2, 20);
+       if ($minYearsExperience !== null && $workYears < $minYearsExperience) {
+           $workPoints = 0;
        }
+       $score += $workPoints;
+       $breakdown['work_experience'] = $workPoints;
+
+       // 4. Eligibility (15 points if required eligibility present)
+       $eligibility = json_decode($this->eligibility, true);
+       $hasRequiredEligibility = false;
+       if ($requiredEligibility) {
+           if (is_array($eligibility)) {
+               foreach ($eligibility as $item) {
+                   if (isset($item['service']) && stripos($item['service'], $requiredEligibility) !== false) {
+                       $hasRequiredEligibility = true;
+                       break;
+                   }
+               }
+           }
+       } else {
+           $hasRequiredEligibility = (is_array($eligibility) && count($eligibility) > 0);
+       }
+       $eligibilityPoints = $hasRequiredEligibility ? 15 : 0;
+       $score += $eligibilityPoints;
+       $breakdown['eligibility'] = $eligibilityPoints;
 
        // 5. Skills (3 pts per skill, max 15)
        $skills = json_decode($this->special_skills, true);
+       $userSkills = is_array($skills) ? array_map('strtolower', $skills) : [];
+       $requiredSkills = is_array($requiredSkills) ? array_map('strtolower', $requiredSkills) : [];
+       $hasAllRequiredSkills = empty($requiredSkills) || !array_diff($requiredSkills, $userSkills);
        $skillPoints = is_array($skills) ? min(count($skills) * 3, 15) : 0;
+       if (!$hasAllRequiredSkills) {
+           $skillPoints = 0;
+       }
        $score += $skillPoints;
+       $breakdown['skills'] = $skillPoints;
 
        // 6. Training (3 pts per training, max 15)
        $training = json_decode($this->learning_development, true);
        $trainingPoints = is_array($training) ? min(count($training) * 3, 15) : 0;
        $score += $trainingPoints;
+       $breakdown['training'] = $trainingPoints;
 
        // 7. Distinctions (1 pt each, max 5)
        $distinctions = json_decode($this->non_academic_distinctions, true);
        $distPoints = is_array($distinctions) ? min(count($distinctions), 5) : 0;
        $score += $distPoints;
+       $breakdown['distinctions'] = $distPoints;
 
        // 8. Voluntary Work (1 pt each, max 5)
        $volWork = json_decode($this->voluntary_work, true);
        $volPoints = is_array($volWork) ? min(count($volWork), 5) : 0;
        $score += $volPoints;
+       $breakdown['voluntary_work'] = $volPoints;
 
        // 9. Associations (1 pt each, max 5)
        $assoc = json_decode($this->association_memberships, true);
        $assocPoints = is_array($assoc) ? min(count($assoc), 5) : 0;
        $score += $assocPoints;
+       $breakdown['associations'] = $assocPoints;
 
-       return $score;
+       return [
+           'score' => $score,
+           'breakdown' => $breakdown
+       ];
    }
 }

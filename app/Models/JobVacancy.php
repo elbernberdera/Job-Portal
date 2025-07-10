@@ -133,8 +133,15 @@ class JobVacancy extends Model
             return ['qualified' => false];
         }
 
-        // Pass the job's required_course to profile scoring
-        $score = $profile->calculateQualificationScore($this->required_course);
+        // Pass all job requirements to profile scoring
+        $scoreData = $profile->calculateQualificationScore(
+            $this->required_course,
+            $this->min_years_experience,
+            $this->required_eligibility,
+            $this->required_skills
+        );
+        $score = $scoreData['score'];
+        $breakdown = $scoreData['breakdown'];
         $totalCriteria = 100;
         $percentage = round(($score / $totalCriteria) * 100);
 
@@ -148,7 +155,15 @@ class JobVacancy extends Model
         }
 
         // Course/Degree alignment check
-        $applicantCourse = strtolower(trim($profile->college ?? ''));
+        $collegeArr = json_decode($profile->college, true);
+        $applicantCourse = '';
+        if (is_array($collegeArr) && count($collegeArr) > 0) {
+            $applicantCourse = strtolower(trim(
+                $collegeArr[0]['degree'] ?? $collegeArr[0]['basic_education_degree_course'] ?? ''
+            ));
+        } else {
+            $applicantCourse = strtolower(trim($profile->college ?? ''));
+        }
         $requiredCourse = strtolower(trim($this->required_course ?? ''));
 
         if ($requiredCourse !== '' && $applicantCourse !== $requiredCourse &&
@@ -176,6 +191,7 @@ class JobVacancy extends Model
             'percentage' => $percentage,
             'total_criteria' => $totalCriteria,
             'failed_criteria' => $qualified ? [] : $failedCriteria,
+            'breakdown' => $breakdown,
         ];
     }
 } 

@@ -1043,12 +1043,16 @@ window.addEventListener('DOMContentLoaded', function() {
                         @foreach($work_experience as $idx => $entry)
                             <div class="work-experience-row mb-3">
                                 <div class="row g-2 align-items-end">
-                                    <div class="col-12 mb-2">
-                                        <strong class="entry-number">{{ $idx + 1 }}.</strong>
+                                    <div class="col-mb-4">
+                                        <strong class="entry-number">{{ isset($idx) ? $idx + 1 : 1 }}.</strong>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Inclusive Dates<br><small>(mm/dd/yyyy)</small></label>
-                                        <input type="text" name="work_inclusive_dates[]" class="form-control" value="{{ $entry['inclusive_dates'] ?? '' }}">
+                                        <label>From</label>
+                                        <input type="date" name="work_date_from[]" class="form-control" value="{{ $entry['date_from'] ?? '' }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>To</label>
+                                        <input type="date" name="work_date_to[]" class="form-control" value="{{ $entry['date_to'] ?? '' }}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
@@ -1087,31 +1091,35 @@ window.addEventListener('DOMContentLoaded', function() {
                                 <div class="col-12 mb-2">
                                     <strong class="entry-number">1.</strong>
                                 </div>
-                                <div class="col-md-4">
-                                    <label>Inclusive Dates<br><small>(mm/dd/yyyy)</small></label>
-                                    <input type="text" name="work_inclusive_dates[]" class="form-control">
+                                <div class="col-md-2">
+                                    <label>From</label>
+                                    <input type="date" name="work_date_from[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
+                                    <label>To</label>
+                                    <input type="date" name="work_date_to[]" class="form-control">
+                                </div>
+                                <div class="col-md-2">
                                     <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
                                     <input type="text" name="work_position_title[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label>Department/Agency/Office/Company<br><small>(Write in full/Do not abbreviate)</small></label>
                                     <input type="text" name="work_department[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label>Monthly Salary</label>
                                     <input type="text" name="work_monthly_salary[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label>Salary/Job/Pay Grade & Step<br><small>(if applicable) & Step Increment</small></label>
                                     <input type="text" name="work_salary_grade[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label>Status of Appointment</label>
                                     <input type="text" name="work_status[]" class="form-control">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label>Govt Service<br><small>(Y/N)</small></label>
                                     <div class="d-flex align-items-end">
                                         <input type="text" name="work_govt_service[]" class="form-control me-2" maxlength="3" style="max-width: 80%;">

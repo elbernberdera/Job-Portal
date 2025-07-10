@@ -172,4 +172,16 @@
     </div>
 @endforeach
 
+
+<script>
+
+    // console.log the qualified applicants and their breakdown debuging
+@foreach($qualifiedApplicants as $item)
+    console.log(
+        'User ID: {{ $item['application']->user->id }}, Job: {{ $item['job']->job_title }}',
+        @json($item['breakdown'])
+    );
+@endforeach
+</script>
+
 @endsection 
