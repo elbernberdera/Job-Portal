@@ -42,8 +42,8 @@
 <div class="flex flex-col md:flex-row min-h-screen">
     <!-- Left Side (Logo & Title) -->
     <div class="hidden md:flex md:w-1/3 bg-gradient-to-b from-blue-700 to-yellow-300 flex-col items-center justify-start p-8 text-white relative">
-        <img src="{{ asset('assets/images/image2.png') }}" alt="" class="w-44 h-44 object-contain" />
-        <h1 class="text-3xl font-extrabold  select-none tracking-wide">JOB PORTAL</h1>
+        <img src="{{ asset('assets/images/image2.png') }}" alt="" class="w-56 h-56 object-contain" />
+        <h1 class="text-4xl font-extrabold  select-none tracking-wide">JOB PORTAL</h1>
         <img src="{{ asset('assets/images/image3.png') }}" alt="" class="w-90 h-90 object-contain mb-1" />
     </div>
     <!-- Right Side (Form) -->
@@ -80,7 +80,7 @@
             <div class="flex justify-center mb-4 md:hidden">
                 <img src="{{ asset('assets/images/image.png') }}" alt="Logo" class="h-20 w-auto" style="max-width: 120px;">
             </div>
-            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-indigo-800 select-none">Registration Form</h2>
+            <h2 class="text-4xl font-extrabold text-center mb-10 mt-2 tracking-wide text-blue-600 select-none">Registration Form</h2>
             <div class="space-y-7">
                 <!-- Name Row -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -259,7 +259,7 @@
                     <!-- Login Link -->
                     <div class="text-center mt-6">
                         <span>Already have an account?</span>
-                        <a href="{{ route('login') }}" class="text-blue-700 font-semibold hover:underline ml-1">Login Here</a>
+                        <a href="{{ route('login') }}" class="text-blue-700 font-semibold hover:underline ml-1">Login</a>
                     </div>
                 </div>
             </div>
