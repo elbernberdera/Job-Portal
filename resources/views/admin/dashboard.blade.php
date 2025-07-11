@@ -191,24 +191,42 @@
         <div class="row">
             <!-- Application Status Distribution -->
             <div class="col-md-6">
-                <div class="card">
+                <div class="card" style="height: 400px;">
                     <div class="card-header">
                         <h3 class="card-title">Application Status Distribution</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="height: calc(100% - 56px);">
                         <canvas id="applicationStatusChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- User Role Distribution -->
+            <!-- Recent Activity Logs (Full Width) -->
             <div class="col-md-6">
-                <div class="card">
+                <div class="card" style="height: 400px;">
                     <div class="card-header">
-                        <h3 class="card-title">User Role Distribution</h3>
+                        <h3 class="card-title">Recent Activity Logs</h3>
                     </div>
-                    <div class="card-body">
-                        <canvas id="userRoleChart" height="250"></canvas>
+                    <div class="card-body p-0" style="height: calc(100% - 56px);">
+                        <div class="activity-feed" style="height: 100%; overflow-y: auto;">
+                            @forelse($recentActivities as $activity)
+                                <div class="activity-item">
+                                    <div class="activity-icon {{ $activity['type'] === 'login' ? 'bg-success' : 'bg-warning' }}">
+                                        <i class="fas {{ $activity['type'] === 'login' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">
+                                            <strong>{{ $activity['user'] }}</strong> {{ $activity['action'] }}
+                                        </div>
+                                        <div class="activity-time">
+                                            {{ \Carbon\Carbon::parse($activity['time'])->diffForHumans() }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center text-muted py-3">No recent activity</div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
             </div>
@@ -277,39 +295,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Activity Logs -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Recent Activity Logs</h3>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="activity-feed">
-                            @forelse($recentActivities as $activity)
-                                <div class="activity-item">
-                                    <div class="activity-icon {{ $activity['type'] === 'login' ? 'bg-success' : 'bg-warning' }}">
-                                        <i class="fas {{ $activity['type'] === 'login' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-text">
-                                            <strong>{{ $activity['user'] }}</strong> {{ $activity['action'] }}
-                                        </div>
-                                        <div class="activity-time">
-                                            {{ \Carbon\Carbon::parse($activity['time'])->diffForHumans() }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="text-center text-muted py-3">No recent activity</div>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
+</div>  
 @endsection
 
 @section('extra_styles')
