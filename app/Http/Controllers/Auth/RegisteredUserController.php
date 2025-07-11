@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use App\Rules\ReCaptcha;
 
 class RegisteredUserController extends Controller
 {
@@ -56,7 +57,7 @@ class RegisteredUserController extends Controller
             'zipcode' => ['required', 'string', 'max:20'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            // 'g-recaptcha-response' => ['required', 'captcha'], // captcha temporarily disabled
+            'g-recaptcha-response' => ['required', new ReCaptcha],
         ]);
 
         // Set province to null if region is NCR

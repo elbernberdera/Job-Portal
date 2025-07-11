@@ -28,23 +28,43 @@
 @endif
 
 <script>
-function showSection(sectionId) {
-    // Hide all sections and remove required from their inputs
-    var sections = document.querySelectorAll('.content');
-    sections.forEach(function(section) {
-        section.style.display = 'none';
-        section.querySelectorAll('[required]').forEach(function(input) {
-            input.dataset.required = 'true';
-            input.removeAttribute('required');
-        });
-    });
-    // Show the requested section and add required to its inputs
-    var current = document.getElementById(sectionId);
-    current.style.display = 'block';
-    current.querySelectorAll('[data-required="true"]').forEach(function(input) {
-        input.setAttribute('required', 'required');
+function saveSection(sectionId, callback) {
+    const formData = new FormData(document.getElementById('profileForm'));
+    formData.append('section', sectionId);
+    fetch("{{ route('user.profile.saveSection') }}", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && typeof callback === 'function') {
+            callback();
+        }
     });
 }
+
+function showSection(sectionId) {
+    // Save current section before switching
+    const currentSection = document.querySelector('.content:not([style*="display: none"])');
+    if (currentSection) {
+        saveSection(currentSection.id, function() {
+            // Hide all sections
+            document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+            // Show the selected section
+            document.getElementById(sectionId).style.display = '';
+        });
+    } else {
+        // Hide all sections
+        document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+        // Show the selected section
+        document.getElementById(sectionId).style.display = '';
+    }
+}
+
+
 // On page load, ensure only visible section has required fields
 window.addEventListener('DOMContentLoaded', function() {
     var sections = document.querySelectorAll('.content');
@@ -71,13 +91,79 @@ window.addEventListener('DOMContentLoaded', function() {
 <link href="{{ asset('assets/static/select2/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 
-<form action="{{ route('user.profile.store') }}" method="POST">
+<style>
+    .nav-tabs .nav-link {
+        color: black;
+        border: 1px solid transparent; /* default border */
+    }
+
+    .nav-tabs .nav-link.active {
+        color: blue !important;
+        border: 1px solid blue !important; /* blue border */
+        border-bottom-color: transparent !important; /* to blend with the tab content below */
+        background-color: white !important; /* optional for contrast */
+    }
+
+    /* Show only short label by default */
+    .nav-link .full-title {
+        display: none;
+    }
+
+    .nav-link .short-title {
+        display: inline;
+    }
+
+    /* When active, hide short title and show full title */
+    .nav-link.active .short-title {
+        display: none;
+    }
+
+    .nav-link.active .full-title {
+        display: inline;
+    }
+</style>
+
+
+
+<div class="container">
+        <ul class="nav nav-tabs" id="profileTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="tab-section1" data-bs-toggle="tab" data-bs-target="#section1" type="button" role="tab">
+                    <span class="short-title">I.</span>
+                    <span class="full-title">I. Personal Information</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-section2" data-bs-toggle="tab" data-bs-target="#section2" type="button" role="tab">
+                    <span class="short-title">II.</span>
+                    <span class="full-title">II. Family Background</span>
+                </button>
+        </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-section3" data-bs-toggle="tab" data-bs-target="#section3" type="button" role="tab">
+                    <span class="short-title">III.</span>
+                    <span class="full-title">III. Educational Background</span>
+                </button>
+        </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tab-section4" data-bs-toggle="tab" data-bs-target="#section4" type="button" role="tab">
+                    <span class="short-title">IV.</span>
+                    <span class="full-title">IV. Civil Service Eligibility</span>
+                </button>
+        </li>
+    </ul>
+</div>
+
+<form id="profileForm">
     @csrf
 
-    <!-- section I: Personal Information -->
-<div class="content" id="section1">
+<!-- section 1 -->
+    
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="section1" role="tabpanel" aria-labelledby="tab-section1">
+            <!-- Section 1 content -->
     <div class="container-fluid">
-        <div class="card">
+                <div class="card mt-3">
             <div class="card-header">
                 <h3 class="card-title">I. Personal Information</h3>
             </div>
@@ -453,27 +539,32 @@ window.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="row mt-3">
                         <div class="col-12 text-end">
-                            <button type="button" class="btn btn-primary" onclick="showSection('section2')">
-                                <i class="fas fa-arrow-right"></i> Next Page
-                            </button>
-                            <!-- <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Dashboard
-                            </a> -->
+                                        <button type="button" class="btn btn-primary" onclick="saveCurrentSection('section1')">Save Section I</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
             </div>
         </div>
     </div>
-</div>
 
-    <!-- section II: Other Information -->
-<div class="content" id="section2" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">II. Family Background</h3>
-            </div>
-            <div class="card-body">
+
+
+
+
+
+
+
+
+<!-- section 2 -->
+        <div class="tab-pane fade" id="section2" role="tabpanel" aria-labelledby="tab-section2">
+            <!-- Section 2 content -->
+            <div class="container-fluid">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">II. Family Background</h3>
+                    </div>
+                    <div class="card-body">
                   <!-- Section II fields go here -->
                   <div class="row">
                       <div class="col-12">
@@ -612,1072 +703,50 @@ window.addEventListener('DOMContentLoaded', function() {
                   </div>
                   <div class="row mt-3">
                       <div class="col-12 d-flex justify-content-end">
-                          <button type="button" class="btn btn-secondary me-2" onclick="showSection('section1')">
-                              <i class="fas fa-arrow-left"></i> Back
-                          </button>
-                          <button type="button" class="btn btn-primary" onclick="showSection('section3')">
-                              Next Page <i class="fas fa-arrow-right"></i>
-                          </button>
+                          <button type="button" class="btn btn-primary" onclick="saveCurrentSection('section2')">Save Section II</button>
                       </div>
                   </div>
             </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- section III -->
-<div class="content" id="section3" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">III. Educational Background</h3>
-            </div>
-            <div class="card-body">
-                <h6>ELEMENTARY</h6>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="elementary_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
-                        <input type="text" id="elementary_school_name" name="elementary_school_name" class="form-control @error('elementary_school_name') is-invalid @enderror" value="{{ old('elementary_school_name', $elementary['school_name'] ?? '') }}" required>
-                        @error('elementary_school_name')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="elementary_degree" class="form-label">Degree or Course</label>
-                        <input type="text" id="elementary_degree" name="elementary_degree" class="form-control" value="{{ old('elementary_degree', $elementary['degree'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="elementary_from" class="form-label">From <span class="text-danger">*</span></label>
-                        <select id="elementary_from" name="elementary_from" class="form-select @error('elementary_from') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('elementary_from', $elementary['from'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('elementary_from')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="elementary_to" class="form-label">To <span class="text-danger">*</span></label>
-                        <select id="elementary_to" name="elementary_to" class="form-select @error('elementary_to') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('elementary_to', $elementary['to'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('elementary_to')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="elementary_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
-                        <input type="text" id="elementary_highest_level" name="elementary_highest_level" class="form-control" value="{{ old('elementary_highest_level', $elementary['highest_level'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="elementary_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
-                        <input type="text" id="elementary_year_graduated" name="elementary_year_graduated" class="form-control @error('elementary_year_graduated') is-invalid @enderror" value="{{ old('elementary_year_graduated', $elementary['year_graduated'] ?? '') }}" required>
-                        @error('elementary_year_graduated')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-4">
-                        <label for="elementary_honors" class="form-label">Scholarship/Academic Honors Received</label>
-                        <input type="text" id="elementary_honors" name="elementary_honors" class="form-control" value="{{ old('elementary_honors', $elementary['honors'] ?? '') }}">
-                    </div>
-                </div>
-                <hr>
-
-                <h6>SECONDARY</h6>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="secondary_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
-                        <input type="text" id="secondary_school_name" name="secondary_school_name" class="form-control @error('secondary_school_name') is-invalid @enderror" value="{{ old('secondary_school_name', $secondary['school_name'] ?? '') }}" required>
-                        @error('secondary_school_name')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="secondary_degree" class="form-label">Degree or Course</label>
-                        <input type="text" id="secondary_degree" name="secondary_degree" class="form-control" value="{{ old('secondary_degree', $secondary['degree'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="secondary_from" class="form-label">From <span class="text-danger">*</span></label>
-                        <select id="secondary_from" name="secondary_from" class="form-select @error('secondary_from') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('secondary_from', $secondary['from'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('secondary_from')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="secondary_to" class="form-label">To <span class="text-danger">*</span></label>
-                        <select id="secondary_to" name="secondary_to" class="form-select @error('secondary_to') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('secondary_to', $secondary['to'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('secondary_to')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="secondary_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
-                        <input type="text" id="secondary_highest_level" name="secondary_highest_level" class="form-control" value="{{ old('secondary_highest_level', $secondary['highest_level'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="secondary_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
-                        <input type="text" id="secondary_year_graduated" name="secondary_year_graduated" class="form-control @error('secondary_year_graduated') is-invalid @enderror" value="{{ old('secondary_year_graduated', $secondary['year_graduated'] ?? '') }}" required>
-                        @error('secondary_year_graduated')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-4">
-                        <label for="secondary_honors" class="form-label">Scholarship/Academic Honors Received</label>
-                        <input type="text" id="secondary_honors" name="secondary_honors" class="form-control" value="{{ old('secondary_honors', $secondary['honors'] ?? '') }}">
-                    </div>
-                </div>
-                <hr>
-
-                <h6>VOCATIONAL / TRADE COURSE</h6>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="vocational_school_name" class="form-label">Name of School</label>
-                        <input type="text" id="vocational_school_name" name="vocational_school_name" class="form-control" value="{{ old('vocational_school_name', $vocational['school_name'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="vocational_degree" class="form-label">Degree or Course</label>
-                        <input type="text" id="vocational_degree" name="vocational_degree" class="form-control" value="{{ old('vocational_degree', $vocational['degree'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="vocational_from" class="form-label">From</label>
-                        <select id="vocational_from" name="vocational_from" class="form-select">
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('vocational_from', $vocational['from'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="vocational_to" class="form-label">To</label>
-                        <select id="vocational_to" name="vocational_to" class="form-select">
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('vocational_to', $vocational['to'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="vocational_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
-                        <input type="text" id="vocational_highest_level" name="vocational_highest_level" class="form-control" value="{{ old('vocational_highest_level', $vocational['highest_level'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="vocational_year_graduated" class="form-label">Year Graduated</label>
-                        <input type="text" id="vocational_year_graduated" name="vocational_year_graduated" class="form-control" value="{{ old('vocational_year_graduated', $vocational['year_graduated'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="vocational_honors" class="form-label">Scholarship/Academic Honors Received</label>
-                        <input type="text" id="vocational_honors" name="vocational_honors" class="form-control" value="{{ old('vocational_honors', $vocational['honors'] ?? '') }}">
-                    </div>
-                </div>
-                <hr>
-
-                <h6>COLLEGE</h6>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="college_school_name" class="form-label">Name of School <span class="text-danger">*</span></label>
-                        <input type="text" id="college_school_name" name="college_school_name" class="form-control @error('college_school_name') is-invalid @enderror" value="{{ old('college_school_name', $college['school_name'] ?? '') }}" required>
-                        @error('college_school_name')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="college_degree" class="form-label">Degree or Course <span class="text-danger">*</span></label>
-                        <input type="text" id="college_degree" name="college_degree" class="form-control @error('college_degree') is-invalid @enderror" value="{{ old('college_degree', $college['degree'] ?? '') }}" required>
-                        @error('college_degree')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="college_from" class="form-label">From <span class="text-danger">*</span></label>
-                        <select id="college_from" name="college_from" class="form-select @error('college_from') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('college_from', $college['from'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('college_from')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-3">
-                        <label for="college_to" class="form-label">To <span class="text-danger">*</span></label>
-                        <select id="college_to" name="college_to" class="form-select @error('college_to') is-invalid @enderror" required>
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('college_to', $college['to'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                        @error('college_to')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="college_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
-                        <input type="text" id="college_highest_level" name="college_highest_level" class="form-control" value="{{ old('college_highest_level', $college['highest_level'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="college_year_graduated" class="form-label">Year Graduated <span class="text-danger">*</span></label>
-                        <input type="text" id="college_year_graduated" name="college_year_graduated" class="form-control @error('college_year_graduated') is-invalid @enderror" value="{{ old('college_year_graduated', $college['year_graduated'] ?? '') }}" required>
-                        @error('college_year_graduated')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-4">
-                        <label for="college_honors" class="form-label">Scholarship/Academic Honors Received</label>
-                        <input type="text" id="college_honors" name="college_honors" class="form-control" value="{{ old('college_honors', $college['honors'] ?? '') }}">
-                    </div>
-                </div>
-                <hr>
-
-                <h6>GRADUATE STUDIES</h6>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="graduate_school_name" class="form-label">Name of School</label>
-                        <input type="text" id="graduate_school_name" name="graduate_school_name" class="form-control" value="{{ old('graduate_school_name', $graduate['school_name'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="graduate_degree" class="form-label">Degree or Course</label>
-                        <input type="text" id="graduate_degree" name="graduate_degree" class="form-control" value="{{ old('graduate_degree', $graduate['degree'] ?? '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="graduate_from" class="form-label">From</label>
-                        <select id="graduate_from" name="graduate_from" class="form-select">
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('graduate_from', $graduate['from'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="graduate_to" class="form-label">To</label>
-                        <select id="graduate_to" name="graduate_to" class="form-select">
-                            <option value="">Year</option>
-                            @for ($year = date('Y'); $year >= 1900; $year--)
-                                <option value="{{ $year }}" {{ old('graduate_to', $graduate['to'] ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="graduate_highest_level" class="form-label">Highest Level/Units Earned (if not graduated)</label>
-                        <input type="text" id="graduate_highest_level" name="graduate_highest_level" class="form-control" value="{{ old('graduate_highest_level', $graduate['highest_level'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="graduate_year_graduated" class="form-label">Year Graduated</label>
-                        <input type="text" id="graduate_year_graduated" name="graduate_year_graduated" class="form-control" value="{{ old('graduate_year_graduated', $graduate['year_graduated'] ?? '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="graduate_honors" class="form-label">Scholarship/Academic Honors Received</label>
-                        <input type="text" id="graduate_honors" name="graduate_honors" class="form-control" value="{{ old('graduate_honors', $graduate['honors'] ?? '') }}">
-                    </div>
-                </div>
-                <hr>
-
-                    <div class="row mt-3">
-                        <div class="col-12 d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section2')">
-                                <i class="fas fa-arrow-left"></i> Back
-                            </button>
-                            <button type="button" class="btn btn-primary" onclick="showSection('section4')">
-                                Next Page <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Section IV -->
-<div class="content" id="section4" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">IV. Civil Service Eligibility</h3>
-            </div>
-            <div class="card-body">
-                <div id="eligibilityContainer">
-                    @php
-                        $eligibility = old('eligibility', $profile->eligibility ?? []);
-                        if (is_string($eligibility)) $eligibility = json_decode($eligibility, true) ?? [];
-                    @endphp
-                    @if(!empty($eligibility))
-                        @foreach($eligibility as $idx => $row)
-                            <div class="eligibility-row mb-3">
-                                <div class="row g-2">
-                                    <div class="col-md-4">
-                                        <label>Career Service/RA 1080/Board/Bar/etc.</label>
-                                        <input type="text" name="eligibility_service[]" class="form-control" value="{{ $row['service'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label>Rating (if applicable)</label>
-                                        <input type="text" name="eligibility_rating[]" class="form-control" value="{{ $row['rating'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label>Date of Exam</label>
-                                        <input type="date" name="eligibility_exam_date[]" class="form-control" value="{{ $row['exam_date'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Place of Exam</label>
-                                        <input type="text" name="eligibility_exam_place[]" class="form-control" value="{{ $row['exam_place'] ?? '' }}">
-                                    </div>
-                                </div>
-                                <div class="row g-2 mt-2 align-items-end">
-                                    <div class="col-md-4">
-                                        <label>License (if applicable)</label>
-                                        <input type="text" name="eligibility_license[]" class="form-control" value="{{ $row['license'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>License Number</label>
-                                        <input type="text" name="eligibility_license_number[]" class="form-control" value="{{ $row['license_number'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>Date of Validity</label>
-                                        <input type="date" name="eligibility_validity[]" class="form-control" value="{{ $row['validity'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-1 d-flex align-items-end">
-                                        <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeEligibilityRow(this)">Remove</button>
-                                    </div>
-                                </div>
-                                <hr>
-                         </div>
-                        @endforeach
-                    @else
-                        <div class="eligibility-row mb-3">
-                            <div class="row g-2">
-                                <div class="col-md-4">
-                                    <label>Career Service/RA 1080/Board/Bar/etc.</label>
-                                    <input type="text" name="eligibility_service[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Rating (if applicable)</label>
-                                    <input type="text" name="eligibility_rating[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Date of Exam</label>
-                                    <input type="date" name="eligibility_exam_date[]" class="form-control">
-                                </div>
-                                <div class="col-md-4">
-                                    <label>Place of Exam</label>
-                                    <input type="text" name="eligibility_exam_place[]" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row g-2 mt-2 align-items-end">
-                                <div class="col-md-4">
-                                    <label>License (if applicable)</label>
-                                    <input type="text" name="eligibility_license[]" class="form-control">
-                                </div>
-                                <div class="col-md-4">
-                                    <label>License Number</label>
-                                    <input type="text" name="eligibility_license_number[]" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Date of Validity</label>
-                                    <input type="date" name="eligibility_validity[]" class="form-control">
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeEligibilityRow(this)">Remove</button>
-                        </div>
-                        </div>
-                            <hr>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addEligibilityRow()">Add Row</button>
-                    <div class="row mt-3">
-                        <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" onclick="showSection('section3')">
-                                <i class="fas fa-arrow-left"></i> Back
-                            </button>
-                        <button type="button" class="btn btn-primary" onclick="showSection('section5')">
-                                Next Page <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
+
+
+        
+
+        <div class="tab-pane fade" id="section3" role="tabpanel" aria-labelledby="tab-section3">
+            <div class="container-fluid">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">III. Educational Background</h3>
                     </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- section V -->
-<div class="content" id="section5" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">V. Work Experience</h3>
-            </div>
-            <div class="card-body">
-                <div id="work-experience-rows">
-                    @php
-                        $work_experience = old('work_experience', $profile->work_experience ?? []);
-                        if (is_string($work_experience)) $work_experience = json_decode($work_experience, true) ?? [];
-                    @endphp
-                    @if(!empty($work_experience))
-                        @foreach($work_experience as $idx => $entry)
-                            <div class="work-experience-row mb-3">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-mb-4">
-                                        <strong class="entry-number">{{ isset($idx) ? $idx + 1 : 1 }}.</strong>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>From</label>
-                                        <input type="date" name="work_date_from[]" class="form-control" value="{{ $entry['date_from'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>To</label>
-                                        <input type="date" name="work_date_to[]" class="form-control" value="{{ $entry['date_to'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
-                                        <input type="text" name="work_position_title[]" class="form-control" value="{{ $entry['position_title'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Department/Agency/Office/Company<br><small>(Write in full/Do not abbreviate)</small></label>
-                                        <input type="text" name="work_department[]" class="form-control" value="{{ $entry['department'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Monthly Salary</label>
-                                        <input type="text" name="work_monthly_salary[]" class="form-control" value="{{ $entry['monthly_salary'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Salary/Job/Pay Grade & Step<br><small>(if applicable) & Step Increment</small></label>
-                                        <input type="text" name="work_salary_grade[]" class="form-control" value="{{ $entry['salary_grade'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Status of Appointment</label>
-                                        <input type="text" name="work_status[]" class="form-control" value="{{ $entry['status'] ?? '' }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Govt Service<br><small>(Y/N)</small></label>
-                                        <div class="d-flex align-items-end">
-                                            <input type="text" name="work_govt_service[]" class="form-control me-2" maxlength="3" style="max-width: 80%;" value="{{ $entry['govt_service'] ?? '' }}">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeWorkExperienceRow(this)">Remove</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="work-experience-row mb-3">
-                            <div class="row g-2 align-items-end">
-                                <div class="col-12 mb-2">
-                                    <strong class="entry-number">1.</strong>
-                                </div>
-                                <div class="col-md-2">
-                                    <label>From</label>
-                                    <input type="date" name="work_date_from[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>To</label>
-                                    <input type="date" name="work_date_to[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Position Title<br><small>(Write in full/Do not abbreviate)</small></label>
-                                    <input type="text" name="work_position_title[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Department/Agency/Office/Company<br><small>(Write in full/Do not abbreviate)</small></label>
-                                    <input type="text" name="work_department[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Monthly Salary</label>
-                                    <input type="text" name="work_monthly_salary[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Salary/Job/Pay Grade & Step<br><small>(if applicable) & Step Increment</small></label>
-                                    <input type="text" name="work_salary_grade[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Status of Appointment</label>
-                                    <input type="text" name="work_status[]" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label>Govt Service<br><small>(Y/N)</small></label>
-                                    <div class="d-flex align-items-end">
-                                        <input type="text" name="work_govt_service[]" class="form-control me-2" maxlength="3" style="max-width: 80%;">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeWorkExperienceRow(this)">Remove</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" class="btn btn-primary" onclick="addWorkExperienceRow()">Add Row</button>
-                <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" onclick="showSection('section4')">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="showSection('section6')">
-                            Next Page <i class="fas fa-arrow-right"></i>
-                        </button>
+                    <div class="card-body">
+                        <!-- Section III form fields go here -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-
-
-
-
-<!-- section VI -->
-<div class="content" id="section6" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">VI. Voluntary Work or Involvement in Civic / Non-Government / People / Voluntary Organizations</h3>
-            </div>
-            <div class="card-body">
-                @php
-                    $voluntary_work_data = old('voluntary', $profile->voluntary_work ?? []);
-                    if (is_string($voluntary_work_data)) $voluntary_work_data = json_decode($voluntary_work_data, true) ?? [];
-                @endphp
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name & Address of Organization<br><small>(Write in full)</small></th>
-                            <th colspan="2">Inclusive Dates<br><small>(mm/dd/yyyy)</small></th>
-                            <th>Number of Hours</th>
-                            <th>Position / Nature of Work</th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="voluntaryTableBody">
-                        @if(!empty($voluntary_work_data))
-                            @foreach($voluntary_work_data as $i => $row)
-                                <tr>
-                                    <td><input type="text" name="voluntary[{{$i}}][organization]" class="form-control" value="{{ $row['organization'] ?? '' }}"></td>
-                                    <td><input type="date" name="voluntary[{{$i}}][from]" class="form-control" value="{{ $row['from'] ?? '' }}"></td>
-                                    <td><input type="date" name="voluntary[{{$i}}][to]" class="form-control" value="{{ $row['to'] ?? '' }}"></td>
-                                    <td><input type="text" name="voluntary[{{$i}}][hours]" class="form-control" value="{{ $row['hours'] ?? '' }}"></td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <input type="text" name="voluntary[{{$i}}][position]" class="form-control me-2" value="{{ $row['position'] ?? '' }}">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeVoluntaryRow(this)">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            @for($i = 0; $i < 4; $i++)
-                                <tr>
-                                    <td><input type="text" name="voluntary[{{$i}}][organization]" class="form-control"></td>
-                                    <td><input type="date" name="voluntary[{{$i}}][from]" class="form-control"></td>
-                                    <td><input type="date" name="voluntary[{{$i}}][to]" class="form-control"></td>
-                                    <td><input type="text" name="voluntary[{{$i}}][hours]" class="form-control"></td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <input type="text" name="voluntary[{{$i}}][position]" class="form-control me-2">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeVoluntaryRow(this)">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endfor
-                        @endif
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addVoluntaryRow()">Add Row</button>
-                <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" onclick="showSection('section5')">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="showSection('section7')">
-                            Next Page <i class="fas fa-arrow-right"></i>
-                        </button>
+        <div class="tab-pane fade" id="section4" role="tabpanel" aria-labelledby="tab-section4">
+            <div class="container-fluid">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">IV. Civil Service Eligibility</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Section IV form fields go here -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 
-
-<!-- section VII -->
-<div class="content" id="section7" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">VII. Learning and Development (L&D) Interventions/Training Programs Attended</h3>
-            </div>
-            <div class="card-body">
-                @php
-                    $ld_data = old('ld', $profile->learning_development ?? []);
-                    if (is_string($ld_data)) $ld_data = json_decode($ld_data, true) ?? [];
-                @endphp
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Title of Learning and Development Interventions/Training Programs<br><small>(Write in full)</small></th>
-                            <th colspan="2">Inclusive Dates of Attendance<br><small>(mm/dd/yyyy)</small></th>
-                            <th>Number of Hours</th>
-                            <th>Type of LD<br><small>(Managerial/Supervisory/Technical/etc)</small></th>
-                            <th>Conducted/Sponsored By<br><small>(Write in full)</small></th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="ldTableBody">
-                        @if(!empty($ld_data))
-                            @foreach($ld_data as $i => $row)
-                                <tr>
-                                    <td><input type="text" name="ld[{{$i}}][title]" class="form-control" value="{{ $row['title'] ?? '' }}"></td>
-                                    <td><input type="date" name="ld[{{$i}}][from]" class="form-control" value="{{ $row['from'] ?? '' }}"></td>
-                                    <td><input type="date" name="ld[{{$i}}][to]" class="form-control" value="{{ $row['to'] ?? '' }}"></td>
-                                    <td><input type="text" name="ld[{{$i}}][hours]" class="form-control" value="{{ $row['hours'] ?? '' }}"></td>
-                                    <td><input type="text" name="ld[{{$i}}][type]" class="form-control" value="{{ $row['type'] ?? '' }}"></td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <input type="text" name="ld[{{$i}}][sponsor]" class="form-control me-2" value="{{ $row['sponsor'] ?? '' }}">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeLDRow(this)">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            @for($i = 0; $i < 4; $i++)
-                                <tr>
-                                    <td><input type="text" name="ld[{{$i}}][title]" class="form-control"></td>
-                                    <td><input type="date" name="ld[{{$i}}][from]" class="form-control"></td>
-                                    <td><input type="date" name="ld[{{$i}}][to]" class="form-control"></td>
-                                    <td><input type="text" name="ld[{{$i}}][hours]" class="form-control"></td>
-                                    <td><input type="text" name="ld[{{$i}}][type]" class="form-control"></td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <input type="text" name="ld[{{$i}}][sponsor]" class="form-control me-2">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeLDRow(this)">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endfor
-                        @endif
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addLDRow()">Add Row</button>
-                <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" onclick="showSection('section6')">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="showSection('section8')">
-                            Next Page <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
-
-
-
-<!-- Section VIII: OTHER INFORMATION -->
-<div class="content" id="section8" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">VIII. OTHER INFORMATION</h3>
-            </div>
-            <div class="card-body">
-                @php
-                    $skills = old('special_skills_hobbies', $profile->special_skills ?? []);
-                    if (is_string($skills)) $skills = json_decode($skills, true) ?? [];
-                    $distinctions = old('non_academic_distinctions', $profile->non_academic_distinctions ?? []);
-                    if (is_string($distinctions)) $distinctions = json_decode($distinctions, true) ?? [];
-                    $memberships = old('association_memberships', $profile->association_memberships ?? []);
-                    if (is_string($memberships)) $memberships = json_decode($memberships, true) ?? [];
-                @endphp
-                <h6>31. SPECIAL SKILLS and HOBBIES</h6>
-                <div id="skillsContainer">
-                    @if(count($skills))
-                        @foreach($skills as $skill)
-                            <div class="input-group mb-2">
-                                <input type="text" name="special_skills_hobbies[]" class="form-control" value="{{ $skill }}" placeholder="Enter your special skills and hobbies">
-                                <button type="button" class="btn btn-danger" onclick="removeField(this, 'skillsContainer')">Remove</button>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="input-group mb-2">
-                            <input type="text" name="special_skills_hobbies[]" class="form-control" placeholder="Enter your special skills and hobbies">
-                            <button type="button" class="btn btn-danger" onclick="removeField(this, 'skillsContainer')">Remove</button>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addSkillField()">Add</button>
-
-                <h6>32. NON-ACADEMIC DISTINCTIONS / RECOGNITION</h6>
-                <p>(Write in full)</p>
-                <div id="distinctionsContainer">
-                    @if(count($distinctions))
-                        @foreach($distinctions as $distinction)
-                            <div class="input-group mb-2">
-                                <input type="text" name="non_academic_distinctions[]" class="form-control" value="{{ $distinction }}" placeholder="Enter your non-academic distinctions or recognition">
-                                <button type="button" class="btn btn-danger" onclick="removeField(this, 'distinctionsContainer')">Remove</button>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="input-group mb-2">
-                            <input type="text" name="non_academic_distinctions[]" class="form-control" placeholder="Enter your non-academic distinctions or recognition">
-                            <button type="button" class="btn btn-danger" onclick="removeField(this, 'distinctionsContainer')">Remove</button>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addDistinctionField()">Add</button>
-
-                <h6>33. MEMBERSHIP IN ASSOCIATION/ORGANIZATION</h6>
-                <p>(Write in full)</p>
-                <div id="membershipContainer">
-                    @if(count($memberships))
-                        @foreach($memberships as $membership)
-                            <div class="input-group mb-2">
-                                <input type="text" name="association_memberships[]" class="form-control" value="{{ $membership }}" placeholder="Enter your membership in association/organization">
-                                <button type="button" class="btn btn-danger" onclick="removeField(this, 'membershipContainer')">Remove</button>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="input-group mb-2">
-                            <input type="text" name="association_memberships[]" class="form-control" placeholder="Enter your membership in association/organization">
-                            <button type="button" class="btn btn-danger" onclick="removeField(this, 'membershipContainer')">Remove</button>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" class="btn btn-sm btn-primary mb-3" onclick="addMembershipField()">Add</button>
-
-                <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" onclick="showSection('section7')">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="showSection('section9')">
-                            Next Page <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-<!-- section IX -->
-<div class="content" id="section9" style="display:none;">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">IX. Information </h3>
-            </div>
-            <div class="card-body">
-                
-                    <!-- Question 34a -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                34a. Are you related by consanguinity or affinity to the appointing or recommending authority, or to chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed, within the third degree?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q34a" id="q34a_yes" value="yes">
-                                <label class="form-check-label" for="q34a_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q34a" id="q34a_no" value="no">
-                                <label class="form-check-label" for="q34a_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q34a_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 34b -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                34b. ...within the fourth degree (for Local Government Unit - Career Employees)?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q34b" id="q34b_yes" value="yes">
-                                <label class="form-check-label" for="q34b_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q34b" id="q34b_no" value="no">
-                                <label class="form-check-label" for="q34b_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q34b_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 35a -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                35a. Have you ever been found guilty of any administrative offense?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q35a" id="q35a_yes" value="yes">
-                                <label class="form-check-label" for="q35a_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q35a" id="q35a_no" value="no">
-                                <label class="form-check-label" for="q35a_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q35a_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 35b -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                35b. Have you been criminally charged before any court?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q35b" id="q35b_yes" value="yes">
-                                <label class="form-check-label" for="q35b_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q35b" id="q35b_no" value="no">
-                                <label class="form-check-label" for="q35b_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q35b_details" placeholder="If YES, give details">
-                            <input type="text" class="form-control mt-2" name="q35b_date_filed" placeholder="Date Filed">
-                            <input type="text" class="form-control mt-2" name="q35b_status" placeholder="Status of Case/s">
-                        </div>
-                    </div>
-                    <!-- Question 36 -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                36. Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q36" id="q36_yes" value="yes">
-                                <label class="form-check-label" for="q36_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q36" id="q36_no" value="no">
-                                <label class="form-check-label" for="q36_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q36_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 37 -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                37. Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q37" id="q37_yes" value="yes">
-                                <label class="form-check-label" for="q37_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q37" id="q37_no" value="no">
-                                <label class="form-check-label" for="q37_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q37_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-
-                    <!-- Question 38a -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                38a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q38a" id="q38a_yes" value="yes">
-                                <label class="form-check-label" for="q38a_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q38a" id="q38a_no" value="no">
-                                <label class="form-check-label" for="q38a_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q38a_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 38b -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                38b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q38b" id="q38b_yes" value="yes">
-                                <label class="form-check-label" for="q38b_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q38b" id="q38b_no" value="no">
-                                <label class="form-check-label" for="q38b_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q38b_details" placeholder="If YES, give details">
-                        </div>
-                    </div>
-                    <!-- Question 39 -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label>
-                                39. Have you acquired the status of an immigrant or permanent resident of another country?
-                            </label>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q39" id="q39_yes" value="yes">
-                                <label class="form-check-label" for="q39_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q39" id="q39_no" value="no">
-                                <label class="form-check-label" for="q39_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q39_details" placeholder="If YES, give details (country)">
-                        </div>
-                    </div>
-                    <!-- Question 40 -->
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label>
-                                40. Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act of 2000 (RA 8972), please answer the following:
-                            </label>
-                        </div>
-                    </div>
-                    <!-- 40a -->
-                    <div class="row mb-2">
-                        <div class="col-md-8 offset-md-1">
-                            <label>
-                                a. Are you a member of any indigenous group?
-                            </label>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40a" id="q40a_yes" value="yes">
-                                <label class="form-check-label" for="q40a_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40a" id="q40a_no" value="no">
-                                <label class="form-check-label" for="q40a_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q40a_details" placeholder="If YES, please specify">
-                        </div>
-                    </div>
-                    <!-- 40b -->
-                    <div class="row mb-2">
-                        <div class="col-md-8 offset-md-1">
-                            <label>
-                                b. Are you a person with disability?
-                            </label>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40b" id="q40b_yes" value="yes">
-                                <label class="form-check-label" for="q40b_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40b" id="q40b_no" value="no">
-                                <label class="form-check-label" for="q40b_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q40b_id" placeholder="If YES, please specify ID No.">
-                        </div>
-                    </div>
-                    <!-- 40c -->
-                    <div class="row mb-2">
-                        <div class="col-md-8 offset-md-1">
-                            <label>
-                                c. Are you a solo parent?
-                            </label>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40c" id="q40c_yes" value="yes">
-                                <label class="form-check-label" for="q40c_yes">YES</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="q40c" id="q40c_no" value="no">
-                                <label class="form-check-label" for="q40c_no">NO</label>
-                            </div>
-                            <input type="text" class="form-control mt-2" name="q40c_id" placeholder="If YES, please specify ID No.">
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12 d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary me-2" onclick="showSection('section8')">
-                                <i class="fas fa-arrow-left"></i> Back
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </div>
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-    <!-- <button type="submit" class="btn btn-primary">Save Profile</button> -->
-
-
-
 </form>
+
 
 
 <script>
@@ -1925,11 +994,38 @@ function addMembershipField() {
     container.appendChild(div);
 }
 
-
+function saveCurrentSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const inputs = section.querySelectorAll('[name]');
+    const formData = new FormData();
+    formData.append('section', sectionId);
+    inputs.forEach(input => {
+        if ((input.type === 'checkbox' || input.type === 'radio') && !input.checked) return;
+        formData.append(input.name, input.value);
+    });
+    fetch("{{ route('user.profile.saveSection') }}", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Section saved!',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+}
 
 
 </script>
-
 
 @endsection
 

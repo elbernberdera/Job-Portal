@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Ignore reCAPTCHA config or keys
+.env
+config/nocaptcha.php

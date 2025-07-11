@@ -201,6 +201,8 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     // Route to check if user already applied for a job
     Route::post('/user/check-application', [JobApplicationController::class, 'checkApplication'])->name('user.check.application');
+
+    Route::post('/user/profile/save-section', [App\Http\Controllers\User\UserProfileController::class, 'saveSection'])->name('user.profile.saveSection');
 });
 
 Route::middleware('auth')->group(function () {

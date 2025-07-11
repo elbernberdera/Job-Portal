@@ -326,13 +326,13 @@
             new Typed('#typed-title', {
                 strings: [
                     'Welcome to <span class="gradient-blue-text">DICT</span> Job Portal',
-                    'Find Your Dream Job Today<span class="typed-sub">Discover thousands of job opportunities with top companies</span>'
+                    //'Find Your Dream Job Today<span class="typed-sub">Discover thousands of job opportunities with top companies</span>'
                 ],
                 typeSpeed: 40,
                 backSpeed: 70,
                 backDelay: 900,
                 showCursor: false,
-                loop: true,
+                loop: false,
                 smartBackspace: false,
             });
 

@@ -761,8 +761,8 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 });
 </script>
 
-<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{!! NoCaptcha::renderJs() !!} -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{!! NoCaptcha::renderJs() !!}
 
 <!-- Add this script before the closing body tag -->
 <script>
