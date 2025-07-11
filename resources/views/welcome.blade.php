@@ -22,21 +22,9 @@
         <!-- Custom Styles -->
         <style>
             .gradient-bg {
-                background: linear-gradient(-45deg, #3b82f6, #fbbf24, rgb(59, 140, 246));
-                background-size: 200% 200%;
+                background: linear-gradient(135deg, #2563eb 0%, #ffffff 100%);
                 position: relative;
                 overflow: hidden;
-            }
-            @keyframes gradient-move {
-                0% {
-                    background-position: 0% 50%;
-                }
-                50% {
-                    background-position: 100% 50%;
-                }
-                100% {
-                    background-position: 0% 50%;
-                }
             }
             .gradient-button, .register-gradient-button {
                 background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
@@ -80,8 +68,8 @@
                 text-shadow: 0 2px 8px rgba(30, 41, 59, 0.25), 0 1px 2px rgba(0,0,0,0.15);
             }
             .gradient-blue-text {
-                color: #2563eb;
-                text-shadow: 0 0 12px #2563eb, 0 0 24px #60a5fa;
+                color: #dc2626;
+                text-shadow: 0 0 12px #dc2626, 0 0 24px #f87171;
             }
             .glass-card {
                 background: rgba(255, 255, 255, 0.25);
@@ -275,14 +263,14 @@
         <!-- Call to Action -->
         <div class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="rounded-2xl p-8 md:p-12 text-center" data-aos="fade-up" style="background: linear-gradient(135deg, #3b82f6 0%, #fbbf24 100%);">
+                <div class="rounded-2xl p-8 md:p-12 text-center" data-aos="fade-up" style="background: linear-gradient(135deg, #2563eb 0%, #ffffff 100%);">
                     <h2 class="text-3xl font-bold text-white mb-4 text-shadow">Ready to Start Your Career Journey?</h2>
                     <p class="text-white/90 mb-8 text-lg">Join thousands of people who've found their dream jobs through our platform</p>
                     <div class="flex flex-col md:flex-row gap-4 justify-center">
-                        <a href="{{ route('register') }}" class="register-gradient-button px-8 py-3 rounded-md font-semibold">
+                        <a href="{{ route('register') }}" class="px-8 py-3 rounded-md font-semibold bg-gray-400 text-white hover:bg-gray-500 transition">
                             Create an Account
                         </a>
-                        <a href="{{ route('login') }}" class="gradient-button px-8 py-3 rounded-md font-semibold">
+                        <a href="{{ route('login') }}" class="px-8 py-3 rounded-md font-semibold bg-green-500 text-white hover:bg-green-600 transition">
                             Sign In
                         </a>
                     </div>
@@ -326,7 +314,7 @@
             new Typed('#typed-title', {
                 strings: [
                     'Welcome to <span class="gradient-blue-text">DICT</span> Job Portal',
-                    //'Find Your Dream Job Today<span class="typed-sub">Discover thousands of job opportunities with top companies</span>'
+                    'Find Your Dream Job Today<span class="typed-sub">Discover thousands of job opportunities with top companies</span>'
                 ],
                 typeSpeed: 40,
                 backSpeed: 70,
