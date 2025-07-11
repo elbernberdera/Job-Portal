@@ -598,49 +598,49 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <label for="job_title_edit_{{ $vacancy->id }}" class="form-label">Job Title</label>
                                     <select id="job_title_edit_{{ $vacancy->id }}" name="job_title" class="form-select" required>
                                         <option value="">Select Job Title</option>
-                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
-                                        <option value="Budget Officer II">Budget Officer II</option>
-                                        <option value="ITO II - Provincial Officer">ITO II - Provincial Officer</option>
-                                        <option value="LINEMAN I - Messenger/Driver">LINEMAN I - Messenger/Driver</option>
-                                        <option value="Cashier II">Cashier II</option>
-                                        <option value="ITO I">ITO I</option>
-                                        <option value="ENG3 - Provincial Officer ADS">ENG3 - Provincial Officer ADS</option>
-                                        <option value="Director IV - Regional Director">Director IV - Regional Director</option>
-                                        <option value="ITO I">ITO I</option>
-                                        <option value="ENG3 - Provincial Officer ADN">ENG3 - Provincial Officer ADN</option>
-                                        <option value="Accountant III">Accountant III</option>
-                                        <option value="CEO III - Support Staff">CEO III - Support Staff</option>
-                                        <option value="ITO II - Provincial Officer PDI">ITO II - Provincial Officer PDI</option>
-                                        <option value="ADAS 3">ADAS 3</option>
-                                        <option value="ECET I">ECET I</option>
-                                        <option value="ITO I- Provincial Officer SDS">ITO I- Provincial Officer SDS</option>
-                                        <option value="Driver II">Driver II</option>
-                                        <option value="ADAS IV  (Driver II)">ADAS IV  (Driver II)</option>
-                                        <option value="ITO III - TOD Chief">ITO III - TOD Chief</option>
-                                        <option value="HRMO II">HRMO II</option>
-                                        <option value="ITO I - Section Head, IIDB">ITO I - Section Head, IIDB</option>
-                                        <option value="ISA I">ISA I</option>
-                                        <option value="ITO 2 - Section Head, Connectivity">ITO 2 - Section Head, Connectivity</option>
-                                        <option value="Chief Administrative Officer">Chief Administrative Officer</option>
-                                        <option value="PDO I">PDO I</option>
-                                        <option value="PDO II">PDO II</option>
-                                        <option value="ENGINEER II">ENGINEER II</option>
-                                        <option value="ENGR II">ENGR II</option>
-                                        <option value="ENGR I">ENGR I</option>
-                                        <option value="ISA II">ISA II</option>
-                                        <option value="PLO II">PLO II</option>
-                                        <option value="PMO I">PMO I</option>
-                                        <option value="ENGR III">ENGR III</option>
-                                        <option value="PLA">PLA</option>
-                                        <option value="PLO I">PLO I</option>
-                                        <option value="Supply Officer I">Supply Officer I</option>
-                                        <option value="Administrative Officer II">Administrative Officer II</option>
-                                        <option value="Administrative Aide IV (Utility)">Administrative Aide IV (Utility)</option>
-                                        <option value="Administrative Aide IV (AA IV)">Administrative Aide IV (AA IV)</option>
-                                        <option value="Administrative Officer II (HRMO I)">Administrative Officer II (HRMO I)</option>
-                                        <option value="Administrative Officer II (Budget Officer I)">Administrative Officer II (Budget Officer I)</option>
-                                        <option value="Administrative Officer I (Cashier I)">Administrative Officer I (Cashier I)</option>
-                                        <option value="Records Officer I">Records Officer I</option>
+                                        <option value="ADAS IV  (Driver II)" {{ $vacancy->job_title == 'ADAS IV  (Driver II)' ? 'selected' : '' }}>ADAS IV  (Driver II)</option>
+                                        <option value="Budget Officer II" {{ $vacancy->job_title == 'Budget Officer II' ? 'selected' : '' }}>Budget Officer II</option>
+                                        <option value="ITO II - Provincial Officer" {{ $vacancy->job_title == 'ITO II - Provincial Officer' ? 'selected' : '' }}>ITO II - Provincial Officer</option>
+                                        <option value="LINEMAN I - Messenger/Driver" {{ $vacancy->job_title == 'LINEMAN I - Messenger/Driver' ? 'selected' : '' }}>LINEMAN I - Messenger/Driver</option>
+                                        <option value="Cashier II" {{ $vacancy->job_title == 'Cashier II' ? 'selected' : '' }}>Cashier II</option>
+                                        <option value="ITO I" {{ $vacancy->job_title == 'ITO I' ? 'selected' : '' }}>ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADS" {{ $vacancy->job_title == 'ENG3 - Provincial Officer ADS' ? 'selected' : '' }}>ENG3 - Provincial Officer ADS</option>
+                                        <option value="Director IV - Regional Director" {{ $vacancy->job_title == 'Director IV - Regional Director' ? 'selected' : '' }}>Director IV - Regional Director</option>
+                                        <option value="ITO I" {{ $vacancy->job_title == 'ITO I' ? 'selected' : '' }}>ITO I</option>
+                                        <option value="ENG3 - Provincial Officer ADN" {{ $vacancy->job_title == 'ENG3 - Provincial Officer ADN' ? 'selected' : '' }}>ENG3 - Provincial Officer ADN</option>
+                                        <option value="Accountant III" {{ $vacancy->job_title == 'Accountant III' ? 'selected' : '' }}>Accountant III</option>
+                                        <option value="CEO III - Support Staff" {{ $vacancy->job_title == 'CEO III - Support Staff' ? 'selected' : '' }}>CEO III - Support Staff</option>
+                                        <option value="ITO II - Provincial Officer PDI" {{ $vacancy->job_title == 'ITO II - Provincial Officer PDI' ? 'selected' : '' }}>ITO II - Provincial Officer PDI</option>
+                                        <option value="ADAS 3" {{ $vacancy->job_title == 'ADAS 3' ? 'selected' : '' }}>ADAS 3</option>
+                                        <option value="ECET I" {{ $vacancy->job_title == 'ECET I' ? 'selected' : '' }}>ECET I</option>
+                                        <option value="ITO I- Provincial Officer SDS" {{ $vacancy->job_title == 'ITO I- Provincial Officer SDS' ? 'selected' : '' }}>ITO I- Provincial Officer SDS</option>
+                                        <option value="Driver II" {{ $vacancy->job_title == 'Driver II' ? 'selected' : '' }}>Driver II</option>
+                                        <option value="ADAS IV  (Driver II)" {{ $vacancy->job_title == 'ADAS IV  (Driver II)' ? 'selected' : '' }}>ADAS IV  (Driver II)</option>
+                                        <option value="ITO III - TOD Chief" {{ $vacancy->job_title == 'ITO III - TOD Chief' ? 'selected' : '' }}>ITO III - TOD Chief</option>
+                                        <option value="HRMO II" {{ $vacancy->job_title == 'HRMO II' ? 'selected' : '' }}>HRMO II</option>
+                                        <option value="ITO I - Section Head, IIDB" {{ $vacancy->job_title == 'ITO I - Section Head, IIDB' ? 'selected' : '' }}>ITO I - Section Head, IIDB</option>
+                                        <option value="ISA I" {{ $vacancy->job_title == 'ISA I' ? 'selected' : '' }}>ISA I</option>
+                                        <option value="ITO 2 - Section Head, Connectivity" {{ $vacancy->job_title == 'ITO 2 - Section Head, Connectivity' ? 'selected' : '' }}>ITO 2 - Section Head, Connectivity</option>
+                                        <option value="Chief Administrative Officer" {{ $vacancy->job_title == 'Chief Administrative Officer' ? 'selected' : '' }}>Chief Administrative Officer</option>
+                                        <option value="PDO I" {{ $vacancy->job_title == 'PDO I' ? 'selected' : '' }}>PDO I</option>
+                                        <option value="PDO II" {{ $vacancy->job_title == 'PDO II' ? 'selected' : '' }}>PDO II</option>
+                                        <option value="ENGINEER II" {{ $vacancy->job_title == 'ENGINEER II' ? 'selected' : '' }}>ENGINEER II</option>
+                                        <option value="ENGR II" {{ $vacancy->job_title == 'ENGR II' ? 'selected' : '' }}>ENGR II</option>
+                                        <option value="ENGR I" {{ $vacancy->job_title == 'ENGR I' ? 'selected' : '' }}>ENGR I</option>
+                                        <option value="ISA II" {{ $vacancy->job_title == 'ISA II' ? 'selected' : '' }}>ISA II</option>
+                                        <option value="PLO II" {{ $vacancy->job_title == 'PLO II' ? 'selected' : '' }}>PLO II</option>
+                                        <option value="PMO I" {{ $vacancy->job_title == 'PMO I' ? 'selected' : '' }}>PMO I</option>
+                                        <option value="ENGR III" {{ $vacancy->job_title == 'ENGR III' ? 'selected' : '' }}>ENGR III</option>
+                                        <option value="PLA" {{ $vacancy->job_title == 'PLA' ? 'selected' : '' }}>PLA</option>
+                                        <option value="PLO I" {{ $vacancy->job_title == 'PLO I' ? 'selected' : '' }}>PLO I</option>
+                                        <option value="Supply Officer I" {{ $vacancy->job_title == 'Supply Officer I' ? 'selected' : '' }}>Supply Officer I</option>
+                                        <option value="Administrative Officer II" {{ $vacancy->job_title == 'Administrative Officer II' ? 'selected' : '' }}>Administrative Officer II</option>
+                                        <option value="Administrative Aide IV (Utility)" {{ $vacancy->job_title == 'Administrative Aide IV (Utility)' ? 'selected' : '' }}>Administrative Aide IV (Utility)</option>
+                                        <option value="Administrative Aide IV (AA IV)" {{ $vacancy->job_title == 'Administrative Aide IV (AA IV)' ? 'selected' : '' }}>Administrative Aide IV (AA IV)</option>
+                                        <option value="Administrative Officer II (HRMO I)" {{ $vacancy->job_title == 'Administrative Officer II (HRMO I)' ? 'selected' : '' }}>Administrative Officer II (HRMO I)</option>
+                                        <option value="Administrative Officer II (Budget Officer I)" {{ $vacancy->job_title == 'Administrative Officer II (Budget Officer I)' ? 'selected' : '' }}>Administrative Officer II (Budget Officer I)</option>
+                                        <option value="Administrative Officer I (Cashier I)" {{ $vacancy->job_title == 'Administrative Officer I (Cashier I)' ? 'selected' : '' }}>Administrative Officer I (Cashier I)</option>
+                                        <option value="Records Officer I" {{ $vacancy->job_title == 'Records Officer I' ? 'selected' : '' }}>Records Officer I</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -651,9 +651,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <label for="division_edit_{{ $vacancy->id }}" class="form-label">Division</label>
                                     <select id="division_edit_{{ $vacancy->id }}" name="division" class="form-select" required>
                                         <option value="">Select Division</option>
-                                        <option value="Admin and Finance">Admin and Finance</option>
-                                        <option value="Technical Operations Division">Technical Operations Division</option>
-                                        <option value="Office of the Regional Director">Office of the Regional Director</option>
+                                        <option value="Admin and Finance" {{ $vacancy->division == 'Admin and Finance' ? 'selected' : '' }}>Admin and Finance</option>
+                                        <option value="Technical Operations Division" {{ $vacancy->division == 'Technical Operations Division' ? 'selected' : '' }}>Technical Operations Division</option>
+                                        <option value="Office of the Regional Director" {{ $vacancy->division == 'Office of the Regional Director' ? 'selected' : '' }}>Office of the Regional Director</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -700,11 +700,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                                 <div class="col-md-6">
                                     <label for="date_posted_edit_{{ $vacancy->id }}" class="form-label">Date Posted</label>
-                                    <input type="date" id="date_posted_edit_{{ $vacancy->id }}" name="date_posted" class="form-control" value="{{ $vacancy->date_posted }}">
+                                    <input type="date" id="date_posted_edit_{{ $vacancy->id }}" name="date_posted" class="form-control" value="{{ $vacancy->date_posted ? $vacancy->date_posted->format('Y-m-d') : '' }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="closing_date_edit_{{ $vacancy->id }}" class="form-label">Accepting Applications Until</label>
-                                    <input type="date" id="closing_date_edit_{{ $vacancy->id }}" name="closing_date" class="form-control" value="{{ $vacancy->closing_date }}">
+                                    <input type="date" id="closing_date_edit_{{ $vacancy->id }}" name="closing_date" class="form-control" value="{{ $vacancy->closing_date ? $vacancy->closing_date->format('Y-m-d') : '' }}">
                                 </div>
                                 <div class="col-12"><hr class="my-4"></div>
                                 <div class="col-12">

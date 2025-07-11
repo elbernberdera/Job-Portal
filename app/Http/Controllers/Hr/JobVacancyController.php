@@ -39,6 +39,7 @@ class JobVacancyController extends Controller
                 'position_code' => 'required|string|unique:job_vacancies,position_code',
                 'division' => 'required|string',
                 'region' => 'required|string',
+                'salary_grade' => 'nullable|integer|min:1|max:33',
                 'monthly_salary' => 'nullable|numeric',
                 'education' => 'nullable|string',
                 'training' => 'nullable|array',
@@ -52,12 +53,23 @@ class JobVacancyController extends Controller
                 'status' => 'required|in:open,closed,archived',
                 'date_posted' => 'nullable|date',
                 'closing_date' => 'nullable|date|after_or_equal:date_posted',
+                'required_course' => 'nullable|string',
+                'min_years_experience' => 'nullable|integer|min:0',
+                'required_skills' => 'nullable|string',
+                'citizenship_requirement' => 'nullable|string',
             ]);
 
             // Set default values for arrays if they're not present
             $validated['training'] = $validated['training'] ?? [];
             $validated['experience'] = $validated['experience'] ?? [];
             $validated['benefits'] = $validated['benefits'] ?? [];
+            
+            // Handle required_skills as array
+            if (isset($validated['required_skills']) && is_string($validated['required_skills'])) {
+                $validated['required_skills'] = array_map('trim', explode(',', $validated['required_skills']));
+            } else {
+                $validated['required_skills'] = [];
+            }
             
             // Set default status if not provided
             if (!isset($validated['status'])) {
@@ -111,6 +123,7 @@ class JobVacancyController extends Controller
             'position_code' => 'required|string',
             'division' => 'required|string',
             'region' => 'required|string',
+            'salary_grade' => 'nullable|integer|min:1|max:33',
             'monthly_salary' => 'nullable|numeric',
             'education' => 'nullable|string',
             'eligibility' => 'nullable|string',
@@ -124,6 +137,10 @@ class JobVacancyController extends Controller
             'benefits' => 'nullable|array',
             'benefits.*.amount' => 'nullable|numeric',
             'benefits.*.description' => 'nullable|string',
+            'required_course' => 'nullable|string',
+            'min_years_experience' => 'nullable|integer|min:0',
+            'required_skills' => 'nullable|string',
+            'citizenship_requirement' => 'nullable|string',
         ]);
 
         try {
@@ -132,6 +149,7 @@ class JobVacancyController extends Controller
             $vacancy->position_code = $validated['position_code'];
             $vacancy->division = $validated['division'];
             $vacancy->region = $validated['region'];
+            $vacancy->salary_grade = $validated['salary_grade'] ?? null;
             $vacancy->monthly_salary = $validated['monthly_salary'] ?? null;
             $vacancy->education = $validated['education'] ?? null;
             $vacancy->eligibility = $validated['eligibility'] ?? null;
@@ -141,6 +159,10 @@ class JobVacancyController extends Controller
             $vacancy->training = $validated['training'] ?? [];
             $vacancy->experience = $validated['experience'] ?? [];
             $vacancy->benefits = $validated['benefits'] ?? [];
+            $vacancy->required_course = $validated['required_course'] ?? null;
+            $vacancy->min_years_experience = $validated['min_years_experience'] ?? null;
+            $vacancy->required_skills = $validated['required_skills'] ? explode(',', $validated['required_skills']) : [];
+            $vacancy->citizenship_requirement = $validated['citizenship_requirement'] ?? null;
             $vacancy->save();
             return redirect()->route('job_vacancies')->with('success', 'Job vacancy updated successfully.');
         } catch (\Exception $e) {

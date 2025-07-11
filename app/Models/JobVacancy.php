@@ -16,6 +16,7 @@ class JobVacancy extends Model
         'position_code',
         'division',
         'region',
+        'salary_grade',
         'monthly_salary',
         'education',
         'training',
